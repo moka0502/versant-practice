@@ -103,3 +103,9 @@
   そちらの結論が変わったらこの節も合わせて見直す）
 - postCreateCommandが長くなる場合は`.devcontainer/postCreate.sh`にまとめ、
   `devcontainer.json`からは`bash .devcontainer/postCreate.sh`の1行で呼ぶ（可読性のため）
+- **新規プロジェクトのDev Container立ち上げ時は、既存の類似プロジェクト（コンテナ）に
+  追加インストールされているツールを確認し、必要なら同様にpostCreate.shへ含める**。
+  都度「入れて」と言われるのを待たず、新規プロジェクト作成の一連の作業として自動でやる。
+  例: english-quiz-botには`gh`・`ffmpeg`・`fonts-liberation`が追加インストールされていた
+  （2026-07-26、versant-practiceへ移植）。逆に、確認して実体が見当たらないもの
+  （設定はあるが未インストール等の環境ドリフト）はそのまま移植せず、気づいた時点で報告する

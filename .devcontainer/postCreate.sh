@@ -16,3 +16,14 @@ sudo mv /etc/apt/sources.list.d/yarn.list /etc/apt/sources.list.d/yarn.list.disa
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
 sudo apt-get install -y nodejs
 sudo npm install -g @anthropic-ai/claude-code
+
+# gh CLI（既存プロジェクトenglish-quiz-botのコンテナ環境で使用していたものを踏襲）
+type -p curl >/dev/null || (sudo apt-get update && sudo apt-get install -y curl)
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y gh
+
+# ffmpeg + fonts-liberation（同上。音声/動画・画像生成が絡む機能を実装する際に必要）
+sudo apt-get install -y ffmpeg fonts-liberation
