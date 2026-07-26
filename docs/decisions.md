@@ -2,6 +2,12 @@
 
 計画時点（`~/.claude/plans/clever-scribbling-graham.md`）からUIプロトタイプ検証を経て変わった/具体化した決定事項をここに記録する。
 
+## 問題データの作り方（方針転換）
+
+計画時点では「既存のenglish-quiz-bot資産（`versant_quizzes.csv`）を流用」としていたが、**一から新規に問題を作成する方針に変更**。既存CSVは参考・着想を得るための参照のみ許可され、そのまま採用はしない。理由は問題の質へのこだわり（[[project-versant-practice-scope]]参照）。
+
+これに伴い、`versant/versant_quizzes.csv`を`magical_brattain`コンテナから取り出すことは、Stage 1の**必須ブロッカーではなくなった**（参考資料としてあれば便利、程度）。`versant_practice/csv_import.py`のbracket区切りパーサー自体は、新規問題を書く際のフォーマットとして流用できる可能性はあるが、データソースが変わったため設計を見直す余地がある。
+
 ## データモデルの難易度命名
 
 計画時点では文字数ベースの難易度を `short`/`medium`/`long` としていたが、UI検討の結果「レベル」として `beginner`/`intermediate`/`advanced`（初級/中級/上級）と呼ぶ形に統一した。判定基準（文字数の閾値）は計画時点のものを踏襲する。
