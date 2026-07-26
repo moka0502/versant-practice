@@ -12,8 +12,24 @@ Versant練習問題を出題するアプリ。まずはWebアプリ(スマホブ
 
 - バックエンド: Python
 - 実行環境: Dockerコンテナ(このフォルダ自体をバインドマウント。コンテナを消してもコードはWindows側に残る)
-- フロントエンド・DB構成は未確定。実装着手前にPlanモードで方針を決める
+- フロントエンド・DB構成は未確定。**実装着手前に必ずPlanモードで方針を決める**（ユーザーとの合意事項）
+
+## 参考資料（既存アセット）
+
+英語BOT(`english-quiz-bot`、Dockerコンテナ`magical_brattain`内`/home/node/english-quiz-bot`、`docker exec magical_brattain ...`でアクセス可)に、**現在停止中のVERSANT練習BOT機能**が存在する。設計時の参考にする（そのまま移植ではなく、要件のインプットとして扱う方針。ユーザー:「ほぼ一から作るかも」）。
+
+- 仕様書: `docs/specs/versant.md`（公式VERSANT仕様準拠のPart A/B定義、CSVスキーマ、生成仕様）
+- 問題バンク: `versant/versant_quizzes.csv`（48問。Part B=Repeatが未投稿分だけで10問以上あり、`script`のフレーズ区切り（例: `[If you need] [any help]...`）が既に付与されている＝リピーティング練習に転用しやすい形）
+- 生成ロジック: `versant/versantquiz.py`（GPTプロンプト）、`versant/versant_generate.py`（週次生成）
+- 投稿・動画・TTS周りの`versantrunner.py`やpart2共用モジュールはX投稿bot専用の実装なので、本アプリには不要（参考にしない）
+
+## 開発環境の状態（2026-07-26セットアップ完了）
+
+- devcontainer構築済み・動作確認済み（コンテナ名は再作成のたびに変わる。当時は`sharp_kalam`）
+- `postCreate.sh`で自動セットアップされるもの: 共通標準CLAUDE.md配置、Obsidian daily-notes自動アーカイブ(SessionEndフック)、Node.js20+Claude Code CLI、gh/ffmpeg/fonts-liberation
+- gh CLIはコンテナ内では**未認証**。GitHub操作が必要になったタイミングで`gh auth login`が要る
+- Obsidian自動アーカイブは仕組みとして組み込み済みだが、**実際にセッション終了時にファイルが書き出されるかは未検証**（SessionEndフックの発火自体をまだ確認していない）
 
 ## バックログ
 
-- (現時点でなし)
+- Obsidian自動アーカイブフックの実地動作確認（未検証、上記参照）
