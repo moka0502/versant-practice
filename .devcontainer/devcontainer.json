@@ -11,7 +11,7 @@
 		"source=${localEnv:USERPROFILE}/OneDrive/デスクトップ/202607_Obsidian/ObsidianVault/daily-notes,target=/mnt/obsidian-daily-notes,type=bind,consistency=cached"
 	],
 
-	"postCreateCommand": "mkdir -p ~/.claude/scripts && cp .devcontainer/global-standards.md ~/.claude/CLAUDE.md && cp .devcontainer/vault_archive.py ~/.claude/scripts/vault_archive.py && cp .devcontainer/global-settings.json ~/.claude/settings.json && pip install -r requirements.txt -r requirements-dev.txt",
+	"postCreateCommand": "bash .devcontainer/postCreate.sh",
 
 	"customizations": {
 		"vscode": {

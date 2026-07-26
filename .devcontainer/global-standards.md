@@ -82,11 +82,17 @@
 
 ## 9. 開発環境（Dev Container）
 
-新規プロジェクトをDev Containerで構築する際は、以下を**都度確認を挟まず**初期セットアップに含める（参照実装: `versant-practice`）。
+新規プロジェクトをDev Containerで構築する際は、以下を**都度確認を挟まず**初期セットアップに含める（参照実装: `versant-practice`の`.devcontainer/`一式）。
 
 - **バインドマウント必須**: ホストフォルダを開いて「Reopen in Container」する既定の挙動を使う。
   「Clone Repository in Container Volume」等のコンテナ内蔵ストレージのみの構成は使わない。
   コンテナを削除するとコードごと失われるため（2026-07-26、english-quiz-botで実際に発生した状態から判明）
+- **Claude Code CLI自体を必ずpostCreateCommandでインストールする**: ベースイメージ（Python等）には
+  Claude Code CLIもNode.jsも入っていない。Node.js 20系 + `npm install -g @anthropic-ai/claude-code`
+  をpostCreateCommandに含める（2026-07-26、versant-practiceで`claude`コマンド不在に気づき追加）。
+  Microsoft系devcontainerベースイメージにはyarn用apt репоが未検証GPG鍵のまま入っており
+  `apt update`を失敗させることがあるため、Node.jsセットアップ前に
+  `/etc/apt/sources.list.d/yarn.list`を無効化しておくこと
 - **Obsidian自動アーカイブ連携**: Windows側グローバル（`~/.claude/settings.json`のSessionEndフック→
   `vault_archive.py`→Obsidian vaultのdaily-notes）と同じ仕組みをコンテナ内にも用意する。
   具体的には、プロジェクトの`.devcontainer/`配下に`vault_archive.py`・`global-settings.json`
@@ -95,3 +101,5 @@
   postCreateCommandで`~/.claude/scripts/vault_archive.py`・`~/.claude/settings.json`へコピーする
   （2026-07-26追加。Obsidian vault構成自体の方針は別途[[obsidian_claude_scope]]で検討中のため、
   そちらの結論が変わったらこの節も合わせて見直す）
+- postCreateCommandが長くなる場合は`.devcontainer/postCreate.sh`にまとめ、
+  `devcontainer.json`からは`bash .devcontainer/postCreate.sh`の1行で呼ぶ（可読性のため）
