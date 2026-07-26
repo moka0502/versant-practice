@@ -1,3 +1,14 @@
+:root {
+  --color-bg: #faf9f7;
+  --color-card: #ffffff;
+  --color-accent: #5b5bd6;
+  --color-accent-active: #4744b8;
+  --color-text: #1c1c1e;
+  --color-text-muted: #6b6b70;
+  --color-border: #e2e0e6;
+  --color-track: #ece9f2;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -5,8 +16,8 @@
 body {
   margin: 0;
   font-family: -apple-system, "Hiragino Sans", "Segoe UI", sans-serif;
-  background: #f5f5f7;
-  color: #1c1c1e;
+  background: var(--color-bg);
+  color: var(--color-text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -58,7 +69,7 @@ button:active {
 
 .tagline {
   font-size: 13px;
-  color: #8e8e93;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -69,28 +80,29 @@ button:active {
 
 .option-label {
   font-size: 13px;
-  color: #6b6b70;
+  color: var(--color-text-muted);
   margin: 0 0 8px 4px;
 }
 
 .chip-group {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
 .chip {
-  padding: 10px 16px;
+  flex: 1;
+  padding: 10px 8px;
   border-radius: 20px;
-  border: 2px solid #d0d0d5;
-  background: #fff;
-  font-size: 15px;
-  color: #6b6b70;
+  border: 2px solid var(--color-border);
+  background: var(--color-card);
+  font-size: 14px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 .chip.active {
-  border-color: #007aff;
-  background: #007aff;
+  border-color: var(--color-accent);
+  background: var(--color-accent);
   color: #fff;
 }
 
@@ -102,7 +114,7 @@ button:active {
   font-weight: 600;
   border: none;
   border-radius: 14px;
-  background: #007aff;
+  background: var(--color-accent);
   color: #fff;
 }
 
@@ -114,7 +126,7 @@ button:active {
   border: none;
   background: none;
   font-size: 15px;
-  color: #007aff;
+  color: var(--color-accent);
   padding: 8px;
 }
 
@@ -128,7 +140,7 @@ button:active {
 
 .progress-label {
   font-size: 14px;
-  color: #6b6b70;
+  color: var(--color-text-muted);
   font-weight: 600;
   text-align: center;
   margin: 0 0 20px;
@@ -137,7 +149,7 @@ button:active {
 .progress-bar-track {
   width: 100%;
   height: 6px;
-  background: #e5e5ea;
+  background: var(--color-track);
   border-radius: 3px;
   overflow: hidden;
   margin-bottom: 6px;
@@ -145,7 +157,7 @@ button:active {
 
 .progress-bar-fill {
   height: 100%;
-  background: #007aff;
+  background: var(--color-accent);
   border-radius: 3px;
   width: 0%;
   transition: width 0.25s ease;
@@ -173,19 +185,19 @@ button:active {
   height: 120px;
   border-radius: 50%;
   border: none;
-  background: #007aff;
+  background: var(--color-accent);
   color: #fff;
   font-size: 36px;
   margin-top: 20px;
 }
 
 .play-circle:active {
-  background: #005fcc;
+  background: var(--color-accent-active);
 }
 
 .hint {
   font-size: 13px;
-  color: #8e8e93;
+  color: var(--color-text-muted);
   margin-top: 10px;
 }
 
@@ -193,7 +205,7 @@ button:active {
   display: flex;
   gap: 6px;
   margin-top: 32px;
-  background: #e5e5ea;
+  background: var(--color-track);
   padding: 4px;
   border-radius: 20px;
 }
@@ -208,7 +220,8 @@ button:active {
 }
 
 .speed-chip.active {
-  background: #fff;
+  background: var(--color-card);
+  color: var(--color-accent);
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
@@ -217,7 +230,7 @@ button:active {
 .accuracy-label {
   text-align: center;
   font-size: 13px;
-  color: #6b6b70;
+  color: var(--color-text-muted);
   margin: 0 0 16px;
 }
 
@@ -225,7 +238,7 @@ button:active {
   font-size: 19px;
   line-height: 1.6;
   padding: 18px;
-  background: #fff;
+  background: var(--color-card);
   border-radius: 12px;
   margin: 0 0 16px;
 }
@@ -235,15 +248,16 @@ button:active {
   width: 100%;
   padding: 12px;
   font-size: 14px;
-  border: 2px solid #d0d0d5;
+  font-weight: 600;
+  border: none;
   border-radius: 12px;
-  background: #fff;
-  color: #1c1c1e;
+  background: var(--color-accent);
+  color: #fff;
   margin: 0 0 20px;
 }
 
 .explanation-box {
-  background: #eef0f2;
+  background: var(--color-track);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 28px;
@@ -252,13 +266,13 @@ button:active {
 .explanation-title {
   font-size: 13px;
   font-weight: 600;
-  color: #6b6b70;
+  color: var(--color-text-muted);
   margin: 0 0 4px;
 }
 
 .explanation-body {
   font-size: 13px;
-  color: #8e8e93;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -289,14 +303,14 @@ button:active {
 .note {
   max-width: 420px;
   font-size: 12px;
-  color: #8e8e93;
+  color: var(--color-text-muted);
   text-align: center;
   margin-top: 24px;
 }
 
 /* セッションリザルト画面 */
 .summary-stats {
-  background: #fff;
+  background: var(--color-card);
   border-radius: 14px;
   padding: 4px 18px;
   margin-bottom: 24px;
@@ -307,9 +321,9 @@ button:active {
   justify-content: space-between;
   align-items: center;
   padding: 14px 0;
-  border-bottom: 1px solid #f0f0f2;
+  border-bottom: 1px solid var(--color-border);
   font-size: 15px;
-  color: #6b6b70;
+  color: var(--color-text-muted);
 }
 
 .summary-row:last-child {
@@ -318,7 +332,7 @@ button:active {
 
 .summary-row strong {
   font-size: 18px;
-  color: #1c1c1e;
+  color: var(--color-text);
 }
 
 #restart-button {
@@ -332,7 +346,7 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(245, 245, 247, 0.85);
+  background: rgba(250, 249, 247, 0.9);
   z-index: 10;
   pointer-events: none;
 }
@@ -350,6 +364,73 @@ button:active {
   0% { transform: scale(0.4); opacity: 0; }
   60% { transform: scale(1.15); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* Part選択画面 */
+.part-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.part-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--color-card);
+  margin-bottom: 10px;
+  font-family: inherit;
+}
+
+.part-item.enabled {
+  border: 2px solid var(--color-accent);
+}
+
+.part-item.disabled {
+  opacity: 0.55;
+}
+
+.part-code {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+  background: var(--color-track);
+  border-radius: 8px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.part-item.disabled .part-code {
+  color: var(--color-text-muted);
+}
+
+.part-body {
+  flex: 1;
+}
+
+.part-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+
+.part-desc {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.part-status {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
 }
 
 /* 横向き・縦幅が狭い画面向けの安全対策（スクロール前提だが要素を詰めて収まりやすくする） */

@@ -1,35 +1,22 @@
 // ダミー問題データ（実データ・実音声はStage 1/2以降で差し替え）
+// 本番のVersant Part B（Repeats）は1回16問のため、件数をそれに合わせている
 const PROBLEMS = [
-  {
-    id: "rep-0001",
-    level: "beginner",
-    text: "If you need any help, just let me know.",
-  },
-  {
-    id: "rep-0002",
-    level: "beginner",
-    text: "Can you close the door, please?",
-  },
-  {
-    id: "rep-0003",
-    level: "intermediate",
-    text: "Could you please send me the report before the end of the day?",
-  },
-  {
-    id: "rep-0004",
-    level: "intermediate",
-    text: "I was wondering if you could help me with this file.",
-  },
-  {
-    id: "rep-0005",
-    level: "advanced",
-    text: "The meeting has been rescheduled to next Tuesday because several key members are traveling.",
-  },
-  {
-    id: "rep-0006",
-    level: "advanced",
-    text: "Although the proposal looked promising, the committee decided to postpone their decision.",
-  },
+  { id: "rep-0001", level: "beginner", text: "If you need any help, just let me know." },
+  { id: "rep-0002", level: "beginner", text: "Can you close the door, please?" },
+  { id: "rep-0003", level: "beginner", text: "I'll call you back in five minutes." },
+  { id: "rep-0004", level: "beginner", text: "The train leaves at nine o'clock sharp." },
+  { id: "rep-0005", level: "beginner", text: "Please turn off the lights before you leave." },
+  { id: "rep-0006", level: "intermediate", text: "Could you please send me the report before the end of the day?" },
+  { id: "rep-0007", level: "intermediate", text: "I was wondering if you could help me with this file." },
+  { id: "rep-0008", level: "intermediate", text: "We need to finalize the budget before the meeting tomorrow." },
+  { id: "rep-0009", level: "intermediate", text: "She usually takes the bus to work unless it's raining heavily." },
+  { id: "rep-0010", level: "intermediate", text: "Let me know if you have any questions about the new policy." },
+  { id: "rep-0011", level: "advanced", text: "The meeting has been rescheduled to next Tuesday because several key members are traveling." },
+  { id: "rep-0012", level: "advanced", text: "Although the proposal looked promising, the committee decided to postpone their decision." },
+  { id: "rep-0013", level: "advanced", text: "Despite the heavy rain, the construction team managed to finish the project ahead of schedule." },
+  { id: "rep-0014", level: "advanced", text: "The new marketing strategy focuses on expanding into international markets over the next few years." },
+  { id: "rep-0015", level: "advanced", text: "Even though the flight was delayed by several hours, most passengers remained remarkably calm." },
+  { id: "rep-0016", level: "advanced", text: "Researchers discovered that the unexpected results were caused by a flaw in the original experiment." },
 ];
 
 const ACCENT_LANG = { us: "en-US", gb: "en-GB", au: "en-AU" };
@@ -50,6 +37,7 @@ const state = {
 };
 
 const screens = {
+  part: document.getElementById("screen-part"),
   select: document.getElementById("screen-select"),
   listen: document.getElementById("screen-listen"),
   answer: document.getElementById("screen-answer"),
@@ -102,6 +90,10 @@ function showReaction(emoji) {
   overlay.classList.remove("hidden");
   setTimeout(() => overlay.classList.add("hidden"), 500);
 }
+
+// --- 画面0: Part選択 ---
+document.getElementById("part-b-button").addEventListener("click", () => showScreen("select"));
+document.getElementById("back-to-part").addEventListener("click", () => showScreen("part"));
 
 // --- 画面1: レベル・アクセント選択（単一選択） ---
 function setupSingleSelectGroup(groupEl, dataAttr, onSelect) {
