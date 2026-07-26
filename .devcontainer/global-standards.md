@@ -79,3 +79,19 @@
 - **標準（本書）**: あるべき姿の規範。現状追認で書き換えない
 - **プロジェクトCLAUDE.md**: 固有の制約・quirks・標準とのギャップ（バックログ）
 - 決定事項は理由とともに残す（「なぜピンク固定か」レベルの小さな決定も、覆すコストが高いものは書く）
+
+## 9. 開発環境（Dev Container）
+
+新規プロジェクトをDev Containerで構築する際は、以下を**都度確認を挟まず**初期セットアップに含める（参照実装: `versant-practice`）。
+
+- **バインドマウント必須**: ホストフォルダを開いて「Reopen in Container」する既定の挙動を使う。
+  「Clone Repository in Container Volume」等のコンテナ内蔵ストレージのみの構成は使わない。
+  コンテナを削除するとコードごと失われるため（2026-07-26、english-quiz-botで実際に発生した状態から判明）
+- **Obsidian自動アーカイブ連携**: Windows側グローバル（`~/.claude/settings.json`のSessionEndフック→
+  `vault_archive.py`→Obsidian vaultのdaily-notes）と同じ仕組みをコンテナ内にも用意する。
+  具体的には、プロジェクトの`.devcontainer/`配下に`vault_archive.py`・`global-settings.json`
+  （SessionEndフック定義、Linux用パス）を置き、`devcontainer.json`で
+  Obsidian vaultのdaily-notesフォルダを追加バインドマウントし、
+  postCreateCommandで`~/.claude/scripts/vault_archive.py`・`~/.claude/settings.json`へコピーする
+  （2026-07-26追加。Obsidian vault構成自体の方針は別途[[obsidian_claude_scope]]で検討中のため、
+  そちらの結論が変わったらこの節も合わせて見直す）
