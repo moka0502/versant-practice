@@ -21,6 +21,8 @@ const PROBLEMS = [
 
 const ACCENT_LANG = { us: "en-US", gb: "en-GB", au: "en-AU" };
 const ACCENT_KEYS = ["us", "gb", "au"];
+const INTER_PROBLEM_PAUSE_MS = 2000; // 問題間の間。iOSでは次の音声再生がユーザー操作から遅延するため、
+                                      // 自動再生がブロックされる可能性がある（実機要確認）
 
 const state = {
   selectedLevel: "mix",
@@ -80,20 +82,45 @@ function vibrate(pattern) {
   if (navigator.vibrate) navigator.vibrate(pattern);
 }
 
-function showReaction(emoji) {
+// emoji表示 + 下部タイムバーを durationMs かけて満たし、終わったら onDone を呼ぶ
+// （問題間の「間」を可視化する役割も兼ねる）
+function showReaction(emoji, durationMs, onDone) {
   const overlay = document.getElementById("reaction-overlay");
   const emojiEl = document.getElementById("reaction-emoji");
+  const barFill = document.getElementById("reaction-bar-fill");
+
   emojiEl.textContent = emoji;
   emojiEl.style.animation = "none";
   void emojiEl.offsetWidth; // アニメーション再発火のためのreflow
   emojiEl.style.animation = "";
+
+  barFill.style.transition = "none";
+  barFill.style.width = "0%";
+  void barFill.offsetWidth;
+  barFill.style.transition = `width ${durationMs}ms linear`;
+  barFill.style.width = "100%";
+
   overlay.classList.remove("hidden");
-  setTimeout(() => overlay.classList.add("hidden"), 500);
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+    onDone && onDone();
+  }, durationMs);
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => toast.classList.remove("show"), 1500);
 }
 
 // --- 画面0: Part選択 ---
 document.getElementById("part-b-button").addEventListener("click", () => showScreen("select"));
 document.getElementById("back-to-part").addEventListener("click", () => showScreen("part"));
+document.querySelectorAll(".part-item.locked").forEach((btn) => {
+  btn.addEventListener("click", () => showToast("🔧 このPartは準備中です"));
+});
 
 // --- 画面1: レベル・アクセント選択（単一選択） ---
 function setupSingleSelectGroup(groupEl, dataAttr, onSelect) {
@@ -221,6 +248,7 @@ function updateAccuracyLabel() {
 function judge(isCorrect) {
   const p = currentProblem();
   state.totalCount += 1;
+  let emoji;
 
   if (isCorrect) {
     state.cleared.add(p.id);
@@ -229,7 +257,7 @@ function judge(isCorrect) {
     state.bestStreak = Math.max(state.bestStreak, state.streak);
     playBeep(880, 0.12);
     vibrate([15]);
-    showReaction("🎉"); // 演出は非同期で流すだけ。次の音声再生をブロックしない（iOSの自動再生制限対策）
+    emoji = "🎉";
   } else {
     state.streak = 0;
     // 間違えた問題は数問先に再度差し込み、同セッション内で再出題する
@@ -238,16 +266,15 @@ function judge(isCorrect) {
     state.queue.splice(reinsertAt, 0, p);
     playBeep(220, 0.18);
     vibrate([30, 40, 30]);
-    showReaction("😅");
+    emoji = "😅";
   }
 
-  if (state.cleared.size >= state.poolSize) {
-    enterSummary();
-    return;
-  }
-  state.currentIndex += 1;
-  // ○/✕タップ（ユーザー操作）の同一コールスタック内で次の音声再生まで行う
-  enterListen();
+  const sessionDone = state.cleared.size >= state.poolSize;
+  if (!sessionDone) state.currentIndex += 1;
+
+  // 2秒の間を空けてから次へ（バーで可視化）。この遅延によりnext再生はユーザー操作と
+  // 同一コールスタックでなくなるため、iOS Safariで自動再生がブロックされる可能性がある（要実機確認）
+  showReaction(emoji, INTER_PROBLEM_PAUSE_MS, sessionDone ? enterSummary : enterListen);
 }
 
 document.getElementById("judge-correct").addEventListener("click", () => judge(true));

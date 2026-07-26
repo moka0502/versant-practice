@@ -17,7 +17,7 @@
   </header>
 
   <ul class="part-list">
-    <li><button class="part-item disabled" disabled>
+    <li><button class="part-item locked">
       <span class="part-code">A</span>
       <span class="part-body"><span class="part-name">Reading</span><span class="part-desc">文章の音読</span></span>
       <span class="part-status">作成中</span>
@@ -27,22 +27,22 @@
       <span class="part-body"><span class="part-name">Repeats（リピーティング）</span><span class="part-desc">聞いた文をそのまま繰り返す</span></span>
       <span class="part-status">▶</span>
     </button></li>
-    <li><button class="part-item disabled" disabled>
+    <li><button class="part-item locked">
       <span class="part-code">C</span>
       <span class="part-body"><span class="part-name">Short Answer Questions</span><span class="part-desc">短い質問に一言で答える</span></span>
       <span class="part-status">作成中</span>
     </button></li>
-    <li><button class="part-item disabled" disabled>
+    <li><button class="part-item locked">
       <span class="part-code">D</span>
       <span class="part-body"><span class="part-name">Sentence Builds</span><span class="part-desc">語句を並べ替えて文を作る</span></span>
       <span class="part-status">作成中</span>
     </button></li>
-    <li><button class="part-item disabled" disabled>
+    <li><button class="part-item locked">
       <span class="part-code">E</span>
       <span class="part-body"><span class="part-name">Story Retelling</span><span class="part-desc">短い話を聞いて要約する</span></span>
       <span class="part-status">作成中</span>
     </button></li>
-    <li><button class="part-item disabled" disabled>
+    <li><button class="part-item locked">
       <span class="part-code">F</span>
       <span class="part-body"><span class="part-name">Open Questions</span><span class="part-desc">自分の意見を話す</span></span>
       <span class="part-status">作成中</span>
@@ -144,12 +144,16 @@
   <button class="btn-text back-button">設定を変える</button>
 </section>
 
-<!-- 正誤リアクション演出 -->
+<!-- 正誤リアクション演出（問題間の一時停止も兼ねる） -->
 <div id="reaction-overlay" class="reaction-overlay hidden">
   <span id="reaction-emoji" class="reaction-emoji"></span>
+  <div class="reaction-bar-track"><div id="reaction-bar-fill" class="reaction-bar-fill"></div></div>
 </div>
 
-<p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。</p>
+<!-- Part準備中タップ時のトースト -->
+<div id="toast" class="toast"></div>
+
+<p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。タイトルは仮称です。</p>
 
 <script src="app.js"></script>
 </body>

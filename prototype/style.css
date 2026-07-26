@@ -360,6 +360,24 @@ button:active {
   animation: reaction-pop 0.5s ease;
 }
 
+.reaction-bar-track {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 40px;
+  height: 4px;
+  background: var(--color-track);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.reaction-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--color-accent);
+  border-radius: 2px;
+}
+
 @keyframes reaction-pop {
   0% { transform: scale(0.4); opacity: 0; }
   60% { transform: scale(1.15); opacity: 1; }
@@ -391,8 +409,15 @@ button:active {
   border: 2px solid var(--color-accent);
 }
 
-.part-item.disabled {
-  opacity: 0.55;
+/* 「準備中」項目もタップはできる（トースト表示）。opacityで薄めず、
+   文字色を明示的に指定して視認性を保つ */
+.part-item.locked {
+  border: 2px solid var(--color-border);
+  background: #f3f1ee;
+}
+
+.part-item.locked .part-name {
+  color: var(--color-text-muted);
 }
 
 .part-code {
@@ -405,8 +430,9 @@ button:active {
   flex-shrink: 0;
 }
 
-.part-item.disabled .part-code {
-  color: var(--color-text-muted);
+.part-item.locked .part-code {
+  color: #9a9a9f;
+  background: #e6e3de;
 }
 
 .part-body {
@@ -418,6 +444,7 @@ button:active {
   font-size: 15px;
   font-weight: 600;
   margin: 0 0 2px;
+  color: var(--color-text);
 }
 
 .part-desc {
@@ -431,6 +458,28 @@ button:active {
   font-size: 11px;
   color: var(--color-text-muted);
   flex-shrink: 0;
+}
+
+/* トースト（準備中Partタップ時） */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(0);
+  background: #1c1c1e;
+  color: #fff;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 20;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-8px);
 }
 
 /* 横向き・縦幅が狭い画面向けの安全対策（スクロール前提だが要素を詰めて収まりやすくする） */
