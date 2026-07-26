@@ -410,14 +410,22 @@ button:active {
 }
 
 /* 「準備中」項目もタップはできる（トースト表示）。opacityで薄めず、
-   文字色を明示的に指定して視認性を保つ */
+   十分暗い塗りグレー+白文字で視認性を保ったまま「無効そう」に見せる */
 .part-item.locked {
-  border: 2px solid var(--color-border);
-  background: #f3f1ee;
+  border: 2px solid #8a877e;
+  background: #8a877e;
 }
 
 .part-item.locked .part-name {
-  color: var(--color-text-muted);
+  color: #ffffff;
+}
+
+.part-item.locked .part-desc {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.part-item.locked .part-status {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .part-code {
@@ -431,8 +439,8 @@ button:active {
 }
 
 .part-item.locked .part-code {
-  color: #9a9a9f;
-  background: #e6e3de;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .part-body {
