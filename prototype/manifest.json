@@ -1,0 +1,19 @@
+{
+  "name": "英語習慣塾",
+  "short_name": "英語習慣塾",
+  "description": "Versant Part B（Repeats）の反復練習アプリ",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf9f7",
+  "theme_color": "#5b5bd6",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

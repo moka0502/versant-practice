@@ -115,8 +115,64 @@ function showToast(message) {
   showToast._timer = setTimeout(() => toast.classList.remove("show"), 1500);
 }
 
+// --- 練習履歴の永続化（localStorage、端末内のみ。サーバー同期はしない） ---
+const HISTORY_KEY = "eigo-shukan-juku:history:v1";
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
+  } catch (e) {
+    return {}; // 壊れた値が入っていた場合は空として扱う（練習自体は止めない）
+  }
+}
+
+function saveHistory(history) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  } catch (e) {
+    // ストレージ容量超過等。記録できないだけで練習は続行できるようにする
+  }
+}
+
+function recordAttempt(problemId, isCorrect) {
+  const history = loadHistory();
+  const entry = history[problemId] || { attempts: 0, correct: 0 };
+  entry.attempts += 1;
+  if (isCorrect) entry.correct += 1;
+  entry.lastResult = isCorrect ? "correct" : "wrong";
+  entry.lastAt = new Date().toISOString();
+  history[problemId] = entry;
+  saveHistory(history);
+}
+
+function lifetimeStats() {
+  const history = loadHistory();
+  return Object.values(history).reduce(
+    (acc, entry) => ({
+      attempts: acc.attempts + entry.attempts,
+      correct: acc.correct + entry.correct,
+    }),
+    { attempts: 0, correct: 0 }
+  );
+}
+
+function renderLifetimeStats() {
+  const el = document.getElementById("lifetime-stats");
+  if (!el) return;
+  const { attempts, correct } = lifetimeStats();
+  if (attempts === 0) {
+    el.textContent = "これまでの記録: まだありません";
+    return;
+  }
+  const pct = Math.round((correct / attempts) * 100);
+  el.textContent = `これまでの記録: 累計${attempts}問・正答率${pct}%`;
+}
+
 // --- 画面0: Part選択 ---
-document.getElementById("part-b-button").addEventListener("click", () => showScreen("select"));
+document.getElementById("part-b-button").addEventListener("click", () => {
+  renderLifetimeStats();
+  showScreen("select");
+});
 document.getElementById("back-to-part").addEventListener("click", () => showScreen("part"));
 document.querySelectorAll(".part-item.locked").forEach((btn) => {
   btn.addEventListener("click", () => showToast("🔧 このPartは準備中です"));
@@ -248,6 +304,7 @@ function updateAccuracyLabel() {
 function judge(isCorrect) {
   const p = currentProblem();
   state.totalCount += 1;
+  recordAttempt(p.id, isCorrect);
   let emoji;
 
   if (isCorrect) {
@@ -294,6 +351,16 @@ function enterSummary() {
 document.querySelectorAll(".back-button").forEach((btn) => {
   btn.addEventListener("click", () => {
     window.speechSynthesis && window.speechSynthesis.cancel();
+    renderLifetimeStats();
     showScreen("select");
   });
 });
+
+// --- PWA: Service Worker登録（対応ブラウザのみ、失敗しても練習機能自体は動く） ---
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {
+      // オフライン対応が効かないだけなので、ここで失敗しても練習は続行できる
+    });
+  });
+}
