@@ -1,0 +1,156 @@
+- id: rep-placeholder-0001
+  text: If you need any help, just let me know.
+  script_segments:
+  - If you need any help, just let me know.
+  char_count: 39
+  difficulty: beginner
+  audio: []
+  source: placeholder
+  source_ref: placeholder-1
+- id: rep-placeholder-0002
+  text: Can you close the door, please?
+  script_segments:
+  - Can you close the door, please?
+  char_count: 31
+  difficulty: beginner
+  audio: []
+  source: placeholder
+  source_ref: placeholder-2
+- id: rep-placeholder-0003
+  text: I'll call you back in five minutes.
+  script_segments:
+  - I'll call you back in five minutes.
+  char_count: 35
+  difficulty: beginner
+  audio: []
+  source: placeholder
+  source_ref: placeholder-3
+- id: rep-placeholder-0004
+  text: The train leaves at nine o'clock sharp.
+  script_segments:
+  - The train leaves at nine o'clock sharp.
+  char_count: 39
+  difficulty: beginner
+  audio: []
+  source: placeholder
+  source_ref: placeholder-4
+- id: rep-placeholder-0005
+  text: Please turn off the lights before you leave.
+  script_segments:
+  - Please turn off the lights before you leave.
+  char_count: 44
+  difficulty: beginner
+  audio: []
+  source: placeholder
+  source_ref: placeholder-5
+- id: rep-placeholder-0006
+  text: Could you please send me the report before the end of the day?
+  script_segments:
+  - Could you please send me the report before the end of the day?
+  char_count: 62
+  difficulty: intermediate
+  audio: []
+  source: placeholder
+  source_ref: placeholder-6
+- id: rep-placeholder-0007
+  text: I was wondering if you could help me with this file.
+  script_segments:
+  - I was wondering if you could help me with this file.
+  char_count: 52
+  difficulty: intermediate
+  audio: []
+  source: placeholder
+  source_ref: placeholder-7
+- id: rep-placeholder-0008
+  text: We need to finalize the budget before the meeting tomorrow.
+  script_segments:
+  - We need to finalize the budget before the meeting tomorrow.
+  char_count: 59
+  difficulty: intermediate
+  audio: []
+  source: placeholder
+  source_ref: placeholder-8
+- id: rep-placeholder-0009
+  text: She usually takes the bus to work unless it's raining heavily.
+  script_segments:
+  - She usually takes the bus to work unless it's raining heavily.
+  char_count: 62
+  difficulty: intermediate
+  audio: []
+  source: placeholder
+  source_ref: placeholder-9
+- id: rep-placeholder-0010
+  text: Let me know if you have any questions about the new policy.
+  script_segments:
+  - Let me know if you have any questions about the new policy.
+  char_count: 59
+  difficulty: intermediate
+  audio: []
+  source: placeholder
+  source_ref: placeholder-10
+- id: rep-placeholder-0011
+  text: The meeting has been rescheduled to next Tuesday because several key members
+    are traveling.
+  script_segments:
+  - The meeting has been rescheduled to next Tuesday because several key members are
+    traveling.
+  char_count: 91
+  difficulty: advanced
+  audio: []
+  source: placeholder
+  source_ref: placeholder-11
+- id: rep-placeholder-0012
+  text: Although the proposal looked promising, the committee decided to postpone
+    their decision.
+  script_segments:
+  - Although the proposal looked promising, the committee decided to postpone their
+    decision.
+  char_count: 89
+  difficulty: advanced
+  audio: []
+  source: placeholder
+  source_ref: placeholder-12
+- id: rep-placeholder-0013
+  text: Despite the heavy rain, the construction team managed to finish the project
+    ahead of schedule.
+  script_segments:
+  - Despite the heavy rain, the construction team managed to finish the project ahead
+    of schedule.
+  char_count: 94
+  difficulty: advanced
+  audio: []
+  source: placeholder
+  source_ref: placeholder-13
+- id: rep-placeholder-0014
+  text: The new marketing strategy focuses on expanding into international markets
+    over the next few years.
+  script_segments:
+  - The new marketing strategy focuses on expanding into international markets over
+    the next few years.
+  char_count: 99
+  difficulty: advanced
+  audio: []
+  source: placeholder
+  source_ref: placeholder-14
+- id: rep-placeholder-0015
+  text: Even though the flight was delayed by several hours, most passengers remained
+    remarkably calm.
+  script_segments:
+  - Even though the flight was delayed by several hours, most passengers remained
+    remarkably calm.
+  char_count: 94
+  difficulty: advanced
+  audio: []
+  source: placeholder
+  source_ref: placeholder-15
+- id: rep-placeholder-0016
+  text: Researchers discovered that the unexpected results were caused by a flaw in
+    the original experiment.
+  script_segments:
+  - Researchers discovered that the unexpected results were caused by a flaw in the
+    original experiment.
+  char_count: 100
+  difficulty: advanced
+  audio: []
+  source: placeholder
+  source_ref: placeholder-16
