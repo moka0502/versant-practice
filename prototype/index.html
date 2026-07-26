@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リピートくん（プロトタイプ）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 画面1: レベル・アクセント選択 -->
+<section id="screen-select" class="screen">
+  <header class="brand">
+    <div class="mascot">🦉</div>
+    <h1>リピートくん</h1>
+    <p class="tagline">毎日ちょっとずつ、話せる耳と口に</p>
+  </header>
+
+  <div class="option-group">
+    <p class="option-label">レベル</p>
+    <div class="chip-group" id="level-group">
+      <button class="chip" data-level="beginner">初級</button>
+      <button class="chip" data-level="intermediate">中級</button>
+      <button class="chip" data-level="advanced">上級</button>
+      <button class="chip active" data-level="mix">ミックス</button>
+    </div>
+  </div>
+
+  <div class="option-group">
+    <p class="option-label">アクセント</p>
+    <div class="chip-group" id="accent-group">
+      <button class="chip" data-accent="us">アメリカ</button>
+      <button class="chip" data-accent="gb">イギリス</button>
+      <button class="chip" data-accent="au">オーストラリア</button>
+      <button class="chip active" data-accent="mix">ミックス</button>
+    </div>
+  </div>
+
+  <button id="start-button" class="btn-primary btn-large">▶ はじめる</button>
+</section>
+
+<!-- 画面2: リスニング -->
+<section id="screen-listen" class="screen hidden">
+  <header class="practice-header">
+    <button class="btn-text back-button">← 戻る</button>
+    <span class="streak-badge hidden"></span>
+  </header>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+  <p class="progress-label"></p>
+
+  <div class="listen-body">
+    <button id="play-button" class="play-circle" aria-label="再生">▶</button>
+    <p class="hint">タップでもう一度聞く</p>
+
+    <div class="speed-group" id="speed-group">
+      <button class="speed-chip" data-rate="0.75">0.75x</button>
+      <button class="speed-chip active" data-rate="1">1x</button>
+      <button class="speed-chip" data-rate="1.25">1.25x</button>
+      <button class="speed-chip" data-rate="1.5">1.5x</button>
+    </div>
+  </div>
+
+  <button id="reveal-button" class="btn-primary btn-large">回答へ</button>
+</section>
+
+<!-- 画面3: 回答・解説 -->
+<section id="screen-answer" class="screen hidden">
+  <header class="practice-header">
+    <button class="btn-text back-button">← 戻る</button>
+    <span class="streak-badge hidden"></span>
+  </header>
+  <p class="progress-label"></p>
+
+  <p id="accuracy-label" class="accuracy-label"></p>
+
+  <p id="answer-text" class="answer-text"></p>
+  <button id="replay-on-answer" class="btn-secondary">🔁 もう一度聞く</button>
+
+  <div class="explanation-box">
+    <p class="explanation-title">解説</p>
+    <p class="explanation-body">（今後追加予定）</p>
+  </div>
+
+  <div class="judge-group">
+    <button id="judge-correct" class="btn-judge btn-correct">○ できた</button>
+    <button id="judge-wrong" class="btn-judge btn-wrong">✕ できなかった</button>
+  </div>
+</section>
+
+<!-- 画面4: セッションリザルト -->
+<section id="screen-summary" class="screen hidden">
+  <header class="brand">
+    <div class="mascot" id="summary-mascot">🎉</div>
+    <h1>お疲れさま！</h1>
+  </header>
+
+  <div class="summary-stats">
+    <p class="summary-row"><span>正答率</span><strong id="summary-accuracy"></strong></p>
+    <p class="summary-row"><span>ベストストリーク</span><strong id="summary-streak"></strong></p>
+    <p class="summary-row"><span>問題数</span><strong id="summary-total"></strong></p>
+  </div>
+
+  <button id="restart-button" class="btn-primary btn-large">🔁 もう一度（同じ設定）</button>
+  <button class="btn-text back-button">設定を変える</button>
+</section>
+
+<!-- 正誤リアクション演出 -->
+<div id="reaction-overlay" class="reaction-overlay hidden">
+  <span id="reaction-emoji" class="reaction-emoji"></span>
+</div>
+
+<p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。</p>
+
+<script src="app.js"></script>
+</body>
+</html>

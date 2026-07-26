@@ -1,0 +1,387 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Hiragino Sans", "Segoe UI", sans-serif;
+  background: #f5f5f7;
+  color: #1c1c1e;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+.screen {
+  width: 100%;
+  max-width: 420px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+.screen.screen-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* タップ演出（ボタン全般） */
+button {
+  transition: transform 0.08s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* ブランド */
+.brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.mascot {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.brand h1 {
+  font-size: 22px;
+  margin: 8px 0 4px;
+}
+
+.tagline {
+  font-size: 13px;
+  color: #8e8e93;
+  margin: 0;
+}
+
+/* 選択グループ */
+.option-group {
+  margin-bottom: 20px;
+}
+
+.option-label {
+  font-size: 13px;
+  color: #6b6b70;
+  margin: 0 0 8px 4px;
+}
+
+.chip-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 2px solid #d0d0d5;
+  background: #fff;
+  font-size: 15px;
+  color: #6b6b70;
+}
+
+.chip.active {
+  border-color: #007aff;
+  background: #007aff;
+  color: #fff;
+}
+
+/* ボタン共通 */
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  background: #007aff;
+  color: #fff;
+}
+
+.btn-large {
+  margin-top: 8px;
+}
+
+.btn-text {
+  border: none;
+  background: none;
+  font-size: 15px;
+  color: #007aff;
+  padding: 8px;
+}
+
+/* 練習系ヘッダー */
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  font-size: 14px;
+  color: #6b6b70;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: #e5e5ea;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #007aff;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.25s ease;
+}
+
+.streak-badge {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff9500;
+  background: #fff4e5;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* リスニング画面 */
+.listen-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 280px;
+}
+
+.play-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: none;
+  background: #007aff;
+  color: #fff;
+  font-size: 36px;
+  margin-top: 20px;
+}
+
+.play-circle:active {
+  background: #005fcc;
+}
+
+.hint {
+  font-size: 13px;
+  color: #8e8e93;
+  margin-top: 10px;
+}
+
+.speed-group {
+  display: flex;
+  gap: 6px;
+  margin-top: 32px;
+  background: #e5e5ea;
+  padding: 4px;
+  border-radius: 20px;
+}
+
+.speed-chip {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  font-size: 13px;
+  color: #3a3a3c;
+}
+
+.speed-chip.active {
+  background: #fff;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* 回答画面 */
+.accuracy-label {
+  text-align: center;
+  font-size: 13px;
+  color: #6b6b70;
+  margin: 0 0 16px;
+}
+
+.answer-text {
+  font-size: 19px;
+  line-height: 1.6;
+  padding: 18px;
+  background: #fff;
+  border-radius: 12px;
+  margin: 0 0 16px;
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 2px solid #d0d0d5;
+  border-radius: 12px;
+  background: #fff;
+  color: #1c1c1e;
+  margin: 0 0 20px;
+}
+
+.explanation-box {
+  background: #eef0f2;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 28px;
+}
+
+.explanation-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b6b70;
+  margin: 0 0 4px;
+}
+
+.explanation-body {
+  font-size: 13px;
+  color: #8e8e93;
+  margin: 0;
+}
+
+.judge-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-judge {
+  flex: 1;
+  padding: 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+}
+
+.btn-correct {
+  background: #34c759;
+  color: #fff;
+}
+
+.btn-wrong {
+  background: #ff3b30;
+  color: #fff;
+}
+
+.note {
+  max-width: 420px;
+  font-size: 12px;
+  color: #8e8e93;
+  text-align: center;
+  margin-top: 24px;
+}
+
+/* セッションリザルト画面 */
+.summary-stats {
+  background: #fff;
+  border-radius: 14px;
+  padding: 4px 18px;
+  margin-bottom: 24px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f2;
+  font-size: 15px;
+  color: #6b6b70;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-row strong {
+  font-size: 18px;
+  color: #1c1c1e;
+}
+
+#restart-button {
+  margin-bottom: 4px;
+}
+
+/* 正誤リアクション演出 */
+.reaction-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 245, 247, 0.85);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.reaction-overlay.hidden {
+  display: none;
+}
+
+.reaction-emoji {
+  font-size: 88px;
+  animation: reaction-pop 0.5s ease;
+}
+
+@keyframes reaction-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 横向き・縦幅が狭い画面向けの安全対策（スクロール前提だが要素を詰めて収まりやすくする） */
+@media (max-height: 500px) {
+  body {
+    padding: 10px;
+  }
+
+  .brand {
+    margin-bottom: 12px;
+  }
+
+  .mascot {
+    font-size: 32px;
+  }
+
+  .play-circle {
+    width: 84px;
+    height: 84px;
+    font-size: 26px;
+    margin-top: 8px;
+  }
+
+  .listen-body {
+    min-height: 0;
+  }
+
+  .speed-group {
+    margin-top: 16px;
+  }
+
+  .note {
+    display: none;
+  }
+}
