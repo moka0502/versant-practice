@@ -33,3 +33,8 @@ Versant練習問題を出題するアプリ。まずはWebアプリ(スマホブ
 ## バックログ
 
 - Obsidian自動アーカイブフックの実地動作確認（未検証、上記参照）
+- 実データ投入待ち: `versant/versant_quizzes.csv`を`magical_brattain`コンテナから取り出し、`versant_practice/csv_import.py`の暫定スキーマ（`id`+`script`列）を実カラム名に合わせて確定させる
+- TTS生成待ち: OpenAI APIキーが未設定。`docs/decisions.md`のTTSスパイク（2〜3件で音質確認）はキー入手後に着手
+- ホスティング先の決定待ち（GitHub Pages案あり、リポジトリ公開可否の判断が必要）
+- PWAの正式アイコン画像（現状`prototype/icon.svg`は仮）、Service Workerの実機動作確認が未実施
+- 詳細は`docs/decisions.md`の「未決定・要検証」を参照
