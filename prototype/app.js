@@ -132,6 +132,7 @@ function recordAttempt(problemId, tier) {
   recordPracticeDay();
   recordDailyAttempt(tier);
   awardXp(tier);
+  awardCoins(tier);
   checkAndAwardBadges();
   maybeCelebratePerfectWeek();
 
@@ -405,6 +406,47 @@ function awardXp(tier) {
   }
 }
 
+// --- コイン・アイテム交換（ストリークフリーズをコインで購入できる） ---
+const COINS_KEY = "eigo-shukan-juku:coins:v1";
+const COINS_BY_TIER = { perfect: 3, half: 2, none: 1 }; // 挑戦そのものにも少し加点する
+const FREEZE_COST_COINS = 30;
+
+function loadCoins() {
+  try {
+    return JSON.parse(localStorage.getItem(COINS_KEY)) || 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function saveCoins(coins) {
+  try {
+    localStorage.setItem(COINS_KEY, JSON.stringify(coins));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function awardCoins(tier) {
+  saveCoins(loadCoins() + COINS_BY_TIER[tier]);
+}
+
+function buyStreakFreeze() {
+  if (loadFreezeCount() >= MAX_STREAK_FREEZES) {
+    showToast("ストリークフリーズはすでに上限です");
+    return;
+  }
+  const coins = loadCoins();
+  if (coins < FREEZE_COST_COINS) {
+    showToast(`🪙 コインが足りません（あと${FREEZE_COST_COINS - coins}枚）`);
+    return;
+  }
+  saveCoins(coins - FREEZE_COST_COINS);
+  saveFreezeCount(loadFreezeCount() + 1);
+  showToast("❄️ ストリークフリーズを購入しました！");
+  renderStatsScreen();
+}
+
 // --- 総練習時間（セッション単位で計測。個々の問題の思考時間までは測らない簡易版） ---
 const PRACTICE_TIME_MS_KEY = "eigo-shukan-juku:practice-time-ms:v1";
 let sessionStartedAt = null;
@@ -556,6 +598,7 @@ function renderStatsScreen() {
   document.getElementById("stats-freezes").textContent = `❄️ ${loadFreezeCount()} 個`;
   document.getElementById("stats-level").textContent = `Lv.${levelForXp(loadXp())}`;
   document.getElementById("stats-practice-time").textContent = formatDuration(loadTotalPracticeMs());
+  document.getElementById("stats-coins").textContent = `${loadCoins()}枚`;
   document.getElementById("streak-countdown").textContent = nextStreakMilestoneMessage(streak);
   renderWeekCalendar();
 
@@ -610,6 +653,7 @@ document.getElementById("lifetime-stats").addEventListener("click", () => {
   showScreen("stats");
 });
 document.getElementById("export-history-button").addEventListener("click", exportHistoryAsJson);
+document.getElementById("buy-freeze-button").addEventListener("click", buyStreakFreeze);
 
 // --- 画面0: Part選択 ---
 document.getElementById("part-b-button").addEventListener("click", () => {
@@ -645,6 +689,22 @@ setupSingleSelectGroup(document.getElementById("accent-group"), "accent", (v) =>
 
 const SESSION_SIZE = 16; // 本番Versant Part B(Repeats)の1回あたり問題数に合わせた上限
 
+// 苦手な問題ほど選ばれやすくする重み（未挑戦は標準、達成度が低いほど重みが大きくなる）
+function problemWeight(p, history) {
+  const entry = history[p.id];
+  if (!entry || entry.attempts === 0) return 1;
+  const accuracy = entry.scoreSum / entry.attempts;
+  return 1 + (1 - accuracy) * 2; // 得意(1.0)→重み1、苦手(0.0)→重み3
+}
+
+// 重み付き非復元抽出（指数キー法）。重みが大きいほど先頭に来やすくなるが、毎回同じ順にはならない
+function weightedShuffle(items, weightFn) {
+  return items
+    .map((item) => ({ item, key: Math.random() ** (1 / weightFn(item)) }))
+    .sort((a, b) => b.key - a.key)
+    .map((entry) => entry.item);
+}
+
 function startSession() {
   const pool =
     state.selectedLevel === "mix"
@@ -652,7 +712,8 @@ function startSession() {
       : PROBLEMS.filter((p) => p.level === state.selectedLevel);
   if (pool.length === 0) return;
 
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  const history = loadHistory();
+  const shuffled = weightedShuffle(pool, (p) => problemWeight(p, history));
   state.queue = shuffled.slice(0, SESSION_SIZE);
   state.poolSize = state.queue.length;
   state.cleared = new Set();
