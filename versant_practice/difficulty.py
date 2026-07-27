@@ -1,12 +1,16 @@
-SHORT_MAX_CHARS = 45
-MEDIUM_MAX_CHARS = 80
+SHORT_MAX_WORDS = 9
+MEDIUM_MAX_WORDS = 12
 
 
-def classify_difficulty(char_count: int) -> str:
-    if char_count < 0:
-        raise ValueError(f"char_count must be non-negative, got {char_count}")
-    if char_count <= SHORT_MAX_CHARS:
+def count_words(text: str) -> int:
+    return len(text.split())
+
+
+def classify_difficulty(word_count: int) -> str:
+    if word_count < 0:
+        raise ValueError(f"word_count must be non-negative, got {word_count}")
+    if word_count <= SHORT_MAX_WORDS:
         return "beginner"
-    if char_count <= MEDIUM_MAX_CHARS:
+    if word_count <= MEDIUM_MAX_WORDS:
         return "intermediate"
     return "advanced"

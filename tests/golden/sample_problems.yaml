@@ -5,6 +5,7 @@
   - any help,
   - just let me know.
   char_count: 39
+  word_count: 9
   difficulty: beginner
   audio: []
   source: english-quiz-bot
@@ -16,7 +17,8 @@
   - send me the report
   - before the end of the day?
   char_count: 62
-  difficulty: intermediate
+  word_count: 13
+  difficulty: advanced
   audio: []
   source: english-quiz-bot
   source_ref: q2

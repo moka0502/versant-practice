@@ -8,17 +8,21 @@
 
 これに伴い、`versant/versant_quizzes.csv`を`magical_brattain`コンテナから取り出すことは、Stage 1の**必須ブロッカーではなくなった**（参考資料としてあれば便利、程度）。`versant_practice/csv_import.py`のbracket区切りパーサー自体は、新規問題を書く際のフォーマットとして流用できる可能性はあるが、データソースが変わったため設計を見直す余地がある。
 
-## データモデルの難易度命名
+## データモデルの難易度命名・判定基準
 
-計画時点では文字数ベースの難易度を `short`/`medium`/`long` としていたが、UI検討の結果「レベル」として `beginner`/`intermediate`/`advanced`（初級/中級/上級）と呼ぶ形に統一した。判定基準（文字数の閾値）は計画時点のものを踏襲する。
+計画時点では文字数ベースの難易度を `short`/`medium`/`long` としていたが、UI検討の結果「レベル」として `beginner`/`intermediate`/`advanced`（初級/中級/上級）と呼ぶ形に統一した。
 
-| レベル | 内部値 | 文字数 |
+判定基準はさらに**文字数から単語数ベースに変更**した（ユーザー判断: 文字数より単語数の方が体感の難易度に近いため）。
+
+| レベル | 内部値 | 単語数 |
 |---|---|---|
-| 初級 | `beginner` | 〜45 |
-| 中級 | `intermediate` | 46〜80 |
-| 上級 | `advanced` | 81〜 |
+| 初級 | `beginner` | 〜9語 |
+| 中級 | `intermediate` | 10〜12語 |
+| 上級 | `advanced` | 13語〜 |
 
-CSV取り込み（Stage 1）実装時は、`versant_practice/difficulty.py` の判定結果をこの命名で `Problem.difficulty` に格納する。
+閾値（9/12）は、現行のプレースホルダー16問の単語数分布が5/5/6ときれいに割れる境界を採用したもの。本番の問題文が揃った時点で分布を見直す余地がある。
+
+`Problem`には`char_count`（参考値、TTS音声の長さ推定等に使う可能性があるため保持）と`word_count`（難易度判定の基準）の両方を持たせている。`versant_practice/difficulty.py`の`classify_difficulty(word_count)`の結果を`Problem.difficulty`に格納する。
 
 ## 画面構成（5画面）
 

@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from versant_practice.csv_import import import_csv, parse_script, problem_from_row
-from versant_practice.difficulty import classify_difficulty
+from versant_practice.difficulty import classify_difficulty, count_words
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample_quizzes.csv"
 
@@ -26,7 +26,8 @@ def test_problem_from_row_builds_expected_fields():
     assert problem.script_segments == ["If you need", "any help,", "just let me know."]
     assert problem.text == "If you need any help, just let me know."
     assert problem.char_count == len(problem.text)
-    assert problem.difficulty == classify_difficulty(problem.char_count)
+    assert problem.word_count == count_words(problem.text)
+    assert problem.difficulty == classify_difficulty(problem.word_count)
     assert problem.audio == []
 
 

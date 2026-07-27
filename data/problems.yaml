@@ -3,6 +3,7 @@
   script_segments:
   - If you need any help, just let me know.
   char_count: 39
+  word_count: 9
   difficulty: beginner
   audio: []
   source: placeholder
@@ -12,6 +13,7 @@
   script_segments:
   - Can you close the door, please?
   char_count: 31
+  word_count: 6
   difficulty: beginner
   audio: []
   source: placeholder
@@ -21,6 +23,7 @@
   script_segments:
   - I'll call you back in five minutes.
   char_count: 35
+  word_count: 7
   difficulty: beginner
   audio: []
   source: placeholder
@@ -30,6 +33,7 @@
   script_segments:
   - The train leaves at nine o'clock sharp.
   char_count: 39
+  word_count: 7
   difficulty: beginner
   audio: []
   source: placeholder
@@ -39,6 +43,7 @@
   script_segments:
   - Please turn off the lights before you leave.
   char_count: 44
+  word_count: 8
   difficulty: beginner
   audio: []
   source: placeholder
@@ -48,7 +53,8 @@
   script_segments:
   - Could you please send me the report before the end of the day?
   char_count: 62
-  difficulty: intermediate
+  word_count: 13
+  difficulty: advanced
   audio: []
   source: placeholder
   source_ref: placeholder-6
@@ -57,6 +63,7 @@
   script_segments:
   - I was wondering if you could help me with this file.
   char_count: 52
+  word_count: 11
   difficulty: intermediate
   audio: []
   source: placeholder
@@ -66,6 +73,7 @@
   script_segments:
   - We need to finalize the budget before the meeting tomorrow.
   char_count: 59
+  word_count: 10
   difficulty: intermediate
   audio: []
   source: placeholder
@@ -75,6 +83,7 @@
   script_segments:
   - She usually takes the bus to work unless it's raining heavily.
   char_count: 62
+  word_count: 11
   difficulty: intermediate
   audio: []
   source: placeholder
@@ -84,6 +93,7 @@
   script_segments:
   - Let me know if you have any questions about the new policy.
   char_count: 59
+  word_count: 12
   difficulty: intermediate
   audio: []
   source: placeholder
@@ -95,6 +105,7 @@
   - The meeting has been rescheduled to next Tuesday because several key members are
     traveling.
   char_count: 91
+  word_count: 14
   difficulty: advanced
   audio: []
   source: placeholder
@@ -106,7 +117,8 @@
   - Although the proposal looked promising, the committee decided to postpone their
     decision.
   char_count: 89
-  difficulty: advanced
+  word_count: 12
+  difficulty: intermediate
   audio: []
   source: placeholder
   source_ref: placeholder-12
@@ -117,6 +129,7 @@
   - Despite the heavy rain, the construction team managed to finish the project ahead
     of schedule.
   char_count: 94
+  word_count: 15
   difficulty: advanced
   audio: []
   source: placeholder
@@ -128,6 +141,7 @@
   - The new marketing strategy focuses on expanding into international markets over
     the next few years.
   char_count: 99
+  word_count: 15
   difficulty: advanced
   audio: []
   source: placeholder
@@ -139,6 +153,7 @@
   - Even though the flight was delayed by several hours, most passengers remained
     remarkably calm.
   char_count: 94
+  word_count: 14
   difficulty: advanced
   audio: []
   source: placeholder
@@ -150,6 +165,7 @@
   - Researchers discovered that the unexpected results were caused by a flaw in the
     original experiment.
   char_count: 100
+  word_count: 15
   difficulty: advanced
   audio: []
   source: placeholder

@@ -13,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # PYTHONPATH無しでも実行できるように
 
-from versant_practice.difficulty import classify_difficulty
+from versant_practice.difficulty import classify_difficulty, count_words
 from versant_practice.models import Problem
 from versant_practice.yaml_io import dump_problems
 
@@ -42,14 +42,15 @@ DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "problems.yaml"
 def build_problems() -> list[Problem]:
     problems = []
     for i, text in enumerate(PLACEHOLDER_SENTENCES, start=1):
-        char_count = len(text)
+        word_count = count_words(text)
         problems.append(
             Problem(
                 id=f"rep-placeholder-{i:04d}",
                 text=text,
                 script_segments=[text],  # プレースホルダーにつきフレーズ区切りはしていない
-                char_count=char_count,
-                difficulty=classify_difficulty(char_count),
+                char_count=len(text),
+                word_count=word_count,
+                difficulty=classify_difficulty(word_count),
                 audio=[],
                 source="placeholder",
                 source_ref=f"placeholder-{i}",

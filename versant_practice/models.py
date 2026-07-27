@@ -15,8 +15,9 @@ class Problem:
     id: str
     text: str
     script_segments: list[str]
-    char_count: int
-    difficulty: str  # "beginner" / "intermediate" / "advanced"（docs/decisions.md参照）
+    char_count: int  # 参考値（TTS音声の長さ推定等に使う可能性があるため保持）。難易度判定には使わない
+    word_count: int  # 難易度判定の基準（docs/decisions.md参照）
+    difficulty: str  # "beginner" / "intermediate" / "advanced"
     audio: list[AudioAsset] = field(default_factory=list)
     source: str = "unknown"
     source_ref: str = ""

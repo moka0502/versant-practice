@@ -2,7 +2,7 @@ import csv
 import re
 from pathlib import Path
 
-from .difficulty import classify_difficulty
+from .difficulty import classify_difficulty, count_words
 from .models import Problem
 
 # NOTE: english-quiz-bot 側の実CSV列名は未確認（取り出し待ち）。ここでは
@@ -25,14 +25,15 @@ def problem_from_row(row: dict, source: str = "english-quiz-bot") -> Problem:
 
     segments = parse_script(row["script"])
     text = " ".join(segments)
-    char_count = len(text)
+    word_count = count_words(text)
 
     return Problem(
         id=f"rep-{source_ref}",
         text=text,
         script_segments=segments,
-        char_count=char_count,
-        difficulty=classify_difficulty(char_count),
+        char_count=len(text),
+        word_count=word_count,
+        difficulty=classify_difficulty(word_count),
         audio=[],
         source=source,
         source_ref=str(source_ref),
