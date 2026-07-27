@@ -133,6 +133,7 @@ function recordAttempt(problemId, tier) {
   recordDailyAttempt(tier);
   awardXp(tier);
   checkAndAwardBadges();
+  maybeCelebratePerfectWeek();
 
   const history = loadHistory();
   const entry = history[problemId] || { attempts: 0, scoreSum: 0 };
@@ -346,6 +347,28 @@ function weeklyReport() {
     }
   }
   return { attempts, scoreSum, daysActive };
+}
+
+// --- パーフェクトウィーク演出（7日連続、全問「できた」だった場合の特別演出） ---
+const PERFECT_WEEK_LAST_KEY = "eigo-shukan-juku:perfect-week-last:v1";
+
+function isPerfectWeek() {
+  const log = loadDailyLog();
+  const today = todayKey();
+  for (let i = 0; i < 7; i++) {
+    const entry = log[shiftDayKey(today, -i)];
+    if (!entry || entry.attempts === 0 || entry.scoreSum !== entry.attempts) return false;
+  }
+  return true;
+}
+
+function maybeCelebratePerfectWeek() {
+  const today = todayKey();
+  if (localStorage.getItem(PERFECT_WEEK_LAST_KEY) === today) return; // 同じ日に何度も演出しない
+  if (isPerfectWeek()) {
+    localStorage.setItem(PERFECT_WEEK_LAST_KEY, today);
+    showToast("🎊 パーフェクトウィーク達成！7日連続で全問「できた」！");
+  }
 }
 
 // --- XP・レベル ---
@@ -820,6 +843,54 @@ function enterSummary() {
   document.getElementById("summary-total").textContent = `${state.poolSize} 問`;
   showScreen("summary");
 }
+
+// --- SNSシェアカード（端末内で画像生成、外部サービスには依存しない） ---
+function generateShareImage() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 600;
+  canvas.height = 400;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#5b5bd6";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.font = "bold 40px sans-serif";
+  ctx.fillText("英語習慣塾", canvas.width / 2, 70);
+  ctx.font = "72px sans-serif";
+  ctx.fillText(document.getElementById("summary-mascot").textContent, canvas.width / 2, 180);
+  ctx.font = "bold 32px sans-serif";
+  ctx.fillText(`達成度 ${document.getElementById("summary-accuracy").textContent}`, canvas.width / 2, 250);
+  ctx.font = "22px sans-serif";
+  ctx.fillText(`ベストストリーク ${document.getElementById("summary-streak").textContent}`, canvas.width / 2, 300);
+  ctx.fillText(`連続練習日数 🔥 ${currentStreak()}日`, canvas.width / 2, 335);
+  return canvas;
+}
+
+function shareResult() {
+  const canvas = generateShareImage();
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], "eigo-shukan-juku-result.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "英語習慣塾", text: "今日の練習結果！" });
+        return;
+      } catch (e) {
+        if (e.name === "AbortError") return; // ユーザーがシェアをキャンセルしただけ
+      }
+    }
+    // Web Share API未対応（主にPC）の場合はダウンロードにフォールバック
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "eigo-shukan-juku-result.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, "image/png");
+}
+
+document.getElementById("share-button").addEventListener("click", shareResult);
 
 // --- 共通: 戻るボタン ---
 document.querySelectorAll(".back-button").forEach((btn) => {
