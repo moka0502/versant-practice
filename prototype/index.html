@@ -219,6 +219,22 @@
 <!-- Part準備中タップ時のトースト -->
 <div id="toast" class="toast"></div>
 
+<!-- 初回起動時のオンボーディング -->
+<div id="onboarding-overlay" class="onboarding-overlay hidden">
+  <div class="onboarding-card">
+    <div class="mascot">🦉</div>
+    <h2>ようこそ、英語習慣塾へ</h2>
+    <ol class="onboarding-steps">
+      <li>🔊 音声を聞く</li>
+      <li>🗣️ 自分で声に出してリピート</li>
+      <li>📝 スクリプトを見て確認</li>
+      <li>✅ 自己採点して次の問題へ</li>
+    </ol>
+    <p class="onboarding-note">毎日ちょっとずつ、続けることが一番の近道です。</p>
+    <button id="onboarding-dismiss" class="btn-primary btn-large">はじめる</button>
+  </div>
+</div>
+
 <p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。タイトルは仮称です。</p>
 
 <script src="app.js"></script>

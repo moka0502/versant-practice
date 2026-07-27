@@ -902,6 +902,30 @@ document.querySelectorAll(".back-button").forEach((btn) => {
   });
 });
 
+// --- オンボーディング（初回起動時のみ表示） ---
+const ONBOARDED_KEY = "eigo-shukan-juku:onboarded:v1";
+
+function hasOnboarded() {
+  try {
+    return !!localStorage.getItem(ONBOARDED_KEY);
+  } catch (e) {
+    return false; // 判定できない場合は毎回出すだけ（実害はない）
+  }
+}
+
+if (!hasOnboarded()) {
+  document.getElementById("onboarding-overlay").classList.remove("hidden");
+}
+
+document.getElementById("onboarding-dismiss").addEventListener("click", () => {
+  document.getElementById("onboarding-overlay").classList.add("hidden");
+  try {
+    localStorage.setItem(ONBOARDED_KEY, "true");
+  } catch (e) {
+    // 保存できなくても今回閉じることはできている（次回また出るだけ）
+  }
+});
+
 // --- ダークモード ---
 const THEME_KEY = "eigo-shukan-juku:theme:v1";
 
