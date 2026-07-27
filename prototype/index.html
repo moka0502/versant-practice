@@ -15,13 +15,30 @@
 </head>
 <body>
 
-<!-- 画面0: 練習するPartの選択 -->
-<section id="screen-part" class="screen">
+<!-- 画面-1: TOP（ダッシュボード） -->
+<section id="screen-top" class="screen">
   <button id="theme-toggle" class="theme-toggle" aria-label="ダークモード切替" type="button">🌙</button>
   <header class="brand">
     <div class="mascot">🦉</div>
     <h1>英語習慣塾</h1>
     <p class="tagline">Versant練習用</p>
+  </header>
+
+  <div class="summary-stats" id="top-stats">
+    <p class="summary-row"><span>🔥 連続練習日数 <button class="info-dot" data-info="streak" aria-label="説明">ⓘ</button></span><strong id="top-streak"></strong></p>
+    <p class="summary-row"><span>⭐ レベル <button class="info-dot" data-info="level" aria-label="説明">ⓘ</button></span><strong id="top-level"></strong></p>
+    <p class="summary-row"><span>🪙 コイン <button class="info-dot" data-info="coins" aria-label="説明">ⓘ</button></span><strong id="top-coins"></strong></p>
+    <p class="summary-row"><span>❄️ フリーズ <button class="info-dot" data-info="freeze" aria-label="説明">ⓘ</button></span><strong id="top-freezes"></strong></p>
+  </div>
+
+  <button id="top-practice-button" class="btn-primary btn-large">📝 練習する</button>
+  <button id="top-stats-button" class="btn-secondary">📊 統計を見る</button>
+</section>
+
+<!-- 画面0: 練習するPartの選択 -->
+<section id="screen-part" class="screen hidden">
+  <header class="practice-header">
+    <button class="btn-text" id="back-to-top">← TOPに戻る</button>
   </header>
 
   <ul class="part-list">
@@ -96,6 +113,7 @@
     <span class="streak-badge hidden"></span>
   </header>
   <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+  <p class="progress-bar-caption">↑ 進捗（正答率ではありません）</p>
   <p class="progress-label"></p>
 
   <div class="listen-body">
@@ -160,7 +178,7 @@
 <!-- 画面5: 統計・履歴 -->
 <section id="screen-stats" class="screen hidden">
   <header class="practice-header">
-    <button class="btn-text back-button">← 戻る</button>
+    <button class="btn-text" id="back-from-stats">← 戻る</button>
     <span class="option-label" style="margin:0;">統計</span>
   </header>
 

@@ -28,6 +28,7 @@ const state = {
 };
 
 const screens = {
+  top: document.getElementById("screen-top"),
   part: document.getElementById("screen-part"),
   select: document.getElementById("screen-select"),
   listen: document.getElementById("screen-listen"),
@@ -654,6 +655,40 @@ document.getElementById("lifetime-stats").addEventListener("click", () => {
 });
 document.getElementById("export-history-button").addEventListener("click", exportHistoryAsJson);
 document.getElementById("buy-freeze-button").addEventListener("click", buyStreakFreeze);
+document.getElementById("back-from-stats").addEventListener("click", () => {
+  renderTopScreen();
+  showScreen("top");
+});
+
+// --- 画面-1: TOP（ダッシュボード） ---
+function renderTopScreen() {
+  document.getElementById("top-streak").textContent = `🔥 ${currentStreak()} 日`;
+  document.getElementById("top-level").textContent = `Lv.${levelForXp(loadXp())}`;
+  document.getElementById("top-coins").textContent = `${loadCoins()}枚`;
+  document.getElementById("top-freezes").textContent = `❄️ ${loadFreezeCount()} 個`;
+}
+
+const STAT_EXPLANATIONS = {
+  streak: "🔥 毎日1問以上練習した連続日数。フリーズがあれば1日休んでも途切れません",
+  level: "⭐ 練習で貯まるXPに応じて上がります（100XPごとにLv.+1）。正解ほど多く貯まります",
+  coins: "🪙 練習するたびに貯まる通貨。30枚でストリークフリーズと交換できます",
+  freeze: "❄️ 1日休んでもストリークを維持できる救済アイテム。7日連続達成ごとに1個もらえます（最大2個）",
+};
+
+document.querySelectorAll(".info-dot").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showToast(STAT_EXPLANATIONS[btn.dataset.info]);
+  });
+});
+
+document.getElementById("top-practice-button").addEventListener("click", () => showScreen("part"));
+document.getElementById("top-stats-button").addEventListener("click", () => {
+  renderStatsScreen();
+  showScreen("stats");
+});
+
+renderTopScreen();
 
 // --- 画面0: Part選択 ---
 document.getElementById("part-b-button").addEventListener("click", () => {
@@ -661,6 +696,10 @@ document.getElementById("part-b-button").addEventListener("click", () => {
   showScreen("select");
 });
 document.getElementById("back-to-part").addEventListener("click", () => showScreen("part"));
+document.getElementById("back-to-top").addEventListener("click", () => {
+  renderTopScreen();
+  showScreen("top");
+});
 document.querySelectorAll(".part-item.locked").forEach((btn) => {
   btn.addEventListener("click", () => showToast("🔧 このPartは準備中です"));
 });
