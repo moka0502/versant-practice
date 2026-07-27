@@ -1,6 +1,7 @@
 // 最小構成のService Worker。アプリシェル（HTML/CSS/JS等）をオフラインでも開けるようにする。
-// 問題データ・音声はまだ静的ファイルに埋め込まれているのみ（Stage 1/2/3実装後は別途キャッシュ戦略を見直す）。
-const CACHE_NAME = "eigo-shukan-juku-shell-v1";
+// CACHE_NAMEはキャッシュ優先の全リクエスト(problems.json・音声含む)に影響するため、
+// シェルやデータを更新するたびにバージョンを上げて古いキャッシュを破棄する必要がある。
+const CACHE_NAME = "eigo-shukan-juku-shell-v2";
 const SHELL_FILES = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {

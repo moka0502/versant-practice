@@ -902,6 +902,34 @@ document.querySelectorAll(".back-button").forEach((btn) => {
   });
 });
 
+// --- ダークモード ---
+const THEME_KEY = "eigo-shukan-juku:theme:v1";
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("theme-toggle").textContent = theme === "dark" ? "☀️" : "🌙";
+}
+
+function loadTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) {
+    return "light";
+  }
+}
+
+applyTheme(loadTheme());
+
+document.getElementById("theme-toggle").addEventListener("click", () => {
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  applyTheme(next);
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch (e) {
+    // 保存できなくても今回の表示切り替え自体はできている
+  }
+});
+
 // --- 問題データの読み込み ---
 const startButtonEl = document.getElementById("start-button");
 startButtonEl.disabled = true;
