@@ -2,6 +2,16 @@
 
 計画時点（`~/.claude/plans/clever-scribbling-graham.md`）からUIプロトタイプ検証を経て変わった/具体化した決定事項をここに記録する。
 
+## 直近のマイルストン: App Store配信
+
+CLAUDE.md記載の長期構想（「PWA→必要ならネイティブ」）を具体化。**直近のマイルストンはApp Store配信（Capacitor等でネイティブラップ）に確定**（2026-07-27、ユーザー判断）。個人開発者としての一つの目標という位置づけ。
+
+これに伴う技術的な帰結:
+- **StoreKit（Appleのアプリ内課金）はネイティブアプリ専用**で、PWAのままでは使えない。「広告解除」等の課金機能は、Web決済(Stripe等)ではなくStoreKitを前提に設計する
+- **広告もネイティブSDK前提**（Google AdMob等。Appleは自前の広告ネットワークを持っていない — iAdは2016年に終了）
+- 上記の理由から、PWA段階でWeb広告タグ・Web決済に投資する必要性は薄い。詳細は`docs/backlog.md`の「収益化」セクション参照
+- PWA化（`manifest.json`・Service Worker）は無駄にはならない。Capacitorはこのままの構成をベースにネイティブアプリへ変換する前提のツールなので、今の実装がそのまま土台になる
+
 ## 問題データの作り方（方針転換）
 
 計画時点では「既存のenglish-quiz-bot資産（`versant_quizzes.csv`）を流用」としていたが、**一から新規に問題を作成する方針に変更**。既存CSVは参考・着想を得るための参照のみ許可され、そのまま採用はしない。理由は問題の質へのこだわり（[[project-versant-practice-scope]]参照）。
