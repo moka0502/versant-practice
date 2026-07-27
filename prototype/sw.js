@@ -1,7 +1,11 @@
 // 最小構成のService Worker。アプリシェル（HTML/CSS/JS等）をオフラインでも開けるようにする。
-// CACHE_NAMEはキャッシュ優先の全リクエスト(problems.json・音声含む)に影響するため、
-// シェルやデータを更新するたびにバージョンを上げて古いキャッシュを破棄する必要がある。
-const CACHE_NAME = "eigo-shukan-juku-shell-v3";
+//
+// 戦略: ネットワーク優先（オンラインなら常に最新を取得し、キャッシュも更新する）。
+// オフライン時のみキャッシュにフォールバックする。開発頻度が高くファイルが
+// 頻繁に更新されるこの段階では、キャッシュ優先だと「CACHE_NAMEのバージョンを
+// 上げ忘れると古い内容が延々と表示され続ける」という事故が起きやすいため
+// （実際に2度発生した）、この戦略に変更した。
+const CACHE_NAME = "eigo-shukan-juku-shell-v4";
 const SHELL_FILES = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -20,18 +24,18 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// キャッシュ優先。無ければネットワークに取りに行き、取れたら次回用にキャッシュする。
+// ネットワーク優先。取得できたらキャッシュも更新する。オフライン等で失敗した時だけキャッシュを使う。
 self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        if (response.ok && event.request.method === "GET") {
+    fetch(event.request)
+      .then((response) => {
+        if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
         return response;
-      });
-    })
+      })
+      .catch(() => caches.match(event.request))
   );
 });
