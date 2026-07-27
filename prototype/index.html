@@ -68,10 +68,10 @@
   <div class="option-group">
     <p class="option-label">レベル</p>
     <div class="chip-group" id="level-group">
-      <button class="chip" data-level="beginner">初級</button>
+      <button class="chip active" data-level="beginner">初級</button>
       <button class="chip" data-level="intermediate">中級</button>
       <button class="chip" data-level="advanced">上級</button>
-      <button class="chip active" data-level="mix">ミックス</button>
+      <button class="chip" data-level="mix">ミックス</button>
     </div>
   </div>
 
@@ -166,7 +166,11 @@
     <p class="summary-row"><span>累計問題数</span><strong id="stats-total"></strong></p>
     <p class="summary-row"><span>達成度</span><strong id="stats-accuracy"></strong></p>
     <p class="summary-row"><span>連続練習日数</span><strong id="stats-streak"></strong></p>
+    <p class="summary-row"><span>ストリークフリーズ</span><strong id="stats-freezes"></strong></p>
   </div>
+
+  <div class="week-calendar" id="week-calendar"></div>
+  <p class="streak-countdown" id="streak-countdown"></p>
 
   <div class="option-group">
     <p class="option-label">レベル別達成度</p>

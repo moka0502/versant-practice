@@ -14,7 +14,7 @@ const INTER_PROBLEM_PAUSE_MS = 2000; // 問題間の間。iOSでは次の音声�
                                       // 自動再生がブロックされる可能性がある（実機要確認）
 
 const state = {
-  selectedLevel: "mix",
+  selectedLevel: "beginner",
   selectedAccent: "us", // 現状は米国英語の音声しか用意していないため（他はUIでロック済み）
   speedRate: 1,
   queue: [],
@@ -186,17 +186,93 @@ function savePracticeDays(days) {
   }
 }
 
+function shiftDayKey(key, deltaDays) {
+  const d = new Date(`${key}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + deltaDays);
+  return d.toISOString().slice(0, 10);
+}
+
+// --- ストリークフリーズ（1日休んでもストリークが途切れないための救済アイテム） ---
+const STREAK_FREEZE_KEY = "eigo-shukan-juku:streak-freezes:v1";
+const FROZEN_DAYS_KEY = "eigo-shukan-juku:frozen-days:v1";
+const FREEZE_MILESTONE_KEY = "eigo-shukan-juku:freeze-milestone:v1";
+const MAX_STREAK_FREEZES = 2;
+const FREEZE_EARN_INTERVAL_DAYS = 7; // 7日連続ごとに1個獲得
+
+function loadFreezeCount() {
+  try {
+    return JSON.parse(localStorage.getItem(STREAK_FREEZE_KEY)) ?? 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function saveFreezeCount(n) {
+  try {
+    localStorage.setItem(STREAK_FREEZE_KEY, JSON.stringify(n));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function loadFrozenDays() {
+  try {
+    return JSON.parse(localStorage.getItem(FROZEN_DAYS_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveFrozenDays(days) {
+  try {
+    localStorage.setItem(FROZEN_DAYS_KEY, JSON.stringify(days));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+// 「昨日だけ」練習を忘れていた場合、フリーズが1個以上あれば自動で昨日を穴埋めする
+function maybeUseStreakFreeze() {
+  const days = new Set(loadPracticeDays());
+  const today = todayKey();
+  const yesterday = shiftDayKey(today, -1);
+  const twoDaysAgo = shiftDayKey(today, -2);
+  if (days.has(today) || days.has(yesterday) || !days.has(twoDaysAgo)) return;
+
+  const freezes = loadFreezeCount();
+  if (freezes <= 0) return;
+
+  saveFreezeCount(freezes - 1);
+  const frozen = loadFrozenDays();
+  if (!frozen.includes(yesterday)) {
+    frozen.push(yesterday);
+    saveFrozenDays(frozen);
+  }
+}
+
+// ストリークが新たに7の倍数に到達するたびにフリーズを1個獲得する（上限あり）
+function maybeAwardStreakFreeze(streak) {
+  const lastMilestone = parseInt(localStorage.getItem(FREEZE_MILESTONE_KEY) || "0", 10);
+  const milestone = Math.floor(streak / FREEZE_EARN_INTERVAL_DAYS);
+  if (milestone > lastMilestone) {
+    localStorage.setItem(FREEZE_MILESTONE_KEY, String(milestone));
+    saveFreezeCount(Math.min(loadFreezeCount() + 1, MAX_STREAK_FREEZES));
+  }
+}
+
 function recordPracticeDay() {
+  maybeUseStreakFreeze();
   const days = loadPracticeDays();
   const key = todayKey();
   if (!days.includes(key)) {
     days.push(key);
     savePracticeDays(days);
   }
+  maybeAwardStreakFreeze(currentStreak());
 }
 
 function currentStreak() {
-  const days = new Set(loadPracticeDays());
+  const days = new Set([...loadPracticeDays(), ...loadFrozenDays()]);
   let streak = 0;
   const cursor = new Date();
   if (!days.has(todayKey(cursor))) cursor.setDate(cursor.getDate() - 1); // 今日未記録でも昨日までの連続は維持
@@ -205,6 +281,15 @@ function currentStreak() {
     cursor.setDate(cursor.getDate() - 1);
   }
   return streak;
+}
+
+// あと何日で次のキリのいいストリーク日数（7/14/30/50/100...）に届くか
+const STREAK_MILESTONES = [7, 14, 30, 50, 100, 200, 365];
+
+function nextStreakMilestoneMessage(streak) {
+  const next = STREAK_MILESTONES.find((m) => m > streak);
+  if (!next) return "";
+  return `あと${next - streak}日で${next}日連続達成！`;
 }
 
 // --- 統計画面 ---
@@ -236,12 +321,36 @@ function weakProblems() {
     .slice(0, WEAK_LIST_LIMIT);
 }
 
+const WEEK_DAY_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
+
+function renderWeekCalendar() {
+  const practiceDays = new Set(loadPracticeDays());
+  const frozenDays = new Set(loadFrozenDays());
+  const today = todayKey();
+  const cells = [];
+  for (let i = 6; i >= 0; i--) {
+    const key = shiftDayKey(today, -i);
+    const date = new Date(`${key}T00:00:00Z`);
+    const dotClass = practiceDays.has(key) ? "done" : frozenDays.has(key) ? "frozen" : "";
+    const todayClass = key === today ? "today" : "";
+    cells.push(
+      `<div class="week-day"><span class="week-day-label">${WEEK_DAY_LABELS[date.getUTCDay()]}</span>` +
+        `<span class="week-day-dot ${dotClass} ${todayClass}"></span></div>`
+    );
+  }
+  document.getElementById("week-calendar").innerHTML = cells.join("");
+}
+
 function renderStatsScreen() {
   const { attempts, scoreSum } = lifetimeStats();
   document.getElementById("stats-total").textContent = attempts === 0 ? "-" : `${attempts}問`;
   document.getElementById("stats-accuracy").textContent =
     attempts === 0 ? "-" : `${Math.round((scoreSum / attempts) * 100)}%`;
-  document.getElementById("stats-streak").textContent = `🔥 ${currentStreak()} 日`;
+  const streak = currentStreak();
+  document.getElementById("stats-streak").textContent = `🔥 ${streak} 日`;
+  document.getElementById("stats-freezes").textContent = `❄️ ${loadFreezeCount()} 個`;
+  document.getElementById("streak-countdown").textContent = nextStreakMilestoneMessage(streak);
+  renderWeekCalendar();
 
   document.getElementById("stats-level-breakdown").innerHTML = Object.entries(levelBreakdown())
     .map(([level, { attempts: a, scoreSum: s }]) => {
@@ -351,7 +460,7 @@ function currentAccentLang() {
 }
 
 function updateProgressUI() {
-  const label = `${state.cleared.size} / ${state.poolSize} 問クリア`;
+  const label = `${state.totalCount + 1}問目`;
   document.querySelectorAll(".progress-label").forEach((el) => (el.textContent = label));
   const fill = document.getElementById("progress-bar-fill");
   if (fill) fill.style.width = `${Math.round((state.cleared.size / state.poolSize) * 100)}%`;
@@ -478,8 +587,25 @@ document.getElementById("judge-none").addEventListener("click", () => judge("non
 document.getElementById("replay-on-answer").addEventListener("click", playCurrent);
 
 // --- 画面4: セッションリザルト ---
+// 達成度に応じてマスコット・メッセージを変える（キャラクターのリアクション拡充）
+const SUMMARY_REACTIONS = [
+  { min: 90, mascot: "🤩", messages: ["完璧！すごい集中力！", "パーフェクトに近い出来栄え！", "この調子で続けよう！"] },
+  { min: 70, mascot: "😊", messages: ["お疲れさま！いい感じ！", "着実に力がついてきてます", "ナイス practice！"] },
+  { min: 40, mascot: "🙂", messages: ["お疲れさま！", "また挑戦してみよう", "続けることに意味があります"] },
+  { min: 0, mascot: "💪", messages: ["よく頑張りました！", "難しい問題もあったね、また挑戦しよう", "少しずつでOK、続けよう"] },
+];
+
+function pickSummaryReaction(pct) {
+  const tier = SUMMARY_REACTIONS.find((t) => pct >= t.min) || SUMMARY_REACTIONS[SUMMARY_REACTIONS.length - 1];
+  const message = tier.messages[Math.floor(Math.random() * tier.messages.length)];
+  return { mascot: tier.mascot, message };
+}
+
 function enterSummary() {
   const pct = state.totalCount === 0 ? 0 : Math.round((state.scoreSum / state.totalCount) * 100);
+  const reaction = pickSummaryReaction(pct);
+  document.getElementById("summary-mascot").textContent = reaction.mascot;
+  document.querySelector("#screen-summary h1").textContent = reaction.message;
   document.getElementById("summary-accuracy").textContent = `${pct}%（${state.totalCount}問中）`;
   document.getElementById("summary-streak").textContent = `🔥 ${state.bestStreak}`;
   document.getElementById("summary-total").textContent = `${state.poolSize} 問`;

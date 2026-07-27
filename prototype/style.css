@@ -544,6 +544,56 @@ button:active {
   padding: 20px 0;
 }
 
+/* 週間カレンダー */
+.week-calendar {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.week-day {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.week-day-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.week-day-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-track);
+  border: 1px solid var(--color-border);
+}
+
+.week-day-dot.done {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.week-day-dot.frozen {
+  background: #7fd3f2;
+  border-color: #7fd3f2;
+}
+
+.week-day-dot.today {
+  box-shadow: 0 0 0 2px var(--color-accent-active);
+}
+
+.streak-countdown {
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0 0 20px;
+}
+
 /* 横向き・縦幅が狭い画面向けの安全対策（スクロール前提だが要素を詰めて収まりやすくする） */
 @media (max-height: 500px) {
   body {
