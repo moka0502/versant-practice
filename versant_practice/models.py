@@ -21,3 +21,4 @@ class Problem:
     audio: list[AudioAsset] = field(default_factory=list)
     source: str = "unknown"
     source_ref: str = ""
+    verified: bool = False  # judge_audio.pyの文字起こし一致チェックを通過したか。配信可否の唯一の判定基準

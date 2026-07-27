@@ -9,6 +9,7 @@
   audio: []
   source: generated
   source_ref: generated-1
+  verified: true
 - id: rep-0002
   text: The soup needs a little more salt.
   script_segments:
@@ -20,6 +21,7 @@
   audio: []
   source: generated
   source_ref: generated-2
+  verified: true
 - id: rep-0003
   text: Did you remember to lock the windows?
   script_segments:
@@ -31,6 +33,7 @@
   audio: []
   source: generated
   source_ref: generated-3
+  verified: true
 - id: rep-0004
   text: I can meet you after my appointment.
   script_segments:
@@ -42,6 +45,7 @@
   audio: []
   source: generated
   source_ref: generated-4
+  verified: true
 - id: rep-0005
   text: Our bus should arrive in ten minutes.
   script_segments:
@@ -53,6 +57,7 @@
   audio: []
   source: generated
   source_ref: generated-5
+  verified: true
 - id: rep-0006
   text: She keeps an extra umbrella in her car.
   script_segments:
@@ -64,6 +69,7 @@
   audio: []
   source: generated
   source_ref: generated-6
+  verified: true
 - id: rep-0007
   text: Turn down the music while the baby sleeps.
   script_segments:
@@ -75,6 +81,7 @@
   audio: []
   source: generated
   source_ref: generated-7
+  verified: true
 - id: rep-0008
   text: We may need to change our plans.
   script_segments:
@@ -86,6 +93,7 @@
   audio: []
   source: generated
   source_ref: generated-8
+  verified: true
 - id: rep-0009
   text: Could you hold this bag for a moment?
   script_segments:
@@ -97,6 +105,7 @@
   audio: []
   source: generated
   source_ref: generated-9
+  verified: true
 - id: rep-0010
   text: The laundry is still damp from yesterday.
   script_segments:
@@ -108,6 +117,7 @@
   audio: []
   source: generated
   source_ref: generated-10
+  verified: true
 - id: rep-0011
   text: Why did the screen suddenly go blank?
   script_segments:
@@ -119,6 +129,7 @@
   audio: []
   source: generated
   source_ref: generated-11
+  verified: true
 - id: rep-0012
   text: I'll call when dinner is ready.
   script_segments:
@@ -130,6 +141,7 @@
   audio: []
   source: generated
   source_ref: generated-12
+  verified: true
 - id: rep-0013
   text: Your keys are beside the coffee maker.
   script_segments:
@@ -141,6 +153,7 @@
   audio: []
   source: generated
   source_ref: generated-13
+  verified: false
 - id: rep-0014
   text: We took the quieter road home.
   script_segments:
@@ -152,6 +165,7 @@
   audio: []
   source: generated
   source_ref: generated-14
+  verified: true
 - id: rep-0015
   text: Please check whether the printer has paper.
   script_segments:
@@ -163,6 +177,7 @@
   audio: []
   source: generated
   source_ref: generated-15
+  verified: true
 - id: rep-0016
   text: This chair feels more comfortable than it looks.
   script_segments:
@@ -174,6 +189,7 @@
   audio: []
   source: generated
   source_ref: generated-16
+  verified: true
 - id: rep-0017
   text: I usually take a short walk before starting work each morning.
   script_segments:
@@ -186,6 +202,7 @@
   audio: []
   source: generated
   source_ref: generated-17
+  verified: true
 - id: rep-0018
   text: Could you remind me to buy batteries on the way home?
   script_segments:
@@ -198,6 +215,7 @@
   audio: []
   source: generated
   source_ref: generated-18
+  verified: true
 - id: rep-0019
   text: The bathroom faucet has been dripping since early this afternoon.
   script_segments:
@@ -210,6 +228,7 @@
   audio: []
   source: generated
   source_ref: generated-19
+  verified: true
 - id: rep-0020
   text: We saved the leftover rice for tomorrow's lunch at work.
   script_segments:
@@ -222,6 +241,7 @@
   audio: []
   source: generated
   source_ref: generated-20
+  verified: true
 - id: rep-0021
   text: Is there enough room in the freezer for this container?
   script_segments:
@@ -234,6 +254,7 @@
   audio: []
   source: generated
   source_ref: generated-21
+  verified: true
 - id: rep-0022
   text: My neighbor offered to water the plants during our trip.
   script_segments:
@@ -246,6 +267,7 @@
   audio: []
   source: generated
   source_ref: generated-22
+  verified: true
 - id: rep-0023
   text: The morning traffic was lighter than I had expected today.
   script_segments:
@@ -258,6 +280,7 @@
   audio: []
   source: generated
   source_ref: generated-23
+  verified: true
 - id: rep-0024
   text: You can borrow my headphones if yours are not working.
   script_segments:
@@ -269,6 +292,7 @@
   audio: []
   source: generated
   source_ref: generated-24
+  verified: true
 - id: rep-0025
   text: Would you mind moving your bicycle away from the stairs?
   script_segments:
@@ -281,6 +305,7 @@
   audio: []
   source: generated
   source_ref: generated-25
+  verified: true
 - id: rep-0026
   text: The doctor suggested resting my ankle for a few days.
   script_segments:
@@ -293,6 +318,7 @@
   audio: []
   source: generated
   source_ref: generated-26
+  verified: true
 - id: rep-0027
   text: We noticed a small crack underneath the kitchen table yesterday.
   script_segments:
@@ -305,6 +331,7 @@
   audio: []
   source: generated
   source_ref: generated-27
+  verified: true
 - id: rep-0028
   text: Can you explain how this new coffee machine actually works?
   script_segments:
@@ -317,6 +344,7 @@
   audio: []
   source: generated
   source_ref: generated-28
+  verified: true
 - id: rep-0029
   text: I left my jacket upstairs because the room felt warm.
   script_segments:
@@ -329,6 +357,7 @@
   audio: []
   source: generated
   source_ref: generated-29
+  verified: true
 - id: rep-0030
   text: They are repainting the hallway before the guests arrive tonight.
   script_segments:
@@ -341,6 +370,7 @@
   audio: []
   source: generated
   source_ref: generated-30
+  verified: true
 - id: rep-0031
   text: Please carefully put the clean glasses back in the cupboard.
   script_segments:
@@ -353,6 +383,7 @@
   audio: []
   source: generated
   source_ref: generated-31
+  verified: true
 - id: rep-0032
   text: My phone battery drains quickly whenever I use the camera.
   script_segments:
@@ -365,6 +396,7 @@
   audio: []
   source: generated
   source_ref: generated-32
+  verified: true
 - id: rep-0033
   text: The grocery store closes earlier on Sundays, so we should leave before six.
   script_segments:
@@ -378,6 +410,7 @@
   audio: []
   source: generated
   source_ref: generated-33
+  verified: false
 - id: rep-0034
   text: I forgot to bring the receipt, but they still offered me a refund.
   script_segments:
@@ -390,6 +423,7 @@
   audio: []
   source: generated
   source_ref: generated-34
+  verified: true
 - id: rep-0035
   text: Would it be easier to discuss the schedule during our lunch break tomorrow
     instead?
@@ -404,6 +438,7 @@
   audio: []
   source: generated
   source_ref: generated-35
+  verified: true
 - id: rep-0036
   text: A strong wind knocked several branches onto the sidewalk during the storm
     last night.
@@ -418,6 +453,7 @@
   audio: []
   source: generated
   source_ref: generated-36
+  verified: true
 - id: rep-0037
   text: You might find the missing charger hidden in the drawer beneath the television.
   script_segments:
@@ -431,6 +467,7 @@
   audio: []
   source: generated
   source_ref: generated-37
+  verified: true
 - id: rep-0038
   text: Please let the soup cool for a few minutes before tasting it yourself.
   script_segments:
@@ -443,6 +480,7 @@
   audio: []
   source: generated
   source_ref: generated-38
+  verified: true
 - id: rep-0039
   text: Our landlord promised to replace the broken heater by the end of this week.
   script_segments:
@@ -456,6 +494,7 @@
   audio: []
   source: generated
   source_ref: generated-39
+  verified: true
 - id: rep-0040
   text: If the package arrives while I'm out, please place it behind the flowerpot
     by the door.
@@ -471,6 +510,7 @@
   audio: []
   source: generated
   source_ref: generated-40
+  verified: false
 - id: rep-0041
   text: Could you lower the music while I finish this report in the next room?
   script_segments:
@@ -483,6 +523,7 @@
   audio: []
   source: generated
   source_ref: generated-41
+  verified: true
 - id: rep-0042
   text: The bus was delayed, so I arrived at the appointment ten minutes late.
   script_segments:
@@ -495,6 +536,7 @@
   audio: []
   source: generated
   source_ref: generated-42
+  verified: true
 - id: rep-0043
   text: We should measure the doorway before ordering a new sofa for the living room.
   script_segments:
@@ -507,6 +549,7 @@
   audio: []
   source: generated
   source_ref: generated-43
+  verified: true
 - id: rep-0044
   text: I packed an extra sandwich in case you get hungry during the hike.
   script_segments:
@@ -519,6 +562,7 @@
   audio: []
   source: generated
   source_ref: generated-44
+  verified: true
 - id: rep-0045
   text: Please turn off the porch light after everyone has come inside for the night.
   script_segments:
@@ -531,6 +575,7 @@
   audio: []
   source: generated
   source_ref: generated-45
+  verified: true
 - id: rep-0046
   text: The laundry will dry faster if you open the window above the sink.
   script_segments:
@@ -543,6 +588,7 @@
   audio: []
   source: generated
   source_ref: generated-46
+  verified: true
 - id: rep-0047
   text: Have you decided which train to catch for your trip to the coast?
   script_segments:
@@ -555,6 +601,7 @@
   audio: []
   source: generated
   source_ref: generated-47
+  verified: true
 - id: rep-0048
   text: I can pick up the medicine after my meeting ends later this afternoon.
   script_segments:
@@ -567,6 +614,7 @@
   audio: []
   source: generated
   source_ref: generated-48
+  verified: true
 - id: rep-0049
   text: Although the forecast predicted rain, we enjoyed a dry walk around the lake
     before dinner.
@@ -580,6 +628,7 @@
   audio: []
   source: generated
   source_ref: generated-49
+  verified: true
 - id: rep-0050
   text: Could someone check whether the back door was locked before we drove away
     this morning?
@@ -593,3 +642,4 @@
   audio: []
   source: generated
   source_ref: generated-50
+  verified: true
