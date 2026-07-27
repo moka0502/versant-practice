@@ -683,7 +683,9 @@ function currentAccentLang() {
 }
 
 function updateProgressUI() {
-  const label = `${state.totalCount + 1}問目`;
+  const clearedCount = state.cleared.size;
+  const correctSuffix = clearedCount > 0 ? `（${clearedCount}問正解）` : "";
+  const label = `${state.totalCount + 1}/${state.poolSize}問目${correctSuffix}`;
   document.querySelectorAll(".progress-label").forEach((el) => (el.textContent = label));
   const fill = document.getElementById("progress-bar-fill");
   if (fill) fill.style.width = `${Math.round((state.cleared.size / state.poolSize) * 100)}%`;
