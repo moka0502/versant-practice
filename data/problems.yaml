@@ -1,172 +1,595 @@
-- id: rep-placeholder-0001
-  text: If you need any help, just let me know.
+- id: rep-0001
+  text: Please leave the package by the front door.
   script_segments:
-  - If you need any help, just let me know.
-  char_count: 39
-  word_count: 9
+  - Please leave the package
+  - by the front door.
+  char_count: 43
+  word_count: 8
   difficulty: beginner
   audio: []
-  source: placeholder
-  source_ref: placeholder-1
-- id: rep-placeholder-0002
-  text: Can you close the door, please?
+  source: generated
+  source_ref: generated-1
+- id: rep-0002
+  text: The soup needs a little more salt.
   script_segments:
-  - Can you close the door, please?
+  - The soup needs
+  - a little more salt.
+  char_count: 34
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-2
+- id: rep-0003
+  text: Did you remember to lock the windows?
+  script_segments:
+  - Did you remember
+  - to lock the windows?
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-3
+- id: rep-0004
+  text: I can meet you after my appointment.
+  script_segments:
+  - I can meet you
+  - after my appointment.
+  char_count: 36
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-4
+- id: rep-0005
+  text: Our bus should arrive in ten minutes.
+  script_segments:
+  - Our bus should arrive
+  - in ten minutes.
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-5
+- id: rep-0006
+  text: She keeps an extra umbrella in her car.
+  script_segments:
+  - She keeps an extra umbrella
+  - in her car.
+  char_count: 39
+  word_count: 8
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-6
+- id: rep-0007
+  text: Turn down the music while the baby sleeps.
+  script_segments:
+  - Turn down the music
+  - while the baby sleeps.
+  char_count: 42
+  word_count: 8
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-7
+- id: rep-0008
+  text: We may need to change our plans.
+  script_segments:
+  - We may need
+  - to change our plans.
+  char_count: 32
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-8
+- id: rep-0009
+  text: Could you hold this bag for a moment?
+  script_segments:
+  - Could you hold this bag
+  - for a moment?
+  char_count: 37
+  word_count: 8
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-9
+- id: rep-0010
+  text: The laundry is still damp from yesterday.
+  script_segments:
+  - The laundry is still damp
+  - from yesterday.
+  char_count: 41
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-10
+- id: rep-0011
+  text: Why did the screen suddenly go blank?
+  script_segments:
+  - Why did the screen
+  - suddenly go blank?
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-11
+- id: rep-0012
+  text: I'll call when dinner is ready.
+  script_segments:
+  - I'll call
+  - when dinner is ready.
   char_count: 31
   word_count: 6
   difficulty: beginner
   audio: []
-  source: placeholder
-  source_ref: placeholder-2
-- id: rep-placeholder-0003
-  text: I'll call you back in five minutes.
+  source: generated
+  source_ref: generated-12
+- id: rep-0013
+  text: Your keys are beside the coffee maker.
   script_segments:
-  - I'll call you back in five minutes.
-  char_count: 35
+  - Your keys are
+  - beside the coffee maker.
+  char_count: 38
   word_count: 7
   difficulty: beginner
   audio: []
-  source: placeholder
-  source_ref: placeholder-3
-- id: rep-placeholder-0004
-  text: The train leaves at nine o'clock sharp.
+  source: generated
+  source_ref: generated-13
+- id: rep-0014
+  text: We took the quieter road home.
   script_segments:
-  - The train leaves at nine o'clock sharp.
-  char_count: 39
+  - We took the quieter road
+  - home.
+  char_count: 30
+  word_count: 6
+  difficulty: beginner
+  audio: []
+  source: generated
+  source_ref: generated-14
+- id: rep-0015
+  text: Please check whether the printer has paper.
+  script_segments:
+  - Please check whether
+  - the printer has paper.
+  char_count: 43
   word_count: 7
   difficulty: beginner
   audio: []
-  source: placeholder
-  source_ref: placeholder-4
-- id: rep-placeholder-0005
-  text: Please turn off the lights before you leave.
+  source: generated
+  source_ref: generated-15
+- id: rep-0016
+  text: This chair feels more comfortable than it looks.
   script_segments:
-  - Please turn off the lights before you leave.
-  char_count: 44
+  - This chair feels more comfortable
+  - than it looks.
+  char_count: 48
   word_count: 8
   difficulty: beginner
   audio: []
-  source: placeholder
-  source_ref: placeholder-5
-- id: rep-placeholder-0006
-  text: Could you please send me the report before the end of the day?
+  source: generated
+  source_ref: generated-16
+- id: rep-0017
+  text: I usually take a short walk before starting work each morning.
   script_segments:
-  - Could you please send me the report before the end of the day?
+  - I usually take a short walk
+  - before starting work
+  - each morning.
   char_count: 62
-  word_count: 13
-  difficulty: advanced
-  audio: []
-  source: placeholder
-  source_ref: placeholder-6
-- id: rep-placeholder-0007
-  text: I was wondering if you could help me with this file.
-  script_segments:
-  - I was wondering if you could help me with this file.
-  char_count: 52
   word_count: 11
   difficulty: intermediate
   audio: []
-  source: placeholder
-  source_ref: placeholder-7
-- id: rep-placeholder-0008
-  text: We need to finalize the budget before the meeting tomorrow.
+  source: generated
+  source_ref: generated-17
+- id: rep-0018
+  text: Could you remind me to buy batteries on the way home?
   script_segments:
-  - We need to finalize the budget before the meeting tomorrow.
+  - Could you remind me
+  - to buy batteries
+  - on the way home?
+  char_count: 53
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-18
+- id: rep-0019
+  text: The bathroom faucet has been dripping since early this afternoon.
+  script_segments:
+  - The bathroom faucet
+  - has been dripping
+  - since early this afternoon.
+  char_count: 65
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-19
+- id: rep-0020
+  text: We saved the leftover rice for tomorrow's lunch at work.
+  script_segments:
+  - We saved the leftover rice
+  - for tomorrow's lunch
+  - at work.
+  char_count: 56
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-20
+- id: rep-0021
+  text: Is there enough room in the freezer for this container?
+  script_segments:
+  - Is there enough room
+  - in the freezer
+  - for this container?
+  char_count: 55
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-21
+- id: rep-0022
+  text: My neighbor offered to water the plants during our trip.
+  script_segments:
+  - My neighbor offered
+  - to water the plants
+  - during our trip.
+  char_count: 56
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-22
+- id: rep-0023
+  text: The morning traffic was lighter than I had expected today.
+  script_segments:
+  - The morning traffic was lighter
+  - than I had expected
+  - today.
+  char_count: 58
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-23
+- id: rep-0024
+  text: You can borrow my headphones if yours are not working.
+  script_segments:
+  - You can borrow my headphones
+  - if yours are not working.
+  char_count: 54
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-24
+- id: rep-0025
+  text: Would you mind moving your bicycle away from the stairs?
+  script_segments:
+  - Would you mind
+  - moving your bicycle
+  - away from the stairs?
+  char_count: 56
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-25
+- id: rep-0026
+  text: The doctor suggested resting my ankle for a few days.
+  script_segments:
+  - The doctor suggested
+  - resting my ankle
+  - for a few days.
+  char_count: 53
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-26
+- id: rep-0027
+  text: We noticed a small crack underneath the kitchen table yesterday.
+  script_segments:
+  - We noticed a small crack
+  - underneath the kitchen table
+  - yesterday.
+  char_count: 64
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-27
+- id: rep-0028
+  text: Can you explain how this new coffee machine actually works?
+  script_segments:
+  - Can you explain
+  - how this new coffee machine
+  - actually works?
   char_count: 59
   word_count: 10
   difficulty: intermediate
   audio: []
-  source: placeholder
-  source_ref: placeholder-8
-- id: rep-placeholder-0009
-  text: She usually takes the bus to work unless it's raining heavily.
+  source: generated
+  source_ref: generated-28
+- id: rep-0029
+  text: I left my jacket upstairs because the room felt warm.
   script_segments:
-  - She usually takes the bus to work unless it's raining heavily.
-  char_count: 62
-  word_count: 11
+  - I left my jacket upstairs
+  - because the room
+  - felt warm.
+  char_count: 53
+  word_count: 10
   difficulty: intermediate
   audio: []
-  source: placeholder
-  source_ref: placeholder-9
-- id: rep-placeholder-0010
-  text: Let me know if you have any questions about the new policy.
+  source: generated
+  source_ref: generated-29
+- id: rep-0030
+  text: They are repainting the hallway before the guests arrive tonight.
   script_segments:
-  - Let me know if you have any questions about the new policy.
-  char_count: 59
-  word_count: 12
+  - They are repainting the hallway
+  - before the guests arrive
+  - tonight.
+  char_count: 65
+  word_count: 10
   difficulty: intermediate
   audio: []
-  source: placeholder
-  source_ref: placeholder-10
-- id: rep-placeholder-0011
-  text: The meeting has been rescheduled to next Tuesday because several key members
-    are traveling.
+  source: generated
+  source_ref: generated-30
+- id: rep-0031
+  text: Please carefully put the clean glasses back in the cupboard.
   script_segments:
-  - The meeting has been rescheduled to next Tuesday because several key members are
-    traveling.
-  char_count: 91
+  - Please carefully put
+  - the clean glasses
+  - back in the cupboard.
+  char_count: 60
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-31
+- id: rep-0032
+  text: My phone battery drains quickly whenever I use the camera.
+  script_segments:
+  - My phone battery drains quickly
+  - whenever I use
+  - the camera.
+  char_count: 58
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: generated
+  source_ref: generated-32
+- id: rep-0033
+  text: The grocery store closes earlier on Sundays, so we should leave before six.
+  script_segments:
+  - The grocery store
+  - closes earlier on Sundays,
+  - so we should leave
+  - before six.
+  char_count: 75
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-33
+- id: rep-0034
+  text: I forgot to bring the receipt, but they still offered me a refund.
+  script_segments:
+  - I forgot to bring the receipt,
+  - but they still offered me
+  - a refund.
+  char_count: 66
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-34
+- id: rep-0035
+  text: Would it be easier to discuss the schedule during our lunch break tomorrow
+    instead?
+  script_segments:
+  - Would it be easier
+  - to discuss the schedule
+  - during our lunch break
+  - tomorrow instead?
+  char_count: 83
   word_count: 14
   difficulty: advanced
   audio: []
-  source: placeholder
-  source_ref: placeholder-11
-- id: rep-placeholder-0012
-  text: Although the proposal looked promising, the committee decided to postpone
-    their decision.
+  source: generated
+  source_ref: generated-35
+- id: rep-0036
+  text: A strong wind knocked several branches onto the sidewalk during the storm
+    last night.
   script_segments:
-  - Although the proposal looked promising, the committee decided to postpone their
-    decision.
-  char_count: 89
-  word_count: 12
-  difficulty: intermediate
-  audio: []
-  source: placeholder
-  source_ref: placeholder-12
-- id: rep-placeholder-0013
-  text: Despite the heavy rain, the construction team managed to finish the project
-    ahead of schedule.
-  script_segments:
-  - Despite the heavy rain, the construction team managed to finish the project ahead
-    of schedule.
-  char_count: 94
-  word_count: 15
-  difficulty: advanced
-  audio: []
-  source: placeholder
-  source_ref: placeholder-13
-- id: rep-placeholder-0014
-  text: The new marketing strategy focuses on expanding into international markets
-    over the next few years.
-  script_segments:
-  - The new marketing strategy focuses on expanding into international markets over
-    the next few years.
-  char_count: 99
-  word_count: 15
-  difficulty: advanced
-  audio: []
-  source: placeholder
-  source_ref: placeholder-14
-- id: rep-placeholder-0015
-  text: Even though the flight was delayed by several hours, most passengers remained
-    remarkably calm.
-  script_segments:
-  - Even though the flight was delayed by several hours, most passengers remained
-    remarkably calm.
-  char_count: 94
+  - A strong wind
+  - knocked several branches
+  - onto the sidewalk
+  - during the storm last night.
+  char_count: 85
   word_count: 14
   difficulty: advanced
   audio: []
-  source: placeholder
-  source_ref: placeholder-15
-- id: rep-placeholder-0016
-  text: Researchers discovered that the unexpected results were caused by a flaw in
-    the original experiment.
+  source: generated
+  source_ref: generated-36
+- id: rep-0037
+  text: You might find the missing charger hidden in the drawer beneath the television.
   script_segments:
-  - Researchers discovered that the unexpected results were caused by a flaw in the
-    original experiment.
-  char_count: 100
+  - You might find
+  - the missing charger
+  - hidden in the drawer
+  - beneath the television.
+  char_count: 79
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-37
+- id: rep-0038
+  text: Please let the soup cool for a few minutes before tasting it yourself.
+  script_segments:
+  - Please let the soup cool
+  - for a few minutes
+  - before tasting it yourself.
+  char_count: 70
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-38
+- id: rep-0039
+  text: Our landlord promised to replace the broken heater by the end of this week.
+  script_segments:
+  - Our landlord promised
+  - to replace the broken heater
+  - by the end
+  - of this week.
+  char_count: 75
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-39
+- id: rep-0040
+  text: If the package arrives while I'm out, please place it behind the flowerpot
+    by the door.
+  script_segments:
+  - If the package arrives
+  - while I'm out,
+  - please place it
+  - behind the flowerpot
+  - by the door.
+  char_count: 87
+  word_count: 16
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-40
+- id: rep-0041
+  text: Could you lower the music while I finish this report in the next room?
+  script_segments:
+  - Could you lower the music
+  - while I finish this report
+  - in the next room?
+  char_count: 70
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-41
+- id: rep-0042
+  text: The bus was delayed, so I arrived at the appointment ten minutes late.
+  script_segments:
+  - The bus was delayed,
+  - so I arrived at the appointment
+  - ten minutes late.
+  char_count: 70
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-42
+- id: rep-0043
+  text: We should measure the doorway before ordering a new sofa for the living room.
+  script_segments:
+  - We should measure the doorway
+  - before ordering a new sofa
+  - for the living room.
+  char_count: 77
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-43
+- id: rep-0044
+  text: I packed an extra sandwich in case you get hungry during the hike.
+  script_segments:
+  - I packed an extra sandwich
+  - in case you get hungry
+  - during the hike.
+  char_count: 66
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-44
+- id: rep-0045
+  text: Please turn off the porch light after everyone has come inside for the night.
+  script_segments:
+  - Please turn off the porch light
+  - after everyone has come inside
+  - for the night.
+  char_count: 77
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-45
+- id: rep-0046
+  text: The laundry will dry faster if you open the window above the sink.
+  script_segments:
+  - The laundry will dry faster
+  - if you open the window
+  - above the sink.
+  char_count: 66
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-46
+- id: rep-0047
+  text: Have you decided which train to catch for your trip to the coast?
+  script_segments:
+  - Have you decided
+  - which train to catch
+  - for your trip to the coast?
+  char_count: 65
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-47
+- id: rep-0048
+  text: I can pick up the medicine after my meeting ends later this afternoon.
+  script_segments:
+  - I can pick up the medicine
+  - after my meeting ends
+  - later this afternoon.
+  char_count: 70
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-48
+- id: rep-0049
+  text: Although the forecast predicted rain, we enjoyed a dry walk around the lake
+    before dinner.
+  script_segments:
+  - Although the forecast predicted rain,
+  - we enjoyed a dry walk
+  - around the lake before dinner.
+  char_count: 90
   word_count: 15
   difficulty: advanced
   audio: []
-  source: placeholder
-  source_ref: placeholder-16
+  source: generated
+  source_ref: generated-49
+- id: rep-0050
+  text: Could someone check whether the back door was locked before we drove away
+    this morning?
+  script_segments:
+  - Could someone check
+  - whether the back door was locked
+  - before we drove away this morning?
+  char_count: 87
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: generated
+  source_ref: generated-50
