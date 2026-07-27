@@ -553,6 +553,10 @@ button:active {
   padding: 16px;
 }
 
+.onboarding-overlay.hidden {
+  display: none;
+}
+
 .onboarding-card {
   background: var(--color-bg);
   border-radius: 20px;
