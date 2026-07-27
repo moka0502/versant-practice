@@ -44,6 +44,7 @@ const screens = {
   listen: document.getElementById("screen-listen"),
   answer: document.getElementById("screen-answer"),
   summary: document.getElementById("screen-summary"),
+  stats: document.getElementById("screen-stats"),
 };
 
 function showScreen(name) {
@@ -135,6 +136,7 @@ function saveHistory(history) {
 }
 
 function recordAttempt(problemId, isCorrect) {
+  recordPracticeDay();
   const history = loadHistory();
   const entry = history[problemId] || { attempts: 0, correct: 0 };
   entry.attempts += 1;
@@ -167,6 +169,124 @@ function renderLifetimeStats() {
   const pct = Math.round((correct / attempts) * 100);
   el.textContent = `これまでの記録: 累計${attempts}問・正答率${pct}%`;
 }
+
+// --- 練習日トラッキング（ストリーク計算用。日付境界はUTC基準の簡略化） ---
+const PRACTICE_DAYS_KEY = "eigo-shukan-juku:practice-days:v1";
+
+function todayKey(date = new Date()) {
+  return date.toISOString().slice(0, 10); // "YYYY-MM-DD"
+}
+
+function loadPracticeDays() {
+  try {
+    return JSON.parse(localStorage.getItem(PRACTICE_DAYS_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function savePracticeDays(days) {
+  try {
+    localStorage.setItem(PRACTICE_DAYS_KEY, JSON.stringify(days));
+  } catch (e) {
+    // 保存できなくてもストリーク表示が0になるだけで練習は続行できる
+  }
+}
+
+function recordPracticeDay() {
+  const days = loadPracticeDays();
+  const key = todayKey();
+  if (!days.includes(key)) {
+    days.push(key);
+    savePracticeDays(days);
+  }
+}
+
+function currentStreak() {
+  const days = new Set(loadPracticeDays());
+  let streak = 0;
+  const cursor = new Date();
+  if (!days.has(todayKey(cursor))) cursor.setDate(cursor.getDate() - 1); // 今日未記録でも昨日までの連続は維持
+  while (days.has(todayKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
+
+// --- 統計画面 ---
+const LEVEL_LABEL = { beginner: "初級", intermediate: "中級", advanced: "上級" };
+const WEAK_MIN_ATTEMPTS = 2; // 1回のミスだけで「苦手」扱いにしないための下限
+const WEAK_LIST_LIMIT = 5;
+
+function levelBreakdown() {
+  const history = loadHistory();
+  const byLevel = {
+    beginner: { attempts: 0, correct: 0 },
+    intermediate: { attempts: 0, correct: 0 },
+    advanced: { attempts: 0, correct: 0 },
+  };
+  for (const p of PROBLEMS) {
+    const entry = history[p.id];
+    if (!entry) continue;
+    byLevel[p.level].attempts += entry.attempts;
+    byLevel[p.level].correct += entry.correct;
+  }
+  return byLevel;
+}
+
+function weakProblems() {
+  const history = loadHistory();
+  return PROBLEMS.map((p) => ({ ...p, ...(history[p.id] || { attempts: 0, correct: 0 }) }))
+    .filter((p) => p.attempts >= WEAK_MIN_ATTEMPTS)
+    .sort((a, b) => a.correct / a.attempts - b.correct / b.attempts || a.id.localeCompare(b.id))
+    .slice(0, WEAK_LIST_LIMIT);
+}
+
+function renderStatsScreen() {
+  const { attempts, correct } = lifetimeStats();
+  document.getElementById("stats-total").textContent = attempts === 0 ? "-" : `${attempts}問`;
+  document.getElementById("stats-accuracy").textContent =
+    attempts === 0 ? "-" : `${Math.round((correct / attempts) * 100)}%`;
+  document.getElementById("stats-streak").textContent = `🔥 ${currentStreak()} 日`;
+
+  document.getElementById("stats-level-breakdown").innerHTML = Object.entries(levelBreakdown())
+    .map(([level, { attempts: a, correct: c }]) => {
+      const pct = a === 0 ? "-" : `${Math.round((c / a) * 100)}%`;
+      return `<p class="summary-row"><span>${LEVEL_LABEL[level]}</span><strong>${pct}</strong></p>`;
+    })
+    .join("");
+
+  const weak = weakProblems();
+  document.getElementById("stats-weak-list").innerHTML =
+    weak.length === 0
+      ? `<p class="stats-empty">まだ記録がありません。練習を始めましょう！</p>`
+      : weak
+          .map((p) => {
+            const pct = Math.round((p.correct / p.attempts) * 100);
+            return `<div class="weak-item"><p class="weak-item-text">${p.text}</p><p class="weak-item-meta">正答率${pct}%（${p.attempts}回中${p.correct}回正解）</p></div>`;
+          })
+          .join("");
+}
+
+function exportHistoryAsJson() {
+  const payload = { history: loadHistory(), practiceDays: loadPracticeDays(), exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `eigo-shukan-juku-history-${todayKey()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("lifetime-stats").addEventListener("click", () => {
+  renderStatsScreen();
+  showScreen("stats");
+});
+document.getElementById("export-history-button").addEventListener("click", exportHistoryAsJson);
 
 // --- 画面0: Part選択 ---
 document.getElementById("part-b-button").addEventListener("click", () => {

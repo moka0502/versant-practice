@@ -81,6 +81,9 @@ button:active {
   border-radius: 20px;
   padding: 6px 12px;
   margin: 0 0 20px;
+  border: none;
+  width: 100%;
+  font-family: inherit;
 }
 
 /* 選択グループ */
@@ -498,6 +501,34 @@ button:active {
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(-8px);
+}
+
+/* 統計画面: 苦手リスト */
+.weak-item {
+  background: var(--color-card);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-border);
+}
+
+.weak-item-text {
+  font-size: 14px;
+  color: var(--color-text);
+  margin: 0 0 4px;
+}
+
+.weak-item-meta {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.stats-empty {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 20px 0;
 }
 
 /* 横向き・縦幅が狭い画面向けの安全対策（スクロール前提だが要素を詰めて収まりやすくする） */
