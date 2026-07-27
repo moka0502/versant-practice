@@ -130,6 +130,10 @@ const SCORE_BY_TIER = { perfect: 1, half: 0.5, none: 0 };
 
 function recordAttempt(problemId, tier) {
   recordPracticeDay();
+  recordDailyAttempt(tier);
+  awardXp(tier);
+  checkAndAwardBadges();
+
   const history = loadHistory();
   const entry = history[problemId] || { attempts: 0, scoreSum: 0 };
   entry.attempts += 1;
@@ -292,6 +296,169 @@ function nextStreakMilestoneMessage(streak) {
   return `あと${next - streak}日で${next}日連続達成！`;
 }
 
+// --- 日次ログ（デイリー目標・週次レポート・成長グラフの共通データ源） ---
+const DAILY_LOG_KEY = "eigo-shukan-juku:daily-log:v1";
+const DAILY_GOAL = 10; // 1日の目標問題数（固定値。将来的にユーザー設定にしてもよい）
+
+function loadDailyLog() {
+  try {
+    return JSON.parse(localStorage.getItem(DAILY_LOG_KEY)) || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveDailyLog(log) {
+  try {
+    localStorage.setItem(DAILY_LOG_KEY, JSON.stringify(log));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function recordDailyAttempt(tier) {
+  const log = loadDailyLog();
+  const key = todayKey();
+  const entry = log[key] || { attempts: 0, scoreSum: 0 };
+  entry.attempts += 1;
+  entry.scoreSum += SCORE_BY_TIER[tier];
+  log[key] = entry;
+  saveDailyLog(log);
+}
+
+function todayProgress() {
+  const log = loadDailyLog();
+  return log[todayKey()] || { attempts: 0, scoreSum: 0 };
+}
+
+function weeklyReport() {
+  const log = loadDailyLog();
+  const today = todayKey();
+  let attempts = 0;
+  let scoreSum = 0;
+  let daysActive = 0;
+  for (let i = 0; i < 7; i++) {
+    const entry = log[shiftDayKey(today, -i)];
+    if (entry) {
+      attempts += entry.attempts;
+      scoreSum += entry.scoreSum;
+      daysActive += 1;
+    }
+  }
+  return { attempts, scoreSum, daysActive };
+}
+
+// --- XP・レベル ---
+const XP_KEY = "eigo-shukan-juku:xp:v1";
+const XP_BY_TIER = { perfect: 10, half: 5, none: 2 }; // 挑戦したこと自体にも少し加点する
+const XP_PER_LEVEL = 100;
+
+function loadXp() {
+  try {
+    return JSON.parse(localStorage.getItem(XP_KEY)) || 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function saveXp(xp) {
+  try {
+    localStorage.setItem(XP_KEY, JSON.stringify(xp));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function levelForXp(xp) {
+  return Math.floor(xp / XP_PER_LEVEL) + 1;
+}
+
+function awardXp(tier) {
+  const before = loadXp();
+  const after = before + XP_BY_TIER[tier];
+  saveXp(after);
+  if (levelForXp(after) > levelForXp(before)) {
+    showToast(`⭐ レベルアップ！ Lv.${levelForXp(after)}`);
+  }
+}
+
+// --- 総練習時間（セッション単位で計測。個々の問題の思考時間までは測らない簡易版） ---
+const PRACTICE_TIME_MS_KEY = "eigo-shukan-juku:practice-time-ms:v1";
+let sessionStartedAt = null;
+
+function loadTotalPracticeMs() {
+  try {
+    return JSON.parse(localStorage.getItem(PRACTICE_TIME_MS_KEY)) || 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function addPracticeMs(ms) {
+  try {
+    localStorage.setItem(PRACTICE_TIME_MS_KEY, JSON.stringify(loadTotalPracticeMs() + ms));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function formatDuration(ms) {
+  const minutes = Math.round(ms / 60000);
+  if (minutes < 60) return `${minutes}分`;
+  const hours = Math.floor(minutes / 60);
+  return `${hours}時間${minutes % 60}分`;
+}
+
+// --- 実績バッジ ---
+const BADGES_KEY = "eigo-shukan-juku:badges:v1";
+const BADGE_DEFS = [
+  { id: "first-step", emoji: "🐣", label: "はじめの一歩", check: (s) => s.lifetimeAttempts >= 1 },
+  { id: "steady-50", emoji: "📘", label: "コツコツ50問", check: (s) => s.lifetimeAttempts >= 50 },
+  { id: "veteran-100", emoji: "🏆", label: "百戦錬磨", check: (s) => s.lifetimeAttempts >= 100 },
+  { id: "streak-3", emoji: "🔥", label: "3日坊主卒業", check: (s) => s.streak >= 3 },
+  { id: "streak-7", emoji: "⚡", label: "1週間戦士", check: (s) => s.streak >= 7 },
+  { id: "perfect-session", emoji: "🌟", label: "パーフェクトセッション", check: (s) => s.hadPerfectSession },
+];
+
+function loadBadges() {
+  try {
+    return JSON.parse(localStorage.getItem(BADGES_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveBadges(badges) {
+  try {
+    localStorage.setItem(BADGES_KEY, JSON.stringify(badges));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function checkAndAwardBadges(extra = {}) {
+  const earned = new Set(loadBadges());
+  const { attempts } = lifetimeStats();
+  const snapshot = { lifetimeAttempts: attempts, streak: currentStreak(), hadPerfectSession: false, ...extra };
+  const newlyEarned = BADGE_DEFS.filter((b) => !earned.has(b.id) && b.check(snapshot));
+  if (newlyEarned.length === 0) return;
+  newlyEarned.forEach((b) => earned.add(b.id));
+  saveBadges([...earned]);
+  newlyEarned.forEach((b) => showToast(`${b.emoji} 実績解除: ${b.label}`));
+}
+
+function renderBadgeGrid() {
+  const earned = new Set(loadBadges());
+  document.getElementById("badge-grid").innerHTML = BADGE_DEFS.map((b) => {
+    const locked = !earned.has(b.id);
+    return (
+      `<div class="badge-item ${locked ? "locked" : ""}">` +
+      `<span class="badge-emoji">${locked ? "🔒" : b.emoji}</span>` +
+      `<span class="badge-label">${b.label}</span></div>`
+    );
+  }).join("");
+}
+
 // --- 統計画面 ---
 const LEVEL_LABEL = { beginner: "初級", intermediate: "中級", advanced: "上級" };
 const WEAK_MIN_ATTEMPTS = 2; // 1回のミスだけで「苦手」扱いにしないための下限
@@ -341,6 +508,21 @@ function renderWeekCalendar() {
   document.getElementById("week-calendar").innerHTML = cells.join("");
 }
 
+function renderGrowthChart() {
+  const log = loadDailyLog();
+  const today = todayKey();
+  const bars = [];
+  for (let i = 6; i >= 0; i--) {
+    const entry = log[shiftDayKey(today, -i)];
+    const pct = entry && entry.attempts > 0 ? Math.round((entry.scoreSum / entry.attempts) * 100) : 0;
+    bars.push(
+      `<div class="growth-bar-col"><div class="growth-bar" style="height:${Math.max(pct, 4)}%"></div>` +
+        `<span class="growth-bar-label">${pct}</span></div>`
+    );
+  }
+  document.getElementById("growth-chart").innerHTML = bars.join("");
+}
+
 function renderStatsScreen() {
   const { attempts, scoreSum } = lifetimeStats();
   document.getElementById("stats-total").textContent = attempts === 0 ? "-" : `${attempts}問`;
@@ -349,8 +531,24 @@ function renderStatsScreen() {
   const streak = currentStreak();
   document.getElementById("stats-streak").textContent = `🔥 ${streak} 日`;
   document.getElementById("stats-freezes").textContent = `❄️ ${loadFreezeCount()} 個`;
+  document.getElementById("stats-level").textContent = `Lv.${levelForXp(loadXp())}`;
+  document.getElementById("stats-practice-time").textContent = formatDuration(loadTotalPracticeMs());
   document.getElementById("streak-countdown").textContent = nextStreakMilestoneMessage(streak);
   renderWeekCalendar();
+
+  const today = todayProgress();
+  document.getElementById("daily-goal-label").textContent = `${today.attempts} / ${DAILY_GOAL} 問`;
+  document.getElementById("daily-goal-fill").style.width =
+    `${Math.min(100, Math.round((today.attempts / DAILY_GOAL) * 100))}%`;
+
+  const week = weeklyReport();
+  document.getElementById("weekly-report").textContent =
+    week.attempts === 0
+      ? "今週はまだ記録がありません"
+      : `今週は${week.daysActive}日練習・計${week.attempts}問・達成度${Math.round((week.scoreSum / week.attempts) * 100)}%`;
+
+  renderGrowthChart();
+  renderBadgeGrid();
 
   document.getElementById("stats-level-breakdown").innerHTML = Object.entries(levelBreakdown())
     .map(([level, { attempts: a, scoreSum: s }]) => {
@@ -440,6 +638,8 @@ function startSession() {
   state.totalCount = 0;
   state.streak = 0;
   state.bestStreak = 0;
+  state.hadAnyImperfect = false;
+  sessionStartedAt = Date.now();
   enterListen();
 }
 
@@ -564,6 +764,7 @@ function judge(tier) {
     state.streak += 1;
     state.bestStreak = Math.max(state.bestStreak, state.streak);
   } else {
+    state.hadAnyImperfect = true;
     state.streak = 0;
     // 「できた」以外は数問先に再度差し込み、同セッション内で再出題する
     const offset = 2 + Math.floor(Math.random() * 3);
@@ -602,6 +803,14 @@ function pickSummaryReaction(pct) {
 }
 
 function enterSummary() {
+  if (sessionStartedAt) {
+    addPracticeMs(Date.now() - sessionStartedAt);
+    sessionStartedAt = null;
+  }
+  if (state.totalCount > 0 && !state.hadAnyImperfect) {
+    checkAndAwardBadges({ hadPerfectSession: true });
+  }
+
   const pct = state.totalCount === 0 ? 0 : Math.round((state.scoreSum / state.totalCount) * 100);
   const reaction = pickSummaryReaction(pct);
   document.getElementById("summary-mascot").textContent = reaction.mascot;
