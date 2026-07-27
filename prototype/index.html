@@ -131,8 +131,9 @@
   </div>
 
   <div class="judge-group">
-    <button id="judge-correct" class="btn-judge btn-correct">○ できた</button>
-    <button id="judge-wrong" class="btn-judge btn-wrong">✕ できなかった</button>
+    <button id="judge-perfect" class="btn-judge btn-perfect">できた</button>
+    <button id="judge-half" class="btn-judge btn-half">半分</button>
+    <button id="judge-none" class="btn-judge btn-none">できなかった</button>
   </div>
 </section>
 
@@ -144,7 +145,7 @@
   </header>
 
   <div class="summary-stats">
-    <p class="summary-row"><span>正答率</span><strong id="summary-accuracy"></strong></p>
+    <p class="summary-row"><span>達成度</span><strong id="summary-accuracy"></strong></p>
     <p class="summary-row"><span>ベストストリーク</span><strong id="summary-streak"></strong></p>
     <p class="summary-row"><span>問題数</span><strong id="summary-total"></strong></p>
   </div>
@@ -162,12 +163,12 @@
 
   <div class="summary-stats">
     <p class="summary-row"><span>累計問題数</span><strong id="stats-total"></strong></p>
-    <p class="summary-row"><span>正答率</span><strong id="stats-accuracy"></strong></p>
+    <p class="summary-row"><span>達成度</span><strong id="stats-accuracy"></strong></p>
     <p class="summary-row"><span>連続練習日数</span><strong id="stats-streak"></strong></p>
   </div>
 
   <div class="option-group">
-    <p class="option-label">レベル別正答率</p>
+    <p class="option-label">レベル別達成度</p>
     <div class="summary-stats" id="stats-level-breakdown"></div>
   </div>
 

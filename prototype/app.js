@@ -32,7 +32,7 @@ const state = {
   poolSize: 0,
   cleared: new Set(),
   currentIndex: 0,
-  correctCount: 0,
+  scoreSum: 0,
   totalCount: 0,
   streak: 0,
   bestStreak: 0,
@@ -135,13 +135,17 @@ function saveHistory(history) {
   }
 }
 
-function recordAttempt(problemId, isCorrect) {
+// 自己評価の3段階。「できた」だけを正解扱いにする（半分は部分点として記録には残すが、
+// クリア・ストリークの継続条件にはしない）
+const SCORE_BY_TIER = { perfect: 1, half: 0.5, none: 0 };
+
+function recordAttempt(problemId, tier) {
   recordPracticeDay();
   const history = loadHistory();
-  const entry = history[problemId] || { attempts: 0, correct: 0 };
+  const entry = history[problemId] || { attempts: 0, scoreSum: 0 };
   entry.attempts += 1;
-  if (isCorrect) entry.correct += 1;
-  entry.lastResult = isCorrect ? "correct" : "wrong";
+  entry.scoreSum += SCORE_BY_TIER[tier];
+  entry.lastResult = tier;
   entry.lastAt = new Date().toISOString();
   history[problemId] = entry;
   saveHistory(history);
@@ -152,22 +156,22 @@ function lifetimeStats() {
   return Object.values(history).reduce(
     (acc, entry) => ({
       attempts: acc.attempts + entry.attempts,
-      correct: acc.correct + entry.correct,
+      scoreSum: acc.scoreSum + entry.scoreSum,
     }),
-    { attempts: 0, correct: 0 }
+    { attempts: 0, scoreSum: 0 }
   );
 }
 
 function renderLifetimeStats() {
   const el = document.getElementById("lifetime-stats");
   if (!el) return;
-  const { attempts, correct } = lifetimeStats();
+  const { attempts, scoreSum } = lifetimeStats();
   if (attempts === 0) {
     el.textContent = "これまでの記録: まだありません";
     return;
   }
-  const pct = Math.round((correct / attempts) * 100);
-  el.textContent = `これまでの記録: 累計${attempts}問・正答率${pct}%`;
+  const pct = Math.round((scoreSum / attempts) * 100);
+  el.textContent = `これまでの記録: 累計${attempts}問・達成度${pct}%`;
 }
 
 // --- 練習日トラッキング（ストリーク計算用。日付境界はUTC基準の簡略化） ---
@@ -222,37 +226,37 @@ const WEAK_LIST_LIMIT = 5;
 function levelBreakdown() {
   const history = loadHistory();
   const byLevel = {
-    beginner: { attempts: 0, correct: 0 },
-    intermediate: { attempts: 0, correct: 0 },
-    advanced: { attempts: 0, correct: 0 },
+    beginner: { attempts: 0, scoreSum: 0 },
+    intermediate: { attempts: 0, scoreSum: 0 },
+    advanced: { attempts: 0, scoreSum: 0 },
   };
   for (const p of PROBLEMS) {
     const entry = history[p.id];
     if (!entry) continue;
     byLevel[p.level].attempts += entry.attempts;
-    byLevel[p.level].correct += entry.correct;
+    byLevel[p.level].scoreSum += entry.scoreSum;
   }
   return byLevel;
 }
 
 function weakProblems() {
   const history = loadHistory();
-  return PROBLEMS.map((p) => ({ ...p, ...(history[p.id] || { attempts: 0, correct: 0 }) }))
+  return PROBLEMS.map((p) => ({ ...p, ...(history[p.id] || { attempts: 0, scoreSum: 0 }) }))
     .filter((p) => p.attempts >= WEAK_MIN_ATTEMPTS)
-    .sort((a, b) => a.correct / a.attempts - b.correct / b.attempts || a.id.localeCompare(b.id))
+    .sort((a, b) => a.scoreSum / a.attempts - b.scoreSum / b.attempts || a.id.localeCompare(b.id))
     .slice(0, WEAK_LIST_LIMIT);
 }
 
 function renderStatsScreen() {
-  const { attempts, correct } = lifetimeStats();
+  const { attempts, scoreSum } = lifetimeStats();
   document.getElementById("stats-total").textContent = attempts === 0 ? "-" : `${attempts}問`;
   document.getElementById("stats-accuracy").textContent =
-    attempts === 0 ? "-" : `${Math.round((correct / attempts) * 100)}%`;
+    attempts === 0 ? "-" : `${Math.round((scoreSum / attempts) * 100)}%`;
   document.getElementById("stats-streak").textContent = `🔥 ${currentStreak()} 日`;
 
   document.getElementById("stats-level-breakdown").innerHTML = Object.entries(levelBreakdown())
-    .map(([level, { attempts: a, correct: c }]) => {
-      const pct = a === 0 ? "-" : `${Math.round((c / a) * 100)}%`;
+    .map(([level, { attempts: a, scoreSum: s }]) => {
+      const pct = a === 0 ? "-" : `${Math.round((s / a) * 100)}%`;
       return `<p class="summary-row"><span>${LEVEL_LABEL[level]}</span><strong>${pct}</strong></p>`;
     })
     .join("");
@@ -263,8 +267,8 @@ function renderStatsScreen() {
       ? `<p class="stats-empty">まだ記録がありません。練習を始めましょう！</p>`
       : weak
           .map((p) => {
-            const pct = Math.round((p.correct / p.attempts) * 100);
-            return `<div class="weak-item"><p class="weak-item-text">${p.text}</p><p class="weak-item-meta">正答率${pct}%（${p.attempts}回中${p.correct}回正解）</p></div>`;
+            const pct = Math.round((p.scoreSum / p.attempts) * 100);
+            return `<div class="weak-item"><p class="weak-item-text">${p.text}</p><p class="weak-item-meta">達成度${pct}%（${p.attempts}回中平均${p.scoreSum.toFixed(1)}点）</p></div>`;
           })
           .join("");
 }
@@ -331,7 +335,7 @@ function startSession() {
   state.poolSize = pool.length;
   state.cleared = new Set();
   state.currentIndex = 0;
-  state.correctCount = 0;
+  state.scoreSum = 0;
   state.totalCount = 0;
   state.streak = 0;
   state.bestStreak = 0;
@@ -418,54 +422,54 @@ function enterAnswer() {
 function updateAccuracyLabel() {
   const el = document.getElementById("accuracy-label");
   if (state.totalCount === 0) {
-    el.textContent = "正答率: -";
+    el.textContent = "達成度: -";
     return;
   }
-  const pct = Math.round((state.correctCount / state.totalCount) * 100);
-  el.textContent = `正答率: ${state.correctCount} / ${state.totalCount}（${pct}%）`;
+  const pct = Math.round((state.scoreSum / state.totalCount) * 100);
+  el.textContent = `達成度: ${pct}%（${state.totalCount}問中）`;
 }
 
-function judge(isCorrect) {
+const TIER_EMOJI = { perfect: "🎉", half: "🙂", none: "😅" };
+const TIER_BEEP = { perfect: [880, 0.12], half: [520, 0.14], none: [220, 0.18] };
+const TIER_VIBRATE = { perfect: [15], half: [20], none: [30, 40, 30] };
+
+function judge(tier) {
   const p = currentProblem();
   state.totalCount += 1;
-  recordAttempt(p.id, isCorrect);
-  let emoji;
+  state.scoreSum += SCORE_BY_TIER[tier];
+  recordAttempt(p.id, tier);
 
-  if (isCorrect) {
+  if (tier === "perfect") {
     state.cleared.add(p.id);
-    state.correctCount += 1;
     state.streak += 1;
     state.bestStreak = Math.max(state.bestStreak, state.streak);
-    playBeep(880, 0.12);
-    vibrate([15]);
-    emoji = "🎉";
   } else {
     state.streak = 0;
-    // 間違えた問題は数問先に再度差し込み、同セッション内で再出題する
+    // 「できた」以外は数問先に再度差し込み、同セッション内で再出題する
     const offset = 2 + Math.floor(Math.random() * 3);
     const reinsertAt = Math.min(state.queue.length, state.currentIndex + 1 + offset);
     state.queue.splice(reinsertAt, 0, p);
-    playBeep(220, 0.18);
-    vibrate([30, 40, 30]);
-    emoji = "😅";
   }
+  playBeep(...TIER_BEEP[tier]);
+  vibrate(TIER_VIBRATE[tier]);
 
   const sessionDone = state.cleared.size >= state.poolSize;
   if (!sessionDone) state.currentIndex += 1;
 
   // 2秒の間を空けてから次へ（バーで可視化）。この遅延によりnext再生はユーザー操作と
   // 同一コールスタックでなくなるため、iOS Safariで自動再生がブロックされる可能性がある（要実機確認）
-  showReaction(emoji, INTER_PROBLEM_PAUSE_MS, sessionDone ? enterSummary : enterListen);
+  showReaction(TIER_EMOJI[tier], INTER_PROBLEM_PAUSE_MS, sessionDone ? enterSummary : enterListen);
 }
 
-document.getElementById("judge-correct").addEventListener("click", () => judge(true));
-document.getElementById("judge-wrong").addEventListener("click", () => judge(false));
+document.getElementById("judge-perfect").addEventListener("click", () => judge("perfect"));
+document.getElementById("judge-half").addEventListener("click", () => judge("half"));
+document.getElementById("judge-none").addEventListener("click", () => judge("none"));
 document.getElementById("replay-on-answer").addEventListener("click", playCurrent);
 
 // --- 画面4: セッションリザルト ---
 function enterSummary() {
-  const pct = state.totalCount === 0 ? 0 : Math.round((state.correctCount / state.totalCount) * 100);
-  document.getElementById("summary-accuracy").textContent = `${state.correctCount} / ${state.totalCount}（${pct}%）`;
+  const pct = state.totalCount === 0 ? 0 : Math.round((state.scoreSum / state.totalCount) * 100);
+  document.getElementById("summary-accuracy").textContent = `${pct}%（${state.totalCount}問中）`;
   document.getElementById("summary-streak").textContent = `🔥 ${state.bestStreak}`;
   document.getElementById("summary-total").textContent = `${state.poolSize} 問`;
   showScreen("summary");
