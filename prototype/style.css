@@ -119,6 +119,13 @@ button:active {
   color: #fff;
 }
 
+/* 音声が用意されていない選択肢（Part一覧のlockedと同じ配色方針） */
+.chip.locked {
+  border-color: #8a877e;
+  background: #8a877e;
+  color: #fff;
+}
+
 /* ボタン共通 */
 .btn-primary {
   width: 100%;

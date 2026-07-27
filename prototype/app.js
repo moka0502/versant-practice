@@ -26,7 +26,7 @@ const INTER_PROBLEM_PAUSE_MS = 2000; // 問題間の間。iOSでは次の音声�
 
 const state = {
   selectedLevel: "mix",
-  selectedAccent: "mix",
+  selectedAccent: "us", // 現状は米国英語の音声しか用意していないため（他はUIでロック済み）
   speedRate: 1,
   queue: [],
   poolSize: 0,
@@ -301,6 +301,10 @@ document.querySelectorAll(".part-item.locked").forEach((btn) => {
 // --- 画面1: レベル・アクセント選択（単一選択） ---
 function setupSingleSelectGroup(groupEl, dataAttr, onSelect) {
   groupEl.querySelectorAll(".chip").forEach((chip) => {
+    if (chip.classList.contains("locked")) {
+      chip.addEventListener("click", () => showToast("🔧 まだ音声を用意していません"));
+      return;
+    }
     chip.addEventListener("click", () => {
       groupEl.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
       chip.classList.add("active");

@@ -221,3 +221,6 @@ __marimo__/
 data/user_id_cache.json
 data/logs/
 node_modules/
+
+# TTS生成物（scripts/generate_audio.pyで再生成可能。プレースホルダーデータの間は特にコミット不要）
+audio_cache/
