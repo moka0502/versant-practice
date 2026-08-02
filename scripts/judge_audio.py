@@ -36,9 +36,9 @@ load_dotenv()
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "problems.yaml"
 AUDIO_CACHE_DIR = Path(__file__).resolve().parent.parent / "audio_cache"
-ACCENT = "en-US"
 VOICE = "alloy"
 TTS_MODEL = "gpt-4o-mini-tts"
+ACCENT_LABEL = {"en-US": "American", "en-GB": "British (UK)", "en-AU": "Australian"}
 
 # 句読点の違いは実際の音声の誤りではないので、比較前に正規化して無視する
 _PUNCTUATION_PATTERN = re.compile(r"[.,!?;:]")
@@ -55,7 +55,7 @@ def check_transcription(client: OpenAI, path: Path, expected_text: str) -> dict:
     return {"transcribed": result.text, "matches": matches}
 
 
-def check_deep(client: OpenAI, path: Path, expected_text: str) -> dict:
+def check_deep(client: OpenAI, path: Path, expected_text: str, accent_label: str) -> dict:
     import base64
 
     with open(path, "rb") as f:
@@ -72,7 +72,8 @@ def check_deep(client: OpenAI, path: Path, expected_text: str) -> dict:
                         "type": "text",
                         "text": (
                             f'The expected script is: "{expected_text}". Evaluate as a JSON object with keys: '
-                            "accent_description (is it natural American English? describe briefly), "
+                            f"accent_description (does it sound like natural {accent_label} English? describe "
+                            "briefly, and say explicitly if it instead sounds American or otherwise mismatched), "
                             "naturalness_1to5 (int). Output JSON only, no markdown fences."
                         ),
                     },
@@ -95,10 +96,18 @@ def main():
     parser.add_argument("--spike", type=int, default=None, help="先頭N件だけチェックする（未指定なら全件）")
     parser.add_argument("--deep", action="store_true", help="アクセント・自然さの参考判定も追加で行う（コスト増）")
     parser.add_argument("--dry-run", action="store_true", help="判定結果をdata/problems.yamlに書き戻さない")
+    parser.add_argument("--accent", type=str, default="en-US", choices=sorted(ACCENT_LABEL), help="チェック対象のアクセント")
+    parser.add_argument("--voice", type=str, default=VOICE, help="チェック対象のTTSボイス（generate_audio.pyでの生成時と揃える）")
     args = parser.parse_args()
 
     if not os.environ.get("OPENAI_API_KEY"):
         raise SystemExit("OPENAI_API_KEY が設定されていません。.env を確認してください。")
+
+    # verifiedフィールドはアクセント区別を持たない（デフォルト配信音声=en-US向け）ため、
+    # en-US以外は書き戻しを行わない（--deepでの参考判定表示のみに限定する）
+    if args.accent != "en-US" and not args.dry_run:
+        print(f"[注記] accent={args.accent} はverifiedへの書き戻し対象外のためdry-run扱いにします\n")
+        args.dry_run = True
 
     full_problems = load_problems(DATA_PATH)
     problems = full_problems[: args.spike] if args.spike is not None else full_problems
@@ -109,7 +118,7 @@ def main():
     skipped = 0
 
     for p in problems:
-        key = cache_key(p.text, ACCENT, VOICE, TTS_MODEL)
+        key = cache_key(p.text, args.accent, args.voice, TTS_MODEL)
         path = AUDIO_CACHE_DIR / f"{key}.mp3"
         if not path.exists():
             print(f"  [{p.id}] SKIP: audio_cache/{key}.mp3 が見つかりません（未生成）")
@@ -127,7 +136,7 @@ def main():
             failures.append(p.id)
 
         if args.deep:
-            print(f"        deep-check: {check_deep(client, path, p.text)}")
+            print(f"        deep-check: {check_deep(client, path, p.text, ACCENT_LABEL[args.accent])}")
 
     checked = len(updated)
     print()

@@ -13,6 +13,16 @@ CLAUDE.md記載の長期構想（「PWA→必要ならネイティブ」）を�
 
 **収益化の方針転換（2026-08-02）**: 本番ホスティング先がGitHub Pages（Web）になったことを受け、「収益化はiOS化してからAdMob」という前提を見直した。**Web版には今すぐGoogle AdSenseを導入できる**（GitHub Pagesは静的ホスティングだがAdSenseはスクリプトタグ＋`ads.txt`の追加のみで動作し、サーバー側の仕組みは不要）。AdMob（ネイティブアプリ内広告）とAdSense（Webサイト広告）は別物で、iOS化を待たずWeb版はAdSenseを個別に検討する。ただしGoogleへの申請・審査はユーザー本人のアカウントで行う必要があり、Claudeが代行できない外部ステップ。詳細は`docs/backlog.md` No.25参照。Web決済(Stripe等)についての結論（StoreKit前提でWeb決済は検討不要）は変更なし。
 
+## アクセント別音声（英/豪）の生成方針（2026-08-02、見送り確定）
+
+`ACCENT_KEYS`にen-GB/en-AUの枠は用意してあったが、実音声は未生成でUIもロック済みのままだった。実際に生成できるか検証した結果、**当面US音声のみを継続する**方針で確定。
+
+**検証内容**: OpenAI TTS（`gpt-4o-mini-tts`）は地域別の専用ボイスを持たず、`instructions`パラメータで発音を誘導する方式しかない。`scripts/generate_audio.py`に`--accent`/`scripts/judge_audio.py`に`--accent`/`--voice`オプションを追加し、複数のボイス（alloy/fable/shimmer/onyx/nova/coral/ash/verse）×強めの指示文で英・豪アクセントの生成を試行、`gpt-audio`モデルによる自動聴取判定（`judge_audio.py --deep`と同じ仕組み）で評価した。
+
+**結果**: 英(GB)は`fable`ボイスで一部成功(2/3)したが再現性が低く、豪(AU)は試した組み合わせのほぼ全て(11/12)がアメリカ発音と判定された。同じボイス・同じ指示文でも問題文によって当たり外れがあり、機械的な自動検品の手段も無い（`judge_audio.py`のverified判定は文字起こし一致のみが基準で、アクセントの正しさは`--deep`の参考判定止まり）ため、本番投入に足る品質を安定して得られないと判断した。
+
+**結論**: 英/豪アクセントのUIロックはそのまま維持する。将来再検討する場合は、地域別の専用ボイスを持つ別プロバイダ（Google Cloud TTS、Azure Speech等）への切り替えが前提になる（新規API連携・別料金体系の検討が必要な規模の変更）。`scripts/generate_audio.py`/`scripts/judge_audio.py`の`--accent`/`--voice`オプション自体は今後の再検証や他プロバイダ移行時にも流用できるため残してある。
+
 ## 問題データの作り方（方針転換）
 
 計画時点では「既存のenglish-quiz-bot資産（`versant_quizzes.csv`）を流用」としていたが、**一から新規に問題を作成する方針に変更**。既存CSVは参考・着想を得るための参照のみ許可され、そのまま採用はしない。理由は問題の質へのこだわり（[[project-versant-practice-scope]]参照）。
