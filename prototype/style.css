@@ -178,7 +178,7 @@ button:active {
 }
 
 .btn-large {
-  margin-top: 8px;
+  margin: 8px 0 16px;
 }
 
 .btn-text {
@@ -295,7 +295,7 @@ button:active {
   border-radius: 16px;
   background: transparent;
   font-size: 13px;
-  color: #3a3a3c;
+  color: var(--color-text-muted);
 }
 
 .speed-chip.active {

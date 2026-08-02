@@ -1630,6 +1630,7 @@ function enterAnswer() {
   updateAccuracyLabel();
   updateMarkButton(p.id);
   updateRecordBoxUI(p.id); // 非同期だが画面遷移をブロックしない（既存録音の有無は準備でき次第反映）
+  setJudgeButtonsDisabled(false);
   showScreen("answer");
 }
 
@@ -1659,7 +1660,15 @@ const PERFECT_WEEK_VIBRATE = [30, 20, 30, 20, 30, 20, 60];
 
 let pendingMistakeProblemId = null;
 
+function setJudgeButtonsDisabled(disabled) {
+  ["judge-perfect", "judge-half", "judge-none"].forEach((id) => {
+    document.getElementById(id).disabled = disabled;
+  });
+}
+
 function judge(tier) {
+  if (document.getElementById("judge-perfect").disabled) return; // 演出中の二重タップ防止
+  setJudgeButtonsDisabled(true);
   const p = currentProblem();
   state.totalCount += 1;
   state.scoreSum += SCORE_BY_TIER[tier];
