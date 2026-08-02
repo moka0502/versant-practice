@@ -813,8 +813,11 @@ function savePhrases(phrases) {
 
 function savePhrase(problemId, phrase) {
   const phrases = loadPhrases();
+  const isDuplicate = phrases.some((p) => p.problemId === problemId && p.phrase === phrase);
+  if (isDuplicate) return false; // 連打等による同一フレーズの重複登録を防ぐ
   phrases.push({ problemId, phrase, at: new Date().toISOString() });
   savePhrases(phrases);
+  return true;
 }
 
 document.getElementById("save-phrase-button").addEventListener("click", () => {
@@ -823,8 +826,8 @@ document.getElementById("save-phrase-button").addEventListener("click", () => {
     showToast("テキストを選択してから押してください");
     return;
   }
-  savePhrase(currentProblem().id, selected);
-  showToast(`📎 「${selected}」を登録しました`);
+  const added = savePhrase(currentProblem().id, selected);
+  showToast(added ? `📎 「${selected}」を登録しました` : "すでに登録済みです");
 });
 
 // --- 誤答ログ（✕/半分回答時に自動記録、任意で理由メモを追加できる） ---
@@ -1585,23 +1588,29 @@ async function updateRecordBoxUI(problemId) {
 
 document.getElementById("record-button").addEventListener("click", async () => {
   const btn = document.getElementById("record-button");
-  const p = currentProblem();
-  if (btn.dataset.recording === "true") {
-    const result = await stopRecording();
-    btn.dataset.recording = "false";
-    btn.textContent = "🎙 録音する";
-    if (result) {
-      const ok = await saveRecording(p.id, result.blob, result.mimeType);
-      document.getElementById("record-status").textContent = ok ? "録音を保存しました" : "保存に失敗しました";
-      document.getElementById("play-my-recording").disabled = !ok;
+  if (btn.dataset.busy === "true") return; // 開始/停止処理中の連打防止（マイク許可待ち等）
+  btn.dataset.busy = "true";
+  try {
+    const p = currentProblem();
+    if (btn.dataset.recording === "true") {
+      const result = await stopRecording();
+      btn.dataset.recording = "false";
+      btn.textContent = "🎙 録音する";
+      if (result) {
+        const ok = await saveRecording(p.id, result.blob, result.mimeType);
+        document.getElementById("record-status").textContent = ok ? "録音を保存しました" : "保存に失敗しました";
+        document.getElementById("play-my-recording").disabled = !ok;
+      }
+      return;
     }
-    return;
-  }
-  const started = await startRecording();
-  if (started) {
-    btn.dataset.recording = "true";
-    btn.textContent = "⏹ 停止";
-    document.getElementById("record-status").textContent = "録音中…";
+    const started = await startRecording();
+    if (started) {
+      btn.dataset.recording = "true";
+      btn.textContent = "⏹ 停止";
+      document.getElementById("record-status").textContent = "録音中…";
+    }
+  } finally {
+    btn.dataset.busy = "false";
   }
 });
 
@@ -1630,7 +1639,7 @@ function enterAnswer() {
   updateAccuracyLabel();
   updateMarkButton(p.id);
   updateRecordBoxUI(p.id); // 非同期だが画面遷移をブロックしない（既存録音の有無は準備でき次第反映）
-  setJudgeButtonsDisabled(false);
+  setAnswerScreenBusy(false);
   showScreen("answer");
 }
 
@@ -1660,15 +1669,19 @@ const PERFECT_WEEK_VIBRATE = [30, 20, 30, 20, 30, 20, 60];
 
 let pendingMistakeProblemId = null;
 
-function setJudgeButtonsDisabled(disabled) {
-  ["judge-perfect", "judge-half", "judge-none"].forEach((id) => {
-    document.getElementById(id).disabled = disabled;
-  });
+// 正誤判定後の演出(reaction-overlay)はpointer-events:noneのため、下に隠れている
+// screen-answer上のボタン（判定ボタンに限らずマーク・録音・戻る等すべて）はクリックが
+// 素通りしてしまう。演出中は画面全体を操作不可にして、同じ問題の二重判定等を防ぐ
+let answerScreenBusy = false;
+
+function setAnswerScreenBusy(busy) {
+  answerScreenBusy = busy;
+  document.getElementById("screen-answer").classList.toggle("screen-busy", busy);
 }
 
 function judge(tier) {
-  if (document.getElementById("judge-perfect").disabled) return; // 演出中の二重タップ防止
-  setJudgeButtonsDisabled(true);
+  if (answerScreenBusy) return; // 演出中の二重タップ防止
+  setAnswerScreenBusy(true);
   const p = currentProblem();
   state.totalCount += 1;
   state.scoreSum += SCORE_BY_TIER[tier];

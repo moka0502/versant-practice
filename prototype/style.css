@@ -71,6 +71,12 @@ body {
   transform: translateY(10px);
 }
 
+/* 正誤判定後の演出(reaction-overlay)はpointer-events:noneのため下のボタンにクリックが
+   素通りしてしまう。演出中はscreen-answer全体を操作不可にして二重タップ系の事故を防ぐ */
+.screen.screen-busy {
+  pointer-events: none;
+}
+
 /* タップ演出（ボタン全般） */
 button {
   transition: transform 0.08s ease;
