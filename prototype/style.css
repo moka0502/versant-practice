@@ -802,3 +802,74 @@ button:active {
     display: none;
   }
 }
+
+/* 横向き本格対応(No.30)。縦向き前提の1カラムのままだと再生画面の縦積みが
+   窮屈になるため、横幅に余裕がある横向きの低高さ画面では横並びに切り替える */
+@media (orientation: landscape) and (max-height: 500px) {
+  .screen {
+    max-width: 640px;
+  }
+
+  .listen-body {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    min-height: 0;
+  }
+
+  .play-circle {
+    width: 72px;
+    height: 72px;
+    font-size: 22px;
+    margin-top: 0;
+    flex-shrink: 0;
+  }
+
+  .answer-text {
+    font-size: 16px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+
+  .explanation-box {
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+
+  .btn-judge {
+    padding: 10px 4px;
+  }
+
+  .practice-header {
+    margin-bottom: 4px;
+  }
+}
+
+/* アクセスゲート(No.2)。本物のセキュリティではない簡易な入場確認 */
+#screen-gate {
+  text-align: center;
+  padding-top: 15vh;
+}
+
+.gate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gate-input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 12px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.gate-error {
+  color: #ff3b30;
+  font-size: 13px;
+  margin: 0;
+}

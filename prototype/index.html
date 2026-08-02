@@ -16,8 +16,22 @@
 </head>
 <body>
 
+<!-- アクセスゲート: 本物のセキュリティではない簡易な入場確認（No.2、docs/backlog.md参照）。
+     GitHub Pagesにはサーバー側の認証機能が無いため、ソースを見れば誰でも突破できる
+     「知らない人がうっかり見ない」程度の抑止に過ぎない -->
+<section id="screen-gate" class="screen">
+  <div class="gate-card">
+    <div class="mascot">🦉</div>
+    <h1>英語習慣塾</h1>
+    <p class="tagline">合言葉を入力してください</p>
+    <input id="gate-password" class="gate-input" type="password" autocomplete="off" placeholder="合言葉">
+    <button id="gate-submit" class="btn-primary btn-large">入る</button>
+    <p id="gate-error" class="gate-error hidden">合言葉が違います</p>
+  </div>
+</section>
+
 <!-- 画面-1: TOP（ダッシュボード） -->
-<section id="screen-top" class="screen">
+<section id="screen-top" class="screen hidden">
   <button id="theme-toggle" class="theme-toggle" aria-label="ダークモード切替" type="button">🌙</button>
   <header class="brand">
     <div class="mascot">🦉</div>

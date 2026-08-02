@@ -1071,8 +1071,53 @@ function hasOnboarded() {
   }
 }
 
-if (!hasOnboarded()) {
-  document.getElementById("onboarding-overlay").classList.remove("hidden");
+function maybeShowOnboarding() {
+  if (!hasOnboarded()) {
+    document.getElementById("onboarding-overlay").classList.remove("hidden");
+  }
+}
+
+// --- アクセスゲート(No.2)。本物のセキュリティではない簡易な入場確認 ---
+// GitHub Pagesにはサーバー側の認証機能が無いため、ソースを見れば誰でも突破できる。
+// 「知らない人がうっかり見ない」程度の抑止に過ぎない。合言葉を変えたい場合はGATE_PASSWORDを書き換える
+const GATE_PASSWORD = "eigo2026";
+const GATE_PASSED_KEY = "eigo-shukan-juku:gate-passed:v1";
+
+function hasPassedGate() {
+  try {
+    return localStorage.getItem(GATE_PASSED_KEY) === "1";
+  } catch (e) {
+    return false;
+  }
+}
+
+function passGate() {
+  try {
+    localStorage.setItem(GATE_PASSED_KEY, "1");
+  } catch (e) {
+    // 保存できなくても今回の表示はそのまま続けられる
+  }
+  document.getElementById("screen-gate").classList.add("hidden");
+  showScreen("top");
+  maybeShowOnboarding();
+}
+
+if (hasPassedGate()) {
+  document.getElementById("screen-gate").classList.add("hidden");
+  showScreen("top");
+  maybeShowOnboarding();
+} else {
+  document.getElementById("gate-submit").addEventListener("click", () => {
+    const input = document.getElementById("gate-password");
+    if (input.value === GATE_PASSWORD) {
+      passGate();
+    } else {
+      document.getElementById("gate-error").classList.remove("hidden");
+    }
+  });
+  document.getElementById("gate-password").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("gate-submit").click();
+  });
 }
 
 document.getElementById("onboarding-dismiss").addEventListener("click", () => {
