@@ -373,6 +373,35 @@ button:active {
   background: #fff4e5;
 }
 
+.record-box {
+  background: var(--color-card);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 0 0 20px;
+}
+
+.record-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.record-actions .btn-inline {
+  flex: 1;
+  width: auto;
+  margin: 0;
+}
+
+.record-button[data-recording="true"] {
+  background: #ff3b30;
+}
+
+.record-status {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 8px 0 0;
+}
+
 .explanation-box {
   background: var(--color-track);
   border-radius: 12px;
@@ -773,6 +802,17 @@ button:active {
   font-size: 13px;
   color: var(--color-text-muted);
   margin: 0;
+}
+
+.leech-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #b3261e;
+  background: #fce8e6;
+  border-radius: 8px;
+  padding: 2px 8px;
+  margin-bottom: 6px;
 }
 
 .mistake-item-actions {

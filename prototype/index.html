@@ -49,6 +49,8 @@
   <button id="top-practice-button" class="btn-primary btn-large">📝 練習する</button>
   <button id="top-stats-button" class="btn-secondary">📊 統計を見る</button>
   <button id="top-mistakes-button" class="btn-secondary btn-outline">🔁 誤答レビュー <span id="top-mistakes-badge" class="count-badge hidden"></span></button>
+  <button id="top-retry-mistakes-button" class="btn-secondary btn-outline hidden">🔂 前回間違えた問題をもう一周 <span id="top-retry-mistakes-badge" class="count-badge"></span></button>
+  <button id="top-srs-button" class="btn-secondary btn-outline hidden">📅 今日の復習 <span id="top-srs-badge" class="count-badge"></span></button>
 
   <p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。タイトルは仮称です。</p>
 </section>
@@ -173,6 +175,18 @@
     <button id="mark-button" class="mark-button" aria-label="この問題をマーク">☆</button>
   </div>
 
+  <button id="save-phrase-button" class="btn-secondary">📎 選択した部分をフレーズ登録</button>
+
+  <!-- 自己録音（非採点。お手本と自分の発話を聞き比べるだけの機能） -->
+  <div id="record-box" class="record-box hidden">
+    <div class="record-actions">
+      <button id="record-button" class="btn-secondary btn-inline record-button" data-recording="false" aria-pressed="false">🎙 録音する</button>
+      <button id="play-my-recording" class="btn-secondary btn-inline" disabled>▶ 自分の録音を聞く</button>
+    </div>
+    <p id="record-status" class="record-status"></p>
+  </div>
+  <audio id="my-recording-audio" preload="none" hidden></audio>
+
   <!-- 解説欄: 内容(コンテンツ)ができるまで非表示。枠自体はexplanation-boxとして残してある -->
   <div class="explanation-box" hidden>
     <p class="explanation-title">解説</p>
@@ -200,6 +214,7 @@
   </div>
 
   <button id="restart-button" class="btn-primary btn-large">🔁 もう一度（同じ設定）</button>
+  <button id="retry-mistakes-button" class="btn-secondary hidden">🔂 間違えた問題だけもう一周</button>
   <button id="share-button" class="btn-secondary btn-outline">📤 結果をシェア</button>
   <button class="btn-text back-button">設定を変える</button>
 </section>
@@ -262,6 +277,11 @@
     <button id="filter-marked-toggle" class="chip filter-marked-toggle" type="button">★ マーク済みのみ</button>
     <div id="stats-weak-list"></div>
     <button id="start-review-button" class="btn-secondary">🎯 復習セットを始める（16問）</button>
+  </details>
+
+  <details class="stats-section">
+    <summary>マイフレーズ</summary>
+    <div id="stats-phrase-list"></div>
   </details>
 
   <button id="export-history-button" class="btn-secondary">⬇ 履歴をエクスポート（JSON）</button>

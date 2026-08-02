@@ -33,6 +33,7 @@ const state = {
   totalCount: 0,
   streak: 0,
   bestStreak: 0,
+  sessionMistakeIds: new Set(), // このセッション内で「できた」以外だった問題ID（終了後の再挑戦用）
 };
 
 const screens = {
@@ -167,6 +168,25 @@ function saveHistory(history) {
 // クリア・ストリークの継続条件にはしない）
 const SCORE_BY_TIER = { perfect: 1, half: 0.5, none: 0 };
 
+// 日をまたぐ間隔反復（簡易SM-2）。historyの各エントリにsrsサブオブジェクトを追加する形で拡張する
+// （既存フィールドは変更しないため後方互換。旧エントリはsrs未設定＝SRS対象外として扱われる）
+const SRS_QUALITY_BY_TIER = { perfect: 5, half: 3, none: 1 };
+
+function applySrsUpdate(entry, tier) {
+  const quality = SRS_QUALITY_BY_TIER[tier];
+  const srs = entry.srs || { repetitions: 0, easeFactor: 2.5, intervalDays: 0 };
+  let { repetitions, easeFactor, intervalDays } = srs;
+  if (quality < 3) {
+    repetitions = 0;
+    intervalDays = 1;
+  } else {
+    intervalDays = repetitions === 0 ? 1 : repetitions === 1 ? 6 : Math.round(intervalDays * easeFactor);
+    repetitions += 1;
+  }
+  easeFactor = Math.max(1.3, easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+  entry.srs = { repetitions, easeFactor, intervalDays, nextReviewDate: shiftDayKey(todayKey(), intervalDays) };
+}
+
 function recordAttempt(problemId, tier) {
   recordPracticeDay();
   recordDailyAttempt(tier);
@@ -181,6 +201,7 @@ function recordAttempt(problemId, tier) {
   entry.scoreSum += SCORE_BY_TIER[tier];
   entry.lastResult = tier;
   entry.lastAt = new Date().toISOString();
+  applySrsUpdate(entry, tier);
   history[problemId] = entry;
   saveHistory(history);
 }
@@ -593,6 +614,8 @@ function renderBadgeGrid() {
 const LEVEL_LABEL = { beginner: "初級", intermediate: "中級", advanced: "上級" };
 const WEAK_MIN_ATTEMPTS = 2; // 1回のミスだけで「苦手」扱いにしないための下限
 const WEAK_LIST_LIMIT = 5;
+const LEECH_MIN_ATTEMPTS = 3; // これ未満は「まだ判断できない」として対象外
+const LEECH_MAX_ACCURACY = 0.5; // この正答率未満をLeech（何度も間違える問題）扱いにする
 
 // 達成度の色分け（進捗の情報階層をテキストだけでなく色でも伝える）
 function pctClass(pct) {
@@ -654,6 +677,29 @@ function weakProblems() {
     .slice(0, WEAK_LIST_LIMIT);
 }
 
+// Leech検出（Ankiに倣い、重み付き抽選でも改善しない「何度も間違える問題」に気づかせる。
+// 専用ストレージは持たず、既存historyを都度判定するだけの軽量ロジック）
+function isLeech(entry) {
+  return entry.attempts >= LEECH_MIN_ATTEMPTS && entry.scoreSum / entry.attempts < LEECH_MAX_ACCURACY;
+}
+
+function leechProblems() {
+  const history = loadHistory();
+  return PROBLEMS.map((p) => ({ ...p, ...(history[p.id] || { attempts: 0, scoreSum: 0 }) }))
+    .filter((p) => isLeech(p))
+    .sort((a, b) => a.scoreSum / a.attempts - b.scoreSum / b.attempts || a.id.localeCompare(b.id));
+}
+
+// SM-2の復習予定日を過ぎた問題（未挑戦の問題はsrs未設定のため対象外。通常セッションで初回消化される想定）
+function dueForReviewProblems() {
+  const history = loadHistory();
+  const today = todayKey();
+  return PROBLEMS.filter((p) => {
+    const entry = history[p.id];
+    return !!(entry && entry.srs && entry.srs.nextReviewDate <= today);
+  });
+}
+
 // --- 苦手問題マーク（ユーザーが手動で☆マークし、後で絞り込んで復習できる） ---
 const MARKED_PROBLEMS_KEY = "eigo-shukan-juku:marked-problems:v1";
 
@@ -689,6 +735,97 @@ function markedProblemsList() {
     ...(history[p.id] || { attempts: 0, scoreSum: 0 }),
   }));
 }
+
+// --- 自己録音の永続化（IndexedDB。バイナリBlobはlocalStorageで扱えないため）。
+// 問題ごとに最新1件のみ保持（keyPathがproblemIdなのでput()すると自動的に上書きされる） ---
+const RECORDING_DB_NAME = "eigo-shukan-juku-recordings";
+const RECORDING_DB_VERSION = 1;
+const RECORDING_STORE = "recordings";
+
+let recordingDbPromise = null;
+
+function openRecordingDb() {
+  if (recordingDbPromise) return recordingDbPromise;
+  recordingDbPromise = new Promise((resolve, reject) => {
+    if (!window.indexedDB) {
+      reject(new Error("IndexedDB not supported"));
+      return;
+    }
+    const req = indexedDB.open(RECORDING_DB_NAME, RECORDING_DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(RECORDING_STORE)) {
+        db.createObjectStore(RECORDING_STORE, { keyPath: "problemId" });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return recordingDbPromise;
+}
+
+async function saveRecording(problemId, blob, mimeType) {
+  try {
+    const db = await openRecordingDb();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(RECORDING_STORE, "readwrite");
+      tx.objectStore(RECORDING_STORE).put({ problemId, blob, mimeType, recordedAt: new Date().toISOString() });
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch (e) {
+    return false; // IndexedDB未対応・失敗時も練習自体は止めない
+  }
+}
+
+async function loadRecording(problemId) {
+  try {
+    const db = await openRecordingDb();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(RECORDING_STORE, "readonly");
+      const req = tx.objectStore(RECORDING_STORE).get(problemId);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) {
+    return null;
+  }
+}
+
+// --- フレーズ単位の個人辞書（回答テキストから選択した部分を保存するだけの簡易版） ---
+const PHRASES_KEY = "eigo-shukan-juku:phrases:v1";
+
+function loadPhrases() {
+  try {
+    return JSON.parse(localStorage.getItem(PHRASES_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function savePhrases(phrases) {
+  try {
+    localStorage.setItem(PHRASES_KEY, JSON.stringify(phrases));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function savePhrase(problemId, phrase) {
+  const phrases = loadPhrases();
+  phrases.push({ problemId, phrase, at: new Date().toISOString() });
+  savePhrases(phrases);
+}
+
+document.getElementById("save-phrase-button").addEventListener("click", () => {
+  const selected = window.getSelection().toString().trim();
+  if (!selected) {
+    showToast("テキストを選択してから押してください");
+    return;
+  }
+  savePhrase(currentProblem().id, selected);
+  showToast(`📎 「${selected}」を登録しました`);
+});
 
 // --- 誤答ログ（✕/半分回答時に自動記録、任意で理由メモを追加できる） ---
 const MISTAKE_LOG_KEY = "eigo-shukan-juku:mistake-log:v1";
@@ -737,6 +874,25 @@ function markMistakeReviewedByAt(at) {
 
 function unreviewedMistakeCount() {
   return loadMistakeLog().filter((m) => !m.reviewed).length;
+}
+
+// --- 直近セッションで間違えた問題（セッション終了後・セッションをまたいでの「もう一周」用） ---
+const LAST_SESSION_MISTAKES_KEY = "eigo-shukan-juku:last-session-mistakes:v1";
+
+function loadLastSessionMistakes() {
+  try {
+    return JSON.parse(localStorage.getItem(LAST_SESSION_MISTAKES_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLastSessionMistakes(ids) {
+  try {
+    localStorage.setItem(LAST_SESSION_MISTAKES_KEY, JSON.stringify(ids));
+  } catch (e) {
+    // 保存できなくても「もう一周」ボタンが出ないだけで練習は続行できる
+  }
 }
 
 const WEEK_DAY_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
@@ -857,8 +1013,19 @@ function renderStatsScreen() {
           .map((p) => {
             const pct = p.attempts === 0 ? "-" : `${Math.round((p.scoreSum / p.attempts) * 100)}%`;
             const meta = p.attempts === 0 ? "まだ挑戦していません" : `達成度${pct}（${p.attempts}回中平均${p.scoreSum.toFixed(1)}点）`;
-            return `<div class="weak-item"><p class="weak-item-text">${escapeHtml(p.text)}</p><p class="weak-item-meta">${meta}</p></div>`;
+            const leechBadge = p.attempts > 0 && isLeech(p) ? `<span class="leech-badge">🩹 何度も間違えています</span>` : "";
+            return `<div class="weak-item">${leechBadge}<p class="weak-item-text">${escapeHtml(p.text)}</p><p class="weak-item-meta">${meta}</p></div>`;
           })
+          .join("");
+
+  const phrases = loadPhrases();
+  document.getElementById("stats-phrase-list").innerHTML =
+    phrases.length === 0
+      ? `<p class="stats-empty">📎 まだ登録したフレーズがありません</p>`
+      : phrases
+          .slice()
+          .reverse()
+          .map((ph) => `<div class="weak-item"><p class="weak-item-text">${escapeHtml(ph.phrase)}</p></div>`)
           .join("");
 }
 
@@ -972,7 +1139,30 @@ function renderTopScreen() {
     badge.textContent = String(count);
     badge.classList.remove("hidden");
   }
+
+  const retryCount = loadLastSessionMistakes().length;
+  const retryBtn = document.getElementById("top-retry-mistakes-button");
+  if (retryCount === 0) {
+    retryBtn.classList.add("hidden");
+  } else {
+    document.getElementById("top-retry-mistakes-badge").textContent = String(retryCount);
+    retryBtn.classList.remove("hidden");
+  }
+
+  const srsCount = dueForReviewProblems().length;
+  const srsBtn = document.getElementById("top-srs-button");
+  if (srsCount === 0) {
+    srsBtn.classList.add("hidden");
+  } else {
+    document.getElementById("top-srs-badge").textContent = String(srsCount);
+    srsBtn.classList.remove("hidden");
+  }
 }
+
+document.getElementById("top-srs-button").addEventListener("click", () => {
+  state.selectedLevel = "srs";
+  startSession();
+});
 
 const STAT_EXPLANATIONS = {
   streak: "🔥 毎日1問以上練習した連続日数。フリーズがあれば1日休んでも途切れません",
@@ -1098,13 +1288,21 @@ function buildReviewSet() {
   return [...markedProblems, ...extra];
 }
 
+let retrySessionPool = []; // 「間違えた問題だけもう一周」用に一時的にセットされる問題プール
+
 function startSession() {
   const isReview = state.selectedLevel === "review";
+  const isRetry = state.selectedLevel === "retry";
+  const isSrs = state.selectedLevel === "srs";
   const pool = isReview
     ? buildReviewSet()
-    : state.selectedLevel === "mix"
-      ? PROBLEMS
-      : PROBLEMS.filter((p) => p.level === state.selectedLevel && p.set_number === state.selectedSet);
+    : isRetry
+      ? retrySessionPool
+      : isSrs
+        ? dueForReviewProblems()
+        : state.selectedLevel === "mix"
+          ? PROBLEMS
+          : PROBLEMS.filter((p) => p.level === state.selectedLevel && p.set_number === state.selectedSet);
   if (pool.length === 0) return;
 
   const history = loadHistory();
@@ -1118,9 +1316,21 @@ function startSession() {
   state.streak = 0;
   state.bestStreak = 0;
   state.hadAnyImperfect = false;
+  state.sessionMistakeIds = new Set();
   sessionStartedAt = Date.now();
   enterListen();
 }
+
+document.getElementById("retry-mistakes-button").addEventListener("click", () => {
+  retrySessionPool = PROBLEMS.filter((p) => loadLastSessionMistakes().includes(p.id));
+  state.selectedLevel = "retry";
+  startSession();
+});
+document.getElementById("top-retry-mistakes-button").addEventListener("click", () => {
+  retrySessionPool = PROBLEMS.filter((p) => loadLastSessionMistakes().includes(p.id));
+  state.selectedLevel = "retry";
+  startSession();
+});
 
 document.getElementById("start-button").addEventListener("click", startSession);
 document.getElementById("restart-button").addEventListener("click", startSession);
@@ -1270,6 +1480,7 @@ function enterListen() {
   p._lang_key = pickAccentKey(); // この出題での再生アクセントを固定（リプレイ時に変わらないように）
   p._lang = ACCENT_LANG[p._lang_key];
   hideAudioErrorHint();
+  releaseMicStream();
   updateProgressUI();
   showScreen("listen");
   playCurrent();
@@ -1291,6 +1502,118 @@ document.getElementById("reveal-button").addEventListener("click", () => {
   enterAnswer();
 });
 
+// --- 自己録音（お手本と聞き比べるための非採点機能。音声認識による自動採点は却下済み方針） ---
+let mediaRecorder = null;
+let recordedChunks = [];
+let micStream = null; // 権限取得後のstreamを保持し、画面遷移時にreleaseMicStream()で解放する
+
+function recordingSupported() {
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+}
+
+// iOS Safariはwebm系codecに対応しない可能性が高いため候補を順に試す（実機での対応状況は未検証）
+const RECORDING_MIME_CANDIDATES = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/aac"];
+
+function pickRecordingMimeType() {
+  if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return "";
+  return RECORDING_MIME_CANDIDATES.find((t) => MediaRecorder.isTypeSupported(t)) || "";
+}
+
+function onMicPermissionDenied() {
+  document.getElementById("record-status").textContent =
+    "🎤 マイクの使用が許可されていません（ブラウザの設定から許可できます）";
+  document.getElementById("record-button").disabled = true;
+}
+
+async function startRecording() {
+  if (!recordingSupported()) {
+    showToast("この端末では録音機能が使えません");
+    return false;
+  }
+  try {
+    micStream = micStream || (await navigator.mediaDevices.getUserMedia({ audio: true }));
+  } catch (e) {
+    onMicPermissionDenied();
+    return false;
+  }
+  const mimeType = pickRecordingMimeType();
+  recordedChunks = [];
+  mediaRecorder = mimeType ? new MediaRecorder(micStream, { mimeType }) : new MediaRecorder(micStream);
+  mediaRecorder.ondataavailable = (e) => {
+    if (e.data.size > 0) recordedChunks.push(e.data);
+  };
+  mediaRecorder.start();
+  return true;
+}
+
+function stopRecording() {
+  return new Promise((resolve) => {
+    if (!mediaRecorder || mediaRecorder.state === "inactive") {
+      resolve(null);
+      return;
+    }
+    mediaRecorder.onstop = () => {
+      const mimeType = mediaRecorder.mimeType || "audio/webm";
+      resolve({ blob: new Blob(recordedChunks, { type: mimeType }), mimeType });
+    };
+    mediaRecorder.stop();
+  });
+}
+
+function releaseMicStream() {
+  if (micStream) {
+    micStream.getTracks().forEach((t) => t.stop());
+    micStream = null;
+  }
+}
+
+async function updateRecordBoxUI(problemId) {
+  const box = document.getElementById("record-box");
+  if (!recordingSupported()) {
+    box.classList.add("hidden");
+    return;
+  }
+  box.classList.remove("hidden");
+  const recordBtn = document.getElementById("record-button");
+  recordBtn.dataset.recording = "false";
+  recordBtn.textContent = "🎙 録音する";
+  recordBtn.disabled = false;
+  const rec = await loadRecording(problemId);
+  document.getElementById("play-my-recording").disabled = !rec;
+  document.getElementById("record-status").textContent = rec ? "録音済みです（再録音で上書きされます）" : "";
+}
+
+document.getElementById("record-button").addEventListener("click", async () => {
+  const btn = document.getElementById("record-button");
+  const p = currentProblem();
+  if (btn.dataset.recording === "true") {
+    const result = await stopRecording();
+    btn.dataset.recording = "false";
+    btn.textContent = "🎙 録音する";
+    if (result) {
+      const ok = await saveRecording(p.id, result.blob, result.mimeType);
+      document.getElementById("record-status").textContent = ok ? "録音を保存しました" : "保存に失敗しました";
+      document.getElementById("play-my-recording").disabled = !ok;
+    }
+    return;
+  }
+  const started = await startRecording();
+  if (started) {
+    btn.dataset.recording = "true";
+    btn.textContent = "⏹ 停止";
+    document.getElementById("record-status").textContent = "録音中…";
+  }
+});
+
+document.getElementById("play-my-recording").addEventListener("click", async () => {
+  const p = currentProblem();
+  const rec = await loadRecording(p.id);
+  if (!rec) return;
+  const audioEl = document.getElementById("my-recording-audio");
+  audioEl.src = URL.createObjectURL(rec.blob);
+  audioEl.play().catch(() => showToast("録音の再生に失敗しました"));
+});
+
 // --- 画面3: 回答・解説 ---
 function updateMarkButton(problemId) {
   const btn = document.getElementById("mark-button");
@@ -1306,6 +1629,7 @@ function enterAnswer() {
   document.getElementById("answer-text").textContent = p.text;
   updateAccuracyLabel();
   updateMarkButton(p.id);
+  updateRecordBoxUI(p.id); // 非同期だが画面遷移をブロックしない（既存録音の有無は準備でき次第反映）
   showScreen("answer");
 }
 
@@ -1356,6 +1680,7 @@ function judge(tier) {
     state.queue.splice(reinsertAt, 0, p);
     recordMistake(p.id, p.text, null, tier);
     pendingMistakeProblemId = p.id;
+    state.sessionMistakeIds.add(p.id);
   }
   playBeep(...TIER_BEEP[tier]);
   vibrate(TIER_VIBRATE[tier]);
@@ -1423,6 +1748,17 @@ function enterSummary() {
   document.getElementById("summary-accuracy").textContent = `${pct}%（${state.totalCount}問中）`;
   document.getElementById("summary-streak").textContent = `🔥 ${state.bestStreak}`;
   document.getElementById("summary-total").textContent = `${state.poolSize} 問`;
+
+  const mistakeIds = [...state.sessionMistakeIds];
+  saveLastSessionMistakes(mistakeIds);
+  const retryBtn = document.getElementById("retry-mistakes-button");
+  if (mistakeIds.length > 0) {
+    retryBtn.textContent = `🔁 間違えた問題だけもう一周（${mistakeIds.length}問）`;
+    retryBtn.classList.remove("hidden");
+  } else {
+    retryBtn.classList.add("hidden");
+  }
+
   showScreen("summary");
 }
 
@@ -1479,6 +1815,7 @@ document.querySelectorAll(".back-button").forEach((btn) => {
   btn.addEventListener("click", () => {
     ttsAudio.pause();
     window.speechSynthesis && window.speechSynthesis.cancel();
+    releaseMicStream();
     clearSessionSnapshot();
     renderLifetimeStats();
     showScreen("select");
@@ -1621,6 +1958,7 @@ loadProblems()
     startButtonEl.disabled = false;
     loadingIndicatorEl.classList.add("hidden");
     renderSetChips(state.selectedLevel);
+    renderTopScreen(); // 初回renderTopScreen()はPROBLEMS未取得時点で走るため、SRSバッジ等を読み込み完了後に再計算する
   })
   .catch((err) => {
     console.error(err);
