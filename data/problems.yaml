@@ -1903,3 +1903,15 @@
   source_ref: dummy-set-padding-96
   verified: false
   set_number: 3
+- id: rep-dummy-0097
+  text: The train leaves from platform three today.
+  script_segments:
+  - The train leaves from platform three today.
+  char_count: 43
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-97
+  verified: false
+  set_number: 1

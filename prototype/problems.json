@@ -999,5 +999,12 @@
     "text": "The airline's new policy requires passengers to check in online before arriving at the airport.",
     "audio": null,
     "set_number": 3
+  },
+  {
+    "id": "rep-dummy-0097",
+    "level": "beginner",
+    "text": "The train leaves from platform three today.",
+    "audio": null,
+    "set_number": 1
   }
 ]
