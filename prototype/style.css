@@ -27,8 +27,8 @@
   border: none;
   background: var(--color-track);
   color: var(--color-text);
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   font-size: 16px;
 }
@@ -140,7 +140,8 @@ button:active {
 
 .chip {
   flex: 1;
-  padding: 10px 8px;
+  min-height: 44px;
+  padding: 12px 8px;
   border-radius: 20px;
   border: 2px solid var(--color-border);
   background: var(--color-card);
@@ -155,10 +156,12 @@ button:active {
   color: #fff;
 }
 
-/* 音声が用意されていない選択肢（Part一覧のlockedと同じ配色方針） */
+/* 音声が用意されていない選択肢（Part一覧のlockedと同じ配色方針）。
+   #8a877eは白文字とのコントラスト比が3.6:1程度でWCAG AA(4.5:1)未達のため、
+   同系色のまま暗めの#6e6b63に調整した(2026-08-02、UI/UX改善) */
 .chip.locked {
-  border-color: #8a877e;
-  background: #8a877e;
+  border-color: #6e6b63;
+  background: #6e6b63;
   color: #fff;
 }
 
@@ -231,7 +234,11 @@ button:active {
   background: none;
   color: var(--color-text-muted);
   font-size: 12px;
-  padding: 0 2px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   vertical-align: middle;
 }
 
@@ -335,6 +342,35 @@ button:active {
   background: transparent;
   color: var(--color-accent);
   border: 1.5px solid var(--color-accent);
+}
+
+.answer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.answer-actions .btn-inline {
+  flex: 1;
+  width: auto;
+  margin: 0;
+}
+
+.mark-button {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-card);
+  color: #ff9500;
+  font-size: 20px;
+}
+
+.mark-button.marked {
+  border-color: #ff9500;
+  background: #fff4e5;
 }
 
 .explanation-box {
@@ -471,6 +507,46 @@ button:active {
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* 誤答時の理由選択チップ（reaction-overlay上に表示、任意選択） */
+.mistake-reason-group {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.mistake-reason-group.hidden {
+  display: none;
+}
+
+.mistake-reason-label {
+  font-size: 12px;
+  color: #fff;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+
+.reason-chip-row {
+  display: flex;
+  gap: 6px;
+}
+
+.mistake-reason-group .reason-chip {
+  display: inline-block;
+  width: auto;
+  flex: none;
+  min-height: 0;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
 /* Part選択画面 */
 .part-list {
   list-style: none;
@@ -497,10 +573,11 @@ button:active {
 }
 
 /* 「準備中」項目もタップはできる（トースト表示）。opacityで薄めず、
-   十分暗い塗りグレー+白文字で視認性を保ったまま「無効そう」に見せる */
+   十分暗い塗りグレー+白文字で視認性を保ったまま「無効そう」に見せる。
+   #8a877eは白文字とのコントラスト比不足のため#6e6b63に調整(2026-08-02) */
 .part-item.locked {
-  border: 2px solid #8a877e;
-  background: #8a877e;
+  border: 2px solid #6e6b63;
+  background: #6e6b63;
 }
 
 .part-item.locked .part-name {
@@ -577,6 +654,46 @@ button:active {
   transform: translateX(-50%) translateY(-8px);
 }
 
+/* セッション再開バナー */
+.resume-banner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  max-width: 388px;
+  margin: 0 auto;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 25;
+}
+
+.resume-banner.hidden {
+  display: none;
+}
+
+.resume-banner-text {
+  font-size: 13px;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.resume-banner-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.resume-banner-actions .btn-text {
+  padding: 8px 10px;
+}
+
 /* オンボーディング（初回起動時のみ） */
 .onboarding-overlay {
   position: fixed;
@@ -628,6 +745,15 @@ button:active {
   margin: 0 0 20px;
 }
 
+.onboarding-question {
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+.onboarding-question .option-label {
+  text-align: center;
+}
+
 /* 統計画面: 苦手リスト */
 .weak-item {
   background: var(--color-card);
@@ -647,6 +773,63 @@ button:active {
   font-size: 13px;
   color: var(--color-text-muted);
   margin: 0;
+}
+
+.mistake-item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mistake-item-actions .btn-text {
+  padding: 8px 4px;
+  font-size: 13px;
+}
+
+.section-title {
+  font-size: 16px;
+  margin: 0 0 16px;
+}
+
+/* TOPページ等の通知バッジ（未消化件数表示） */
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.filter-marked-toggle {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* 統計画面の折りたたみセクション（ネイティブdetails/summaryで軽量に実装） */
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.stats-section summary {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0 0 8px 4px;
+  padding: 6px 0;
+  min-height: 32px;
+  cursor: pointer;
+  list-style: revert;
+}
+
+.stats-section[open] summary {
+  margin-bottom: 8px;
 }
 
 .stats-empty {
@@ -722,6 +905,30 @@ button:active {
   padding: 12px 16px;
   margin: 0;
   line-height: 1.6;
+}
+
+.weekly-trend {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 6px 0 0;
+}
+
+.weekly-trend.trend-up {
+  color: #34c759;
+  font-weight: 600;
+}
+
+.weekly-trend.trend-down {
+  color: var(--color-text-muted);
+}
+
+.pct-high {
+  color: #34c759 !important;
+}
+
+.pct-low {
+  color: #ff3b30 !important;
 }
 
 /* 成長グラフ（簡易棒グラフ） */
@@ -892,4 +1099,53 @@ button:active {
   color: #ff3b30;
   font-size: 13px;
   margin: 0;
+}
+
+/* ローディング表示（問題データ取得中） */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0 0 16px;
+}
+
+.loading-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-track);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 音声再生失敗時の代替導線 */
+.audio-error-hint {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  background: var(--color-track);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 12px 0 0;
+  text-align: center;
+}
+
+/* モーション過敏なユーザー向け配慮。アニメーション・トランジションを無効化する */
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  button,
+  .progress-bar-fill,
+  .reaction-emoji,
+  .reaction-bar-fill,
+  .growth-bar,
+  .loading-spinner {
+    transition: none !important;
+    animation: none !important;
+  }
 }

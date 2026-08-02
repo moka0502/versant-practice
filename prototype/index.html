@@ -48,6 +48,7 @@
 
   <button id="top-practice-button" class="btn-primary btn-large">📝 練習する</button>
   <button id="top-stats-button" class="btn-secondary">📊 統計を見る</button>
+  <button id="top-mistakes-button" class="btn-secondary btn-outline">🔁 誤答レビュー <span id="top-mistakes-badge" class="count-badge hidden"></span></button>
 
   <p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。タイトルは仮称です。</p>
 </section>
@@ -102,7 +103,7 @@
 
   <div class="option-group">
     <p class="option-label">レベル</p>
-    <div class="chip-group" id="level-group">
+    <div class="chip-group" id="level-group" role="radiogroup" aria-label="レベル">
       <button class="chip active" data-level="beginner">初級</button>
       <button class="chip" data-level="intermediate">中級</button>
       <button class="chip" data-level="advanced">上級</button>
@@ -112,12 +113,12 @@
 
   <div class="option-group" id="set-option-group" hidden>
     <p class="option-label">セット</p>
-    <div class="chip-group" id="set-group"></div>
+    <div class="chip-group" id="set-group" role="radiogroup" aria-label="セット"></div>
   </div>
 
   <div class="option-group">
     <p class="option-label">アクセント</p>
-    <div class="chip-group" id="accent-group">
+    <div class="chip-group" id="accent-group" role="radiogroup" aria-label="アクセント">
       <button class="chip active" data-accent="us">米</button>
       <button class="chip locked" data-accent="gb">英</button>
       <button class="chip locked" data-accent="au">豪</button>
@@ -125,6 +126,7 @@
     </div>
   </div>
 
+  <p id="loading-indicator" class="loading-indicator"><span class="loading-spinner"></span>問題を読み込み中…</p>
   <button id="start-button" class="btn-primary btn-large">▶ はじめる</button>
 </section>
 
@@ -134,7 +136,7 @@
     <button class="btn-text back-button">← 戻る</button>
     <span class="streak-badge hidden"></span>
   </header>
-  <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+  <div class="progress-bar-track" role="progressbar" aria-label="進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
   <p class="progress-bar-caption">↑ 進捗（正答率ではありません）</p>
   <p class="progress-label"></p>
 
@@ -142,6 +144,7 @@
     <audio id="tts-audio" preload="none"></audio>
     <button id="play-button" class="play-circle" aria-label="再生">▶</button>
     <p class="hint">タップでもう一度聞く</p>
+    <p id="audio-error-hint" class="audio-error-hint hidden">🔇 音声を再生できませんでした。テキストで確認: <span id="audio-error-text"></span></p>
 
     <div class="speed-group" id="speed-group">
       <button class="speed-chip" data-rate="0.75">0.75x</button>
@@ -165,7 +168,10 @@
   <p id="accuracy-label" class="accuracy-label"></p>
 
   <p id="answer-text" class="answer-text"></p>
-  <button id="replay-on-answer" class="btn-secondary">🔁 もう一度聞く</button>
+  <div class="answer-actions">
+    <button id="replay-on-answer" class="btn-secondary btn-inline">🔁 もう一度聞く</button>
+    <button id="mark-button" class="mark-button" aria-label="この問題をマーク">☆</button>
+  </div>
 
   <!-- 解説欄: 内容(コンテンツ)ができるまで非表示。枠自体はexplanation-boxとして残してある -->
   <div class="explanation-box" hidden>
@@ -173,7 +179,7 @@
     <p class="explanation-body">（今後追加予定）</p>
   </div>
 
-  <div class="judge-group">
+  <div class="judge-group" role="group" aria-label="自己採点">
     <button id="judge-perfect" class="btn-judge btn-perfect">できた</button>
     <button id="judge-half" class="btn-judge btn-half">半分</button>
     <button id="judge-none" class="btn-judge btn-none">できなかった</button>
@@ -228,39 +234,73 @@
   <div class="option-group">
     <p class="option-label">今週の振り返り</p>
     <p class="weekly-report" id="weekly-report"></p>
+    <p class="weekly-trend" id="weekly-trend"></p>
   </div>
 
-  <div class="option-group">
-    <p class="option-label">達成度の推移（直近7日）</p>
+  <details class="stats-section" open>
+    <summary>達成度の推移（直近7日）</summary>
     <div class="growth-chart" id="growth-chart"></div>
-  </div>
+  </details>
 
-  <div class="option-group">
-    <p class="option-label">実績</p>
+  <details class="stats-section">
+    <summary>実績</summary>
     <div class="badge-grid" id="badge-grid"></div>
-  </div>
+  </details>
 
-  <div class="option-group">
-    <p class="option-label">レベル別達成度</p>
+  <details class="stats-section">
+    <summary>レベル別達成度</summary>
     <div class="summary-stats" id="stats-level-breakdown"></div>
-  </div>
+  </details>
 
-  <div class="option-group">
-    <p class="option-label">苦手な問題（上位5件）</p>
+  <details class="stats-section">
+    <summary>アクセント別正答率</summary>
+    <div class="summary-stats" id="stats-accent-breakdown"></div>
+  </details>
+
+  <details class="stats-section" open>
+    <summary>苦手な問題（上位5件）</summary>
+    <button id="filter-marked-toggle" class="chip filter-marked-toggle" type="button">★ マーク済みのみ</button>
     <div id="stats-weak-list"></div>
-  </div>
+    <button id="start-review-button" class="btn-secondary">🎯 復習セットを始める（16問）</button>
+  </details>
 
   <button id="export-history-button" class="btn-secondary">⬇ 履歴をエクスポート（JSON）</button>
 </section>
 
+<!-- 画面6: 誤答レビュー -->
+<section id="screen-mistakes" class="screen hidden">
+  <header class="practice-header">
+    <button class="btn-text" id="back-from-mistakes">← 戻る</button>
+  </header>
+  <h2 class="section-title">🔁 誤答レビュー</h2>
+  <div id="mistakes-list"></div>
+</section>
+
 <!-- 正誤リアクション演出（問題間の一時停止も兼ねる） -->
-<div id="reaction-overlay" class="reaction-overlay hidden">
+<div id="reaction-overlay" class="reaction-overlay hidden" role="status" aria-live="polite">
   <span id="reaction-emoji" class="reaction-emoji"></span>
+  <div id="mistake-reason-group" class="mistake-reason-group hidden">
+    <p class="mistake-reason-label">どこが違った？（任意）</p>
+    <div class="reason-chip-row">
+      <button class="chip reason-chip" data-reason="hearing">聞き取れず</button>
+      <button class="chip reason-chip" data-reason="structure">文構造</button>
+      <button class="chip reason-chip" data-reason="speed">速度</button>
+    </div>
+  </div>
   <div class="reaction-bar-track"><div id="reaction-bar-fill" class="reaction-bar-fill"></div></div>
 </div>
 
 <!-- Part準備中タップ時のトースト -->
 <div id="toast" class="toast"></div>
+
+<!-- 前回のセッションが中断された場合の再開バナー -->
+<div id="resume-banner" class="resume-banner hidden">
+  <p class="resume-banner-text">前回の続きがあります</p>
+  <div class="resume-banner-actions">
+    <button id="resume-session-button" class="btn-text">再開する</button>
+    <button id="dismiss-resume-button" class="btn-text">閉じる</button>
+  </div>
+</div>
 
 <!-- 初回起動時のオンボーディング -->
 <div id="onboarding-overlay" class="onboarding-overlay hidden">
@@ -273,6 +313,23 @@
       <li>📝 スクリプトを見て確認</li>
       <li>✅ 自己採点して次の問題へ</li>
     </ol>
+    <div class="onboarding-question">
+      <p class="option-label">今のレベル感は？</p>
+      <div class="chip-group" id="onboarding-level-group" role="radiogroup" aria-label="レベル感">
+        <button class="chip active" data-level="beginner">初級</button>
+        <button class="chip" data-level="intermediate">中級</button>
+        <button class="chip" data-level="advanced">上級</button>
+      </div>
+    </div>
+    <div class="onboarding-question">
+      <p class="option-label">練習の目的は？</p>
+      <div class="chip-group" id="onboarding-goal-group" role="radiogroup" aria-label="目的">
+        <button class="chip active" data-goal="general">日常</button>
+        <button class="chip" data-goal="travel">旅行</button>
+        <button class="chip" data-goal="business">仕事</button>
+        <button class="chip" data-goal="exam">試験</button>
+      </div>
+    </div>
     <p class="onboarding-note">毎日ちょっとずつ、続けることが一番の近道です。</p>
     <button id="onboarding-dismiss" class="btn-primary btn-large">はじめる</button>
   </div>

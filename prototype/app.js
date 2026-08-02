@@ -8,10 +8,17 @@ async function loadProblems() {
   PROBLEMS = await res.json();
 }
 
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 const ACCENT_LANG = { us: "en-US", gb: "en-GB", au: "en-AU" };
 const ACCENT_KEYS = ["us", "gb", "au"];
-const INTER_PROBLEM_PAUSE_MS = 2000; // 問題間の間。iOSでは次の音声再生がユーザー操作から遅延するため、
-                                      // 自動再生がブロックされる可能性がある（実機要確認）
+const INTER_PROBLEM_PAUSE_MS = 1400; // 問題間の間。iOSでは次の音声再生がユーザー操作から遅延するため、
+                                      // 自動再生がブロックされる可能性がある（実機確認済み、2026-08-02）
+const MISTAKE_REASON_PAUSE_MS = 3000; // 誤答理由チップを選ぶ余地を与えるため、通常の間より長くする
 
 const state = {
   selectedLevel: "beginner",
@@ -36,6 +43,7 @@ const screens = {
   answer: document.getElementById("screen-answer"),
   summary: document.getElementById("screen-summary"),
   stats: document.getElementById("screen-stats"),
+  mistakes: document.getElementById("screen-mistakes"),
 };
 
 function showScreen(name) {
@@ -102,12 +110,15 @@ const SESSION_COMPLETE_CHIME = [
 
 // emoji表示 + 下部タイムバーを durationMs かけて満たし、終わったら onDone を呼ぶ
 // （問題間の「間」を可視化する役割も兼ねる）
-function showReaction(emoji, durationMs, onDone) {
+function showReaction(emoji, durationMs, onDone, ariaLabel, showReasonChips) {
   const overlay = document.getElementById("reaction-overlay");
   const emojiEl = document.getElementById("reaction-emoji");
   const barFill = document.getElementById("reaction-bar-fill");
 
+  document.getElementById("mistake-reason-group").classList.toggle("hidden", !showReasonChips);
+
   emojiEl.textContent = emoji;
+  if (ariaLabel) emojiEl.setAttribute("aria-label", ariaLabel);
   emojiEl.style.animation = "none";
   void emojiEl.offsetWidth; // アニメーション再発火のためのreflow
   emojiEl.style.animation = "";
@@ -378,6 +389,28 @@ function weeklyReport() {
   return { attempts, scoreSum, daysActive };
 }
 
+function weeklyReportWithComparison() {
+  const thisWeek = weeklyReport();
+  const log = loadDailyLog();
+  const today = todayKey();
+  let attempts = 0;
+  let scoreSum = 0;
+  let daysActive = 0;
+  for (let i = 7; i < 14; i++) {
+    const entry = log[shiftDayKey(today, -i)];
+    if (entry) {
+      attempts += entry.attempts;
+      scoreSum += entry.scoreSum;
+      daysActive += 1;
+    }
+  }
+  const lastWeek = { attempts, scoreSum, daysActive };
+  const thisPct = thisWeek.attempts ? thisWeek.scoreSum / thisWeek.attempts : null;
+  const lastPct = lastWeek.attempts ? lastWeek.scoreSum / lastWeek.attempts : null;
+  const trend = thisPct !== null && lastPct !== null ? Math.round((thisPct - lastPct) * 100) : null;
+  return { thisWeek, lastWeek, trend };
+}
+
 // --- パーフェクトウィーク演出（7日連続、全問「できた」だった場合の特別演出） ---
 const PERFECT_WEEK_LAST_KEY = "eigo-shukan-juku:perfect-week-last:v1";
 
@@ -398,6 +431,7 @@ function maybeCelebratePerfectWeek() {
     localStorage.setItem(PERFECT_WEEK_LAST_KEY, today);
     showToast("🎊 パーフェクトウィーク達成！7日連続で全問「できた」！");
     playChime(PERFECT_WEEK_CHIME);
+    vibrate(PERFECT_WEEK_VIBRATE);
   }
 }
 
@@ -433,6 +467,7 @@ function awardXp(tier) {
   if (levelForXp(after) > levelForXp(before)) {
     showToast(`⭐ レベルアップ！ Lv.${levelForXp(after)}`);
     playChime(LEVEL_UP_CHIME);
+    vibrate(LEVEL_UP_VIBRATE);
   }
 }
 
@@ -559,6 +594,13 @@ const LEVEL_LABEL = { beginner: "初級", intermediate: "中級", advanced: "上
 const WEAK_MIN_ATTEMPTS = 2; // 1回のミスだけで「苦手」扱いにしないための下限
 const WEAK_LIST_LIMIT = 5;
 
+// 達成度の色分け（進捗の情報階層をテキストだけでなく色でも伝える）
+function pctClass(pct) {
+  if (pct >= 80) return "pct-high";
+  if (pct < 50) return "pct-low";
+  return "";
+}
+
 function levelBreakdown() {
   const history = loadHistory();
   const byLevel = {
@@ -575,12 +617,126 @@ function levelBreakdown() {
   return byLevel;
 }
 
+// --- アクセント別正答率（現状は米国英語の音声のみ提供中。将来の英/豪音声追加を見越し先行実装） ---
+const ACCENT_LOG_KEY = "eigo-shukan-juku:accent-log:v1";
+const ACCENT_LABEL = { us: "米", gb: "英", au: "豪" };
+
+function loadAccentLog() {
+  try {
+    return JSON.parse(localStorage.getItem(ACCENT_LOG_KEY)) || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveAccentLog(log) {
+  try {
+    localStorage.setItem(ACCENT_LOG_KEY, JSON.stringify(log));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function recordAccentAttempt(accentKey, tier) {
+  const log = loadAccentLog();
+  const entry = log[accentKey] || { attempts: 0, scoreSum: 0 };
+  entry.attempts += 1;
+  entry.scoreSum += SCORE_BY_TIER[tier];
+  log[accentKey] = entry;
+  saveAccentLog(log);
+}
+
 function weakProblems() {
   const history = loadHistory();
   return PROBLEMS.map((p) => ({ ...p, ...(history[p.id] || { attempts: 0, scoreSum: 0 }) }))
     .filter((p) => p.attempts >= WEAK_MIN_ATTEMPTS)
     .sort((a, b) => a.scoreSum / a.attempts - b.scoreSum / b.attempts || a.id.localeCompare(b.id))
     .slice(0, WEAK_LIST_LIMIT);
+}
+
+// --- 苦手問題マーク（ユーザーが手動で☆マークし、後で絞り込んで復習できる） ---
+const MARKED_PROBLEMS_KEY = "eigo-shukan-juku:marked-problems:v1";
+
+function loadMarkedProblems() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(MARKED_PROBLEMS_KEY)) || []);
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function saveMarkedProblems(marked) {
+  try {
+    localStorage.setItem(MARKED_PROBLEMS_KEY, JSON.stringify([...marked]));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function toggleMarkedProblem(problemId) {
+  const marked = loadMarkedProblems();
+  if (marked.has(problemId)) marked.delete(problemId);
+  else marked.add(problemId);
+  saveMarkedProblems(marked);
+  return marked.has(problemId);
+}
+
+function markedProblemsList() {
+  const marked = loadMarkedProblems();
+  const history = loadHistory();
+  return PROBLEMS.filter((p) => marked.has(p.id)).map((p) => ({
+    ...p,
+    ...(history[p.id] || { attempts: 0, scoreSum: 0 }),
+  }));
+}
+
+// --- 誤答ログ（✕/半分回答時に自動記録、任意で理由メモを追加できる） ---
+const MISTAKE_LOG_KEY = "eigo-shukan-juku:mistake-log:v1";
+const MISTAKE_LOG_LIMIT = 200; // 肥大化防止。古い順に切り捨てる
+const REASON_LABEL = { hearing: "聞き取れず", structure: "文構造", speed: "速度" };
+
+function loadMistakeLog() {
+  try {
+    return JSON.parse(localStorage.getItem(MISTAKE_LOG_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveMistakeLog(log) {
+  try {
+    localStorage.setItem(MISTAKE_LOG_KEY, JSON.stringify(log.slice(-MISTAKE_LOG_LIMIT)));
+  } catch (e) {
+    // 保存できなくても練習は続行できる
+  }
+}
+
+function recordMistake(problemId, text, reason, tier) {
+  const log = loadMistakeLog();
+  log.push({ problemId, text, reason, tier, at: new Date().toISOString(), reviewed: false });
+  saveMistakeLog(log);
+}
+
+function updateLastMistakeReason(problemId, reason) {
+  const log = loadMistakeLog();
+  for (let i = log.length - 1; i >= 0; i--) {
+    if (log[i].problemId === problemId) {
+      log[i].reason = reason;
+      break;
+    }
+  }
+  saveMistakeLog(log);
+}
+
+function markMistakeReviewedByAt(at) {
+  const log = loadMistakeLog();
+  const entry = log.find((m) => m.at === at);
+  if (entry) entry.reviewed = true;
+  saveMistakeLog(log);
+}
+
+function unreviewedMistakeCount() {
+  return loadMistakeLog().filter((m) => !m.reviewed).length;
 }
 
 const WEEK_DAY_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
@@ -613,7 +769,7 @@ function renderGrowthChart() {
   const hasAnyData = entries.some((entry) => entry && entry.attempts > 0);
   if (!hasAnyData) {
     document.getElementById("growth-chart").innerHTML =
-      '<p class="stats-empty">まだデータがありません。練習を始めましょう！</p>';
+      '<p class="stats-empty">📊 まだデータがありません。練習を始めましょう！</p>';
     return;
   }
   const bars = entries.map((entry) => {
@@ -625,6 +781,8 @@ function renderGrowthChart() {
   });
   document.getElementById("growth-chart").innerHTML = bars.join("");
 }
+
+let statsShowMarkedOnly = false;
 
 function renderStatsScreen() {
   const { attempts, scoreSum } = lifetimeStats();
@@ -645,11 +803,25 @@ function renderStatsScreen() {
   document.getElementById("daily-goal-fill").style.width =
     `${Math.min(100, Math.round((today.attempts / DAILY_GOAL) * 100))}%`;
 
-  const week = weeklyReport();
+  const { thisWeek: week, trend } = weeklyReportWithComparison();
   document.getElementById("weekly-report").textContent =
     week.attempts === 0
       ? "今週はまだ記録がありません"
       : `今週は${week.daysActive}日練習・計${week.attempts}問・達成度${Math.round((week.scoreSum / week.attempts) * 100)}%`;
+  const trendEl = document.getElementById("weekly-trend");
+  if (trend === null) {
+    trendEl.textContent = "先週のデータがないため比較できません";
+    trendEl.className = "weekly-trend";
+  } else if (trend > 0) {
+    trendEl.textContent = `↑ 先週比 +${trend}pt`;
+    trendEl.className = "weekly-trend trend-up";
+  } else if (trend < 0) {
+    trendEl.textContent = `↓ 先週比 ${trend}pt`;
+    trendEl.className = "weekly-trend trend-down";
+  } else {
+    trendEl.textContent = "先週と同じ達成度です";
+    trendEl.className = "weekly-trend";
+  }
 
   renderGrowthChart();
   renderBadgeGrid();
@@ -657,21 +829,43 @@ function renderStatsScreen() {
   document.getElementById("stats-level-breakdown").innerHTML = Object.entries(levelBreakdown())
     .map(([level, { attempts: a, scoreSum: s }]) => {
       const pct = a === 0 ? "-" : `${Math.round((s / a) * 100)}%`;
-      return `<p class="summary-row"><span>${LEVEL_LABEL[level]}</span><strong>${pct}</strong></p>`;
+      const cls = a === 0 ? "" : pctClass(Math.round((s / a) * 100));
+      return `<p class="summary-row"><span>${LEVEL_LABEL[level]}</span><strong class="${cls}">${pct}</strong></p>`;
     })
     .join("");
 
-  const weak = weakProblems();
+  const accentLog = loadAccentLog();
+  document.getElementById("stats-accent-breakdown").innerHTML = ACCENT_KEYS.map((key) => {
+    const entry = accentLog[key];
+    const hasData = entry && entry.attempts > 0;
+    const pctNum = hasData ? Math.round((entry.scoreSum / entry.attempts) * 100) : null;
+    const pct = hasData ? `${pctNum}%` : "データなし";
+    const cls = hasData ? pctClass(pctNum) : "";
+    return `<p class="summary-row"><span>${ACCENT_LABEL[key]}</span><strong class="${cls}">${pct}</strong></p>`;
+  }).join("");
+
+  const filterBtn = document.getElementById("filter-marked-toggle");
+  filterBtn.classList.toggle("active", statsShowMarkedOnly);
+  const listSource = statsShowMarkedOnly ? markedProblemsList() : weakProblems();
+  const emptyMessage = statsShowMarkedOnly
+    ? "☆ まだマークした問題がありません"
+    : "📊 まだ記録がありません。練習を始めましょう！";
   document.getElementById("stats-weak-list").innerHTML =
-    weak.length === 0
-      ? `<p class="stats-empty">まだ記録がありません。練習を始めましょう！</p>`
-      : weak
+    listSource.length === 0
+      ? `<p class="stats-empty">${emptyMessage}</p>`
+      : listSource
           .map((p) => {
-            const pct = Math.round((p.scoreSum / p.attempts) * 100);
-            return `<div class="weak-item"><p class="weak-item-text">${p.text}</p><p class="weak-item-meta">達成度${pct}%（${p.attempts}回中平均${p.scoreSum.toFixed(1)}点）</p></div>`;
+            const pct = p.attempts === 0 ? "-" : `${Math.round((p.scoreSum / p.attempts) * 100)}%`;
+            const meta = p.attempts === 0 ? "まだ挑戦していません" : `達成度${pct}（${p.attempts}回中平均${p.scoreSum.toFixed(1)}点）`;
+            return `<div class="weak-item"><p class="weak-item-text">${escapeHtml(p.text)}</p><p class="weak-item-meta">${meta}</p></div>`;
           })
           .join("");
 }
+
+document.getElementById("filter-marked-toggle").addEventListener("click", () => {
+  statsShowMarkedOnly = !statsShowMarkedOnly;
+  renderStatsScreen();
+});
 
 function exportHistoryAsJson() {
   const payload = { history: loadHistory(), practiceDays: loadPracticeDays(), exportedAt: new Date().toISOString() };
@@ -697,12 +891,87 @@ document.getElementById("back-from-stats").addEventListener("click", () => {
   showScreen("top");
 });
 
+// --- 画面6: 誤答レビュー ---
+function playMistakeAudio(problemId) {
+  const p = PROBLEMS.find((pr) => pr.id === problemId);
+  if (!p) return;
+  if (p.audio) {
+    ttsAudio.src = p.audio;
+    ttsAudio.playbackRate = 1;
+    ttsAudio.currentTime = 0;
+    ttsAudio.play().catch(() => speakFallback(p));
+  } else {
+    speakFallback(p);
+  }
+}
+
+function renderMistakesScreen() {
+  const log = loadMistakeLog().filter((m) => !m.reviewed).slice().reverse();
+  const listEl = document.getElementById("mistakes-list");
+  if (log.length === 0) {
+    listEl.innerHTML = `<p class="stats-empty">🎉 誤答はありません</p>`;
+    return;
+  }
+  listEl.innerHTML = log
+    .map((m) => {
+      const meta = m.reason ? `理由: ${REASON_LABEL[m.reason]}` : "理由: 未選択";
+      return (
+        `<div class="weak-item">` +
+        `<p class="weak-item-text">${escapeHtml(m.text)}</p>` +
+        `<p class="weak-item-meta">${meta}</p>` +
+        `<div class="mistake-item-actions">` +
+        `<button class="btn-text mistake-play" data-problem-id="${escapeHtml(m.problemId)}">🔊 音声を聞く</button>` +
+        `<button class="btn-text mistake-reviewed" data-at="${escapeHtml(m.at)}">✓ レビュー済みにする</button>` +
+        `</div></div>`
+      );
+    })
+    .join("");
+}
+
+document.getElementById("mistakes-list").addEventListener("click", (e) => {
+  const playBtn = e.target.closest(".mistake-play");
+  if (playBtn) {
+    playMistakeAudio(playBtn.dataset.problemId);
+    return;
+  }
+  const reviewedBtn = e.target.closest(".mistake-reviewed");
+  if (reviewedBtn) {
+    markMistakeReviewedByAt(reviewedBtn.dataset.at);
+    renderMistakesScreen();
+    renderTopScreen();
+  }
+});
+
+document.getElementById("start-review-button").addEventListener("click", () => {
+  state.selectedLevel = "review";
+  renderLifetimeStats();
+  startSession();
+});
+
+document.getElementById("top-mistakes-button").addEventListener("click", () => {
+  renderMistakesScreen();
+  showScreen("mistakes");
+});
+document.getElementById("back-from-mistakes").addEventListener("click", () => {
+  renderTopScreen();
+  showScreen("top");
+});
+
 // --- 画面-1: TOP（ダッシュボード） ---
 function renderTopScreen() {
   document.getElementById("top-streak").textContent = `${currentStreak()} 日`;
   document.getElementById("top-level").textContent = `Lv.${levelForXp(loadXp())}`;
   document.getElementById("top-coins").textContent = `${loadCoins()}枚`;
   document.getElementById("top-freezes").textContent = `${loadFreezeCount()} 個`;
+
+  const badge = document.getElementById("top-mistakes-badge");
+  const count = unreviewedMistakeCount();
+  if (count === 0) {
+    badge.classList.add("hidden");
+  } else {
+    badge.textContent = String(count);
+    badge.classList.remove("hidden");
+  }
 }
 
 const STAT_EXPLANATIONS = {
@@ -744,13 +1013,19 @@ document.querySelectorAll(".part-item.locked").forEach((btn) => {
 // --- 画面1: レベル・アクセント選択（単一選択） ---
 function setupSingleSelectGroup(groupEl, dataAttr, onSelect) {
   groupEl.querySelectorAll(".chip").forEach((chip) => {
+    chip.setAttribute("role", "radio");
+    chip.setAttribute("aria-checked", chip.classList.contains("active") ? "true" : "false");
     if (chip.classList.contains("locked")) {
       chip.addEventListener("click", () => showToast("🔧 まだ音声を用意していません"));
       return;
     }
     chip.addEventListener("click", () => {
-      groupEl.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+      groupEl.querySelectorAll(".chip").forEach((c) => {
+        c.classList.remove("active");
+        c.setAttribute("aria-checked", "false");
+      });
       chip.classList.add("active");
+      chip.setAttribute("aria-checked", "true");
       onSelect(chip.dataset[dataAttr]);
     });
   });
@@ -807,15 +1082,33 @@ function weightedShuffle(items, weightFn) {
     .map((entry) => entry.item);
 }
 
+// 復習専用セット（マーク済み問題を優先し、不足分は既存の苦手判定・重み付けで補うハイブリッド方式）
+function buildReviewSet() {
+  const marked = loadMarkedProblems();
+  const markedProblems = PROBLEMS.filter((p) => marked.has(p.id));
+  if (markedProblems.length >= SESSION_SIZE) {
+    return weightedShuffle(markedProblems, () => 1).slice(0, SESSION_SIZE);
+  }
+  const remaining = SESSION_SIZE - markedProblems.length;
+  const history = loadHistory();
+  const weakIds = new Set(weakProblems().map((p) => p.id));
+  const weakPool = PROBLEMS.filter((p) => !marked.has(p.id) && weakIds.has(p.id));
+  const fallbackPool = PROBLEMS.filter((p) => !marked.has(p.id) && !weakIds.has(p.id));
+  const extra = weightedShuffle([...weakPool, ...fallbackPool], (p) => problemWeight(p, history)).slice(0, remaining);
+  return [...markedProblems, ...extra];
+}
+
 function startSession() {
-  const pool =
-    state.selectedLevel === "mix"
+  const isReview = state.selectedLevel === "review";
+  const pool = isReview
+    ? buildReviewSet()
+    : state.selectedLevel === "mix"
       ? PROBLEMS
       : PROBLEMS.filter((p) => p.level === state.selectedLevel && p.set_number === state.selectedSet);
   if (pool.length === 0) return;
 
   const history = loadHistory();
-  const shuffled = weightedShuffle(pool, (p) => problemWeight(p, history));
+  const shuffled = isReview ? pool : weightedShuffle(pool, (p) => problemWeight(p, history));
   state.queue = shuffled.slice(0, SESSION_SIZE);
   state.poolSize = state.queue.length;
   state.cleared = new Set();
@@ -832,17 +1125,80 @@ function startSession() {
 document.getElementById("start-button").addEventListener("click", startSession);
 document.getElementById("restart-button").addEventListener("click", startSession);
 
+// --- セッションの中断・再開（バックグラウンド遷移やリロードをまたいで途中から再開できるようにする） ---
+const SESSION_SNAPSHOT_KEY = "eigo-shukan-juku:session-snapshot:v1";
+const SESSION_RESUME_TIMEOUT_MS = 30 * 60 * 1000; // 30分以上前のスナップショットは古すぎるため無視する
+
+function saveSessionSnapshot() {
+  if (state.queue.length === 0) return;
+  try {
+    localStorage.setItem(
+      SESSION_SNAPSHOT_KEY,
+      JSON.stringify({ ...state, cleared: [...state.cleared], savedAt: Date.now() })
+    );
+  } catch (e) {
+    // 保存できなくても練習は続行できる（再開できないだけ）
+  }
+}
+
+function loadSessionSnapshot() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SESSION_SNAPSHOT_KEY));
+    if (!raw || !Array.isArray(raw.queue) || raw.queue.length === 0) return null;
+    if (Date.now() - raw.savedAt > SESSION_RESUME_TIMEOUT_MS) return null;
+    return raw;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearSessionSnapshot() {
+  try {
+    localStorage.removeItem(SESSION_SNAPSHOT_KEY);
+  } catch (e) {
+    // 消せなくても実害は次回また再開バナーが出るだけ
+  }
+}
+
+function maybeShowResumeBanner() {
+  if (!loadSessionSnapshot()) return;
+  document.getElementById("resume-banner").classList.remove("hidden");
+}
+
+function resumeSession() {
+  const snapshot = loadSessionSnapshot();
+  if (!snapshot) return;
+  Object.assign(state, snapshot);
+  state.cleared = new Set(snapshot.cleared);
+  delete state.savedAt;
+  document.getElementById("resume-banner").classList.add("hidden");
+  sessionStartedAt = Date.now();
+  enterListen();
+}
+
+document.getElementById("resume-session-button").addEventListener("click", resumeSession);
+document.getElementById("dismiss-resume-button").addEventListener("click", () => {
+  clearSessionSnapshot();
+  document.getElementById("resume-banner").classList.add("hidden");
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) saveSessionSnapshot();
+});
+
 // --- 画面2: リスニング ---
 function currentProblem() {
   return state.queue[state.currentIndex];
 }
 
+function pickAccentKey() {
+  return state.selectedAccent === "mix"
+    ? ACCENT_KEYS[Math.floor(Math.random() * ACCENT_KEYS.length)]
+    : state.selectedAccent;
+}
+
 function currentAccentLang() {
-  const key =
-    state.selectedAccent === "mix"
-      ? ACCENT_KEYS[Math.floor(Math.random() * ACCENT_KEYS.length)]
-      : state.selectedAccent;
-  return ACCENT_LANG[key];
+  return ACCENT_LANG[pickAccentKey()];
 }
 
 function updateProgressUI() {
@@ -851,7 +1207,11 @@ function updateProgressUI() {
   const label = `第${state.totalCount + 1}問（全${state.poolSize}問中）${correctSuffix}`;
   document.querySelectorAll(".progress-label").forEach((el) => (el.textContent = label));
   const fill = document.getElementById("progress-bar-fill");
-  if (fill) fill.style.width = `${Math.round((state.cleared.size / state.poolSize) * 100)}%`;
+  if (fill) {
+    const pct = Math.round((state.cleared.size / state.poolSize) * 100);
+    fill.style.width = `${pct}%`;
+    fill.closest(".progress-bar-track")?.setAttribute("aria-valuenow", String(pct));
+  }
 
   document.querySelectorAll(".streak-badge").forEach((el) => {
     if (state.streak >= 2) {
@@ -884,9 +1244,10 @@ function playCurrent() {
 // verified=Trueの問題だけがproblems.jsonに含まれ、それには音声が必ず紐付いているため）
 function speakFallback(p) {
   if (!window.speechSynthesis) {
-    alert(p.text);
+    showAudioErrorHint(p.text);
     return;
   }
+  hideAudioErrorHint();
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(p.text);
   utter.lang = p._lang || currentAccentLang();
@@ -894,9 +1255,21 @@ function speakFallback(p) {
   window.speechSynthesis.speak(utter);
 }
 
+function showAudioErrorHint(text) {
+  document.getElementById("audio-error-text").textContent = text;
+  document.getElementById("audio-error-hint").classList.remove("hidden");
+  showToast("🔇 音声を再生できませんでした");
+}
+
+function hideAudioErrorHint() {
+  document.getElementById("audio-error-hint").classList.add("hidden");
+}
+
 function enterListen() {
   const p = currentProblem();
-  p._lang = currentAccentLang(); // この出題での再生アクセントを固定（リプレイ時に変わらないように）
+  p._lang_key = pickAccentKey(); // この出題での再生アクセントを固定（リプレイ時に変わらないように）
+  p._lang = ACCENT_LANG[p._lang_key];
+  hideAudioErrorHint();
   updateProgressUI();
   showScreen("listen");
   playCurrent();
@@ -919,13 +1292,29 @@ document.getElementById("reveal-button").addEventListener("click", () => {
 });
 
 // --- 画面3: 回答・解説 ---
+function updateMarkButton(problemId) {
+  const btn = document.getElementById("mark-button");
+  const isMarked = loadMarkedProblems().has(problemId);
+  btn.textContent = isMarked ? "★" : "☆";
+  btn.classList.toggle("marked", isMarked);
+  btn.setAttribute("aria-pressed", String(isMarked));
+}
+
 function enterAnswer() {
   const p = currentProblem();
   updateProgressUI();
   document.getElementById("answer-text").textContent = p.text;
   updateAccuracyLabel();
+  updateMarkButton(p.id);
   showScreen("answer");
 }
+
+document.getElementById("mark-button").addEventListener("click", () => {
+  const p = currentProblem();
+  const nowMarked = toggleMarkedProblem(p.id);
+  updateMarkButton(p.id);
+  showToast(nowMarked ? "★ マークしました" : "マークを解除しました");
+});
 
 function updateAccuracyLabel() {
   const el = document.getElementById("accuracy-label");
@@ -938,19 +1327,26 @@ function updateAccuracyLabel() {
 }
 
 const TIER_EMOJI = { perfect: "🎉", half: "🙂", none: "😅" };
+const TIER_LABEL = { perfect: "できた", half: "半分できた", none: "できなかった" };
 const TIER_BEEP = { perfect: [880, 0.12], half: [520, 0.14], none: [220, 0.18] };
 const TIER_VIBRATE = { perfect: [15], half: [20], none: [30, 40, 30] };
+const LEVEL_UP_VIBRATE = [20, 30, 20, 30, 40];
+const PERFECT_WEEK_VIBRATE = [30, 20, 30, 20, 30, 20, 60];
+
+let pendingMistakeProblemId = null;
 
 function judge(tier) {
   const p = currentProblem();
   state.totalCount += 1;
   state.scoreSum += SCORE_BY_TIER[tier];
   recordAttempt(p.id, tier);
+  if (p._lang_key) recordAccentAttempt(p._lang_key, tier);
 
   if (tier === "perfect") {
     state.cleared.add(p.id);
     state.streak += 1;
     state.bestStreak = Math.max(state.bestStreak, state.streak);
+    pendingMistakeProblemId = null;
   } else {
     state.hadAnyImperfect = true;
     state.streak = 0;
@@ -958,22 +1354,41 @@ function judge(tier) {
     const offset = 2 + Math.floor(Math.random() * 3);
     const reinsertAt = Math.min(state.queue.length, state.currentIndex + 1 + offset);
     state.queue.splice(reinsertAt, 0, p);
+    recordMistake(p.id, p.text, null, tier);
+    pendingMistakeProblemId = p.id;
   }
   playBeep(...TIER_BEEP[tier]);
   vibrate(TIER_VIBRATE[tier]);
 
   const sessionDone = state.cleared.size >= state.poolSize;
   if (!sessionDone) state.currentIndex += 1;
+  saveSessionSnapshot();
 
-  // 2秒の間を空けてから次へ（バーで可視化）。この遅延によりnext再生はユーザー操作と
-  // 同一コールスタックでなくなるため、iOS Safariで自動再生がブロックされる可能性がある（要実機確認）
-  showReaction(TIER_EMOJI[tier], INTER_PROBLEM_PAUSE_MS, sessionDone ? enterSummary : enterListen);
+  // 間を空けてから次へ（バーで可視化）。誤答理由チップを出す場合は選ぶ時間を確保するため長めにする。
+  // この遅延によりnext再生はユーザー操作と同一コールスタックでなくなるため、
+  // iOS Safariで自動再生がブロックされる可能性がある（実機確認済み）
+  const pauseMs = tier === "perfect" ? INTER_PROBLEM_PAUSE_MS : MISTAKE_REASON_PAUSE_MS;
+  showReaction(
+    TIER_EMOJI[tier],
+    pauseMs,
+    sessionDone ? enterSummary : enterListen,
+    TIER_LABEL[tier],
+    tier !== "perfect"
+  );
 }
 
 document.getElementById("judge-perfect").addEventListener("click", () => judge("perfect"));
 document.getElementById("judge-half").addEventListener("click", () => judge("half"));
 document.getElementById("judge-none").addEventListener("click", () => judge("none"));
 document.getElementById("replay-on-answer").addEventListener("click", playCurrent);
+
+document.querySelectorAll("#mistake-reason-group .reason-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    if (!pendingMistakeProblemId) return;
+    updateLastMistakeReason(pendingMistakeProblemId, chip.dataset.reason);
+    showToast("メモしました");
+  });
+});
 
 // --- 画面4: セッションリザルト ---
 // 達成度に応じてマスコット・メッセージを変える（キャラクターのリアクション拡充）
@@ -991,6 +1406,7 @@ function pickSummaryReaction(pct) {
 }
 
 function enterSummary() {
+  clearSessionSnapshot();
   if (sessionStartedAt) {
     addPracticeMs(Date.now() - sessionStartedAt);
     sessionStartedAt = null;
@@ -1063,6 +1479,7 @@ document.querySelectorAll(".back-button").forEach((btn) => {
   btn.addEventListener("click", () => {
     ttsAudio.pause();
     window.speechSynthesis && window.speechSynthesis.cancel();
+    clearSessionSnapshot();
     renderLifetimeStats();
     showScreen("select");
   });
@@ -1084,6 +1501,26 @@ function maybeShowOnboarding() {
     document.getElementById("onboarding-overlay").classList.remove("hidden");
   }
 }
+
+// --- オンボーディングの簡易パーソナライズ設問（レベル感・目的） ---
+const ONBOARDING_PROFILE_KEY = "eigo-shukan-juku:onboarding-profile:v1";
+let onboardingLevel = "beginner";
+let onboardingGoal = "general";
+
+function saveOnboardingProfile(profile) {
+  try {
+    localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(profile));
+  } catch (e) {
+    // 保存できなくても選択内容がstate.selectedLevelに反映されていればこの回だけは有効
+  }
+}
+
+setupSingleSelectGroup(document.getElementById("onboarding-level-group"), "level", (v) => {
+  onboardingLevel = v;
+});
+setupSingleSelectGroup(document.getElementById("onboarding-goal-group"), "goal", (v) => {
+  onboardingGoal = v;
+});
 
 // --- アクセスゲート(No.2)。本物のセキュリティではない簡易な入場確認 ---
 // GitHub Pagesにはサーバー側の認証機能が無いため、ソースを見れば誰でも突破できる。
@@ -1108,12 +1545,14 @@ function passGate() {
   document.getElementById("screen-gate").classList.add("hidden");
   showScreen("top");
   maybeShowOnboarding();
+  maybeShowResumeBanner();
 }
 
 if (hasPassedGate()) {
   document.getElementById("screen-gate").classList.add("hidden");
   showScreen("top");
   maybeShowOnboarding();
+  maybeShowResumeBanner();
 } else {
   document.getElementById("gate-submit").addEventListener("click", () => {
     const input = document.getElementById("gate-password");
@@ -1130,6 +1569,13 @@ if (hasPassedGate()) {
 
 document.getElementById("onboarding-dismiss").addEventListener("click", () => {
   document.getElementById("onboarding-overlay").classList.add("hidden");
+  saveOnboardingProfile({ goal: onboardingGoal, initialLevel: onboardingLevel });
+  state.selectedLevel = onboardingLevel;
+  document.querySelectorAll("#level-group .chip").forEach((c) => {
+    const isSelected = c.dataset.level === onboardingLevel;
+    c.classList.toggle("active", isSelected);
+    c.setAttribute("aria-checked", String(isSelected));
+  });
   try {
     localStorage.setItem(ONBOARDED_KEY, "true");
   } catch (e) {
@@ -1167,15 +1613,18 @@ document.getElementById("theme-toggle").addEventListener("click", () => {
 
 // --- 問題データの読み込み ---
 const startButtonEl = document.getElementById("start-button");
+const loadingIndicatorEl = document.getElementById("loading-indicator");
 startButtonEl.disabled = true;
 
 loadProblems()
   .then(() => {
     startButtonEl.disabled = false;
+    loadingIndicatorEl.classList.add("hidden");
     renderSetChips(state.selectedLevel);
   })
   .catch((err) => {
     console.error(err);
+    loadingIndicatorEl.classList.add("hidden");
     alert("問題データの読み込みに失敗しました。ページを再読み込みしてください。");
   });
 
