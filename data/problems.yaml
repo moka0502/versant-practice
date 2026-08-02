@@ -10,6 +10,7 @@
   source: generated
   source_ref: generated-1
   verified: true
+  set_number: 1
 - id: rep-0002
   text: The soup needs a little more salt.
   script_segments:
@@ -22,6 +23,7 @@
   source: generated
   source_ref: generated-2
   verified: true
+  set_number: 1
 - id: rep-0003
   text: Did you remember to lock the windows?
   script_segments:
@@ -34,6 +36,7 @@
   source: generated
   source_ref: generated-3
   verified: true
+  set_number: 1
 - id: rep-0004
   text: I can meet you after my appointment.
   script_segments:
@@ -46,6 +49,7 @@
   source: generated
   source_ref: generated-4
   verified: true
+  set_number: 1
 - id: rep-0005
   text: Our bus should arrive in ten minutes.
   script_segments:
@@ -58,6 +62,7 @@
   source: generated
   source_ref: generated-5
   verified: true
+  set_number: 1
 - id: rep-0006
   text: She keeps an extra umbrella in her car.
   script_segments:
@@ -70,6 +75,7 @@
   source: generated
   source_ref: generated-6
   verified: true
+  set_number: 1
 - id: rep-0007
   text: Turn down the music while the baby sleeps.
   script_segments:
@@ -82,6 +88,7 @@
   source: generated
   source_ref: generated-7
   verified: true
+  set_number: 1
 - id: rep-0008
   text: We may need to change our plans.
   script_segments:
@@ -94,6 +101,7 @@
   source: generated
   source_ref: generated-8
   verified: true
+  set_number: 1
 - id: rep-0009
   text: Could you hold this bag for a moment?
   script_segments:
@@ -106,6 +114,7 @@
   source: generated
   source_ref: generated-9
   verified: true
+  set_number: 1
 - id: rep-0010
   text: The laundry is still damp from yesterday.
   script_segments:
@@ -118,6 +127,7 @@
   source: generated
   source_ref: generated-10
   verified: true
+  set_number: 1
 - id: rep-0011
   text: Why did the screen suddenly go blank?
   script_segments:
@@ -130,6 +140,7 @@
   source: generated
   source_ref: generated-11
   verified: true
+  set_number: 1
 - id: rep-0012
   text: I'll call when dinner is ready.
   script_segments:
@@ -142,6 +153,7 @@
   source: generated
   source_ref: generated-12
   verified: true
+  set_number: 1
 - id: rep-0013
   text: Your keys are beside the coffee maker.
   script_segments:
@@ -154,6 +166,7 @@
   source: generated
   source_ref: generated-13
   verified: false
+  set_number: 1
 - id: rep-0014
   text: We took the quieter road home.
   script_segments:
@@ -166,6 +179,7 @@
   source: generated
   source_ref: generated-14
   verified: true
+  set_number: 1
 - id: rep-0015
   text: Please check whether the printer has paper.
   script_segments:
@@ -178,6 +192,7 @@
   source: generated
   source_ref: generated-15
   verified: true
+  set_number: 1
 - id: rep-0016
   text: This chair feels more comfortable than it looks.
   script_segments:
@@ -190,6 +205,7 @@
   source: generated
   source_ref: generated-16
   verified: true
+  set_number: 1
 - id: rep-0017
   text: I usually take a short walk before starting work each morning.
   script_segments:
@@ -203,6 +219,7 @@
   source: generated
   source_ref: generated-17
   verified: true
+  set_number: 1
 - id: rep-0018
   text: Could you remind me to buy batteries on the way home?
   script_segments:
@@ -216,6 +233,7 @@
   source: generated
   source_ref: generated-18
   verified: true
+  set_number: 1
 - id: rep-0019
   text: The bathroom faucet has been dripping since early this afternoon.
   script_segments:
@@ -229,6 +247,7 @@
   source: generated
   source_ref: generated-19
   verified: true
+  set_number: 1
 - id: rep-0020
   text: We saved the leftover rice for tomorrow's lunch at work.
   script_segments:
@@ -242,6 +261,7 @@
   source: generated
   source_ref: generated-20
   verified: true
+  set_number: 1
 - id: rep-0021
   text: Is there enough room in the freezer for this container?
   script_segments:
@@ -255,6 +275,7 @@
   source: generated
   source_ref: generated-21
   verified: true
+  set_number: 1
 - id: rep-0022
   text: My neighbor offered to water the plants during our trip.
   script_segments:
@@ -268,6 +289,7 @@
   source: generated
   source_ref: generated-22
   verified: true
+  set_number: 1
 - id: rep-0023
   text: The morning traffic was lighter than I had expected today.
   script_segments:
@@ -281,6 +303,7 @@
   source: generated
   source_ref: generated-23
   verified: true
+  set_number: 1
 - id: rep-0024
   text: You can borrow my headphones if yours are not working.
   script_segments:
@@ -293,6 +316,7 @@
   source: generated
   source_ref: generated-24
   verified: true
+  set_number: 1
 - id: rep-0025
   text: Would you mind moving your bicycle away from the stairs?
   script_segments:
@@ -306,6 +330,7 @@
   source: generated
   source_ref: generated-25
   verified: true
+  set_number: 1
 - id: rep-0026
   text: The doctor suggested resting my ankle for a few days.
   script_segments:
@@ -319,6 +344,7 @@
   source: generated
   source_ref: generated-26
   verified: true
+  set_number: 1
 - id: rep-0027
   text: We noticed a small crack underneath the kitchen table yesterday.
   script_segments:
@@ -332,6 +358,7 @@
   source: generated
   source_ref: generated-27
   verified: true
+  set_number: 1
 - id: rep-0028
   text: Can you explain how this new coffee machine actually works?
   script_segments:
@@ -345,6 +372,7 @@
   source: generated
   source_ref: generated-28
   verified: true
+  set_number: 1
 - id: rep-0029
   text: I left my jacket upstairs because the room felt warm.
   script_segments:
@@ -358,6 +386,7 @@
   source: generated
   source_ref: generated-29
   verified: true
+  set_number: 1
 - id: rep-0030
   text: They are repainting the hallway before the guests arrive tonight.
   script_segments:
@@ -371,6 +400,7 @@
   source: generated
   source_ref: generated-30
   verified: true
+  set_number: 1
 - id: rep-0031
   text: Please carefully put the clean glasses back in the cupboard.
   script_segments:
@@ -384,6 +414,7 @@
   source: generated
   source_ref: generated-31
   verified: true
+  set_number: 1
 - id: rep-0032
   text: My phone battery drains quickly whenever I use the camera.
   script_segments:
@@ -397,6 +428,7 @@
   source: generated
   source_ref: generated-32
   verified: true
+  set_number: 1
 - id: rep-0033
   text: The grocery store closes earlier on Sundays, so we should leave before six.
   script_segments:
@@ -411,6 +443,7 @@
   source: generated
   source_ref: generated-33
   verified: false
+  set_number: 1
 - id: rep-0034
   text: I forgot to bring the receipt, but they still offered me a refund.
   script_segments:
@@ -424,6 +457,7 @@
   source: generated
   source_ref: generated-34
   verified: true
+  set_number: 1
 - id: rep-0035
   text: Would it be easier to discuss the schedule during our lunch break tomorrow
     instead?
@@ -439,6 +473,7 @@
   source: generated
   source_ref: generated-35
   verified: true
+  set_number: 1
 - id: rep-0036
   text: A strong wind knocked several branches onto the sidewalk during the storm
     last night.
@@ -454,6 +489,7 @@
   source: generated
   source_ref: generated-36
   verified: true
+  set_number: 1
 - id: rep-0037
   text: You might find the missing charger hidden in the drawer beneath the television.
   script_segments:
@@ -468,6 +504,7 @@
   source: generated
   source_ref: generated-37
   verified: true
+  set_number: 1
 - id: rep-0038
   text: Please let the soup cool for a few minutes before tasting it yourself.
   script_segments:
@@ -481,6 +518,7 @@
   source: generated
   source_ref: generated-38
   verified: true
+  set_number: 1
 - id: rep-0039
   text: Our landlord promised to replace the broken heater by the end of this week.
   script_segments:
@@ -495,6 +533,7 @@
   source: generated
   source_ref: generated-39
   verified: true
+  set_number: 1
 - id: rep-0040
   text: If the package arrives while I'm out, please place it behind the flowerpot
     by the door.
@@ -511,6 +550,7 @@
   source: generated
   source_ref: generated-40
   verified: false
+  set_number: 1
 - id: rep-0041
   text: Could you lower the music while I finish this report in the next room?
   script_segments:
@@ -524,6 +564,7 @@
   source: generated
   source_ref: generated-41
   verified: true
+  set_number: 1
 - id: rep-0042
   text: The bus was delayed, so I arrived at the appointment ten minutes late.
   script_segments:
@@ -537,6 +578,7 @@
   source: generated
   source_ref: generated-42
   verified: true
+  set_number: 1
 - id: rep-0043
   text: We should measure the doorway before ordering a new sofa for the living room.
   script_segments:
@@ -550,6 +592,7 @@
   source: generated
   source_ref: generated-43
   verified: true
+  set_number: 1
 - id: rep-0044
   text: I packed an extra sandwich in case you get hungry during the hike.
   script_segments:
@@ -563,6 +606,7 @@
   source: generated
   source_ref: generated-44
   verified: true
+  set_number: 1
 - id: rep-0045
   text: Please turn off the porch light after everyone has come inside for the night.
   script_segments:
@@ -576,6 +620,7 @@
   source: generated
   source_ref: generated-45
   verified: true
+  set_number: 1
 - id: rep-0046
   text: The laundry will dry faster if you open the window above the sink.
   script_segments:
@@ -589,6 +634,7 @@
   source: generated
   source_ref: generated-46
   verified: true
+  set_number: 1
 - id: rep-0047
   text: Have you decided which train to catch for your trip to the coast?
   script_segments:
@@ -602,6 +648,7 @@
   source: generated
   source_ref: generated-47
   verified: true
+  set_number: 1
 - id: rep-0048
   text: I can pick up the medicine after my meeting ends later this afternoon.
   script_segments:
@@ -615,6 +662,7 @@
   source: generated
   source_ref: generated-48
   verified: true
+  set_number: 1
 - id: rep-0049
   text: Although the forecast predicted rain, we enjoyed a dry walk around the lake
     before dinner.
@@ -629,6 +677,7 @@
   source: generated
   source_ref: generated-49
   verified: true
+  set_number: 1
 - id: rep-0050
   text: Could someone check whether the back door was locked before we drove away
     this morning?
@@ -643,3 +692,1214 @@
   source: generated
   source_ref: generated-50
   verified: true
+  set_number: 1
+- id: rep-dummy-0001
+  text: Please leave the box on the table.
+  script_segments:
+  - Please leave the box on the table.
+  char_count: 34
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-1
+  verified: false
+  set_number: 2
+- id: rep-dummy-0002
+  text: Can you open the window for me?
+  script_segments:
+  - Can you open the window for me?
+  char_count: 31
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-2
+  verified: false
+  set_number: 2
+- id: rep-dummy-0003
+  text: I will meet you at the station.
+  script_segments:
+  - I will meet you at the station.
+  char_count: 31
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-3
+  verified: false
+  set_number: 2
+- id: rep-dummy-0004
+  text: She likes to read books at night.
+  script_segments:
+  - She likes to read books at night.
+  char_count: 33
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-4
+  verified: false
+  set_number: 2
+- id: rep-dummy-0005
+  text: The store closes early on Sundays.
+  script_segments:
+  - The store closes early on Sundays.
+  char_count: 34
+  word_count: 6
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-5
+  verified: false
+  set_number: 2
+- id: rep-dummy-0006
+  text: We should leave before it gets dark.
+  script_segments:
+  - We should leave before it gets dark.
+  char_count: 36
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-6
+  verified: false
+  set_number: 2
+- id: rep-dummy-0007
+  text: He forgot his umbrella at the office.
+  script_segments:
+  - He forgot his umbrella at the office.
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-7
+  verified: false
+  set_number: 2
+- id: rep-dummy-0008
+  text: Turn left at the next corner, please.
+  script_segments:
+  - Turn left at the next corner, please.
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-8
+  verified: false
+  set_number: 2
+- id: rep-dummy-0009
+  text: I need to buy some milk today.
+  script_segments:
+  - I need to buy some milk today.
+  char_count: 30
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-9
+  verified: false
+  set_number: 2
+- id: rep-dummy-0010
+  text: The bus was late again this morning.
+  script_segments:
+  - The bus was late again this morning.
+  char_count: 36
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-10
+  verified: false
+  set_number: 2
+- id: rep-dummy-0011
+  text: Could you pass me the salt, please?
+  script_segments:
+  - Could you pass me the salt, please?
+  char_count: 35
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-11
+  verified: false
+  set_number: 2
+- id: rep-dummy-0012
+  text: They moved to a new apartment last week.
+  script_segments:
+  - They moved to a new apartment last week.
+  char_count: 40
+  word_count: 8
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-12
+  verified: false
+  set_number: 2
+- id: rep-dummy-0013
+  text: My phone battery died this afternoon.
+  script_segments:
+  - My phone battery died this afternoon.
+  char_count: 37
+  word_count: 6
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-13
+  verified: false
+  set_number: 2
+- id: rep-dummy-0014
+  text: Let's grab lunch before the meeting starts.
+  script_segments:
+  - Let's grab lunch before the meeting starts.
+  char_count: 43
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-14
+  verified: false
+  set_number: 2
+- id: rep-dummy-0015
+  text: The garden looks lovely in the spring.
+  script_segments:
+  - The garden looks lovely in the spring.
+  char_count: 38
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-15
+  verified: false
+  set_number: 2
+- id: rep-dummy-0016
+  text: I forgot to lock the front door.
+  script_segments:
+  - I forgot to lock the front door.
+  char_count: 32
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-16
+  verified: false
+  set_number: 2
+- id: rep-dummy-0017
+  text: Can we reschedule our call to Friday?
+  script_segments:
+  - Can we reschedule our call to Friday?
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-17
+  verified: false
+  set_number: 3
+- id: rep-dummy-0018
+  text: The coffee machine is broken again today.
+  script_segments:
+  - The coffee machine is broken again today.
+  char_count: 41
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-18
+  verified: false
+  set_number: 3
+- id: rep-dummy-0019
+  text: Please remember to bring your ID card.
+  script_segments:
+  - Please remember to bring your ID card.
+  char_count: 38
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-19
+  verified: false
+  set_number: 3
+- id: rep-dummy-0020
+  text: It started raining right after lunch.
+  script_segments:
+  - It started raining right after lunch.
+  char_count: 37
+  word_count: 6
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-20
+  verified: false
+  set_number: 3
+- id: rep-dummy-0021
+  text: The kids are playing in the backyard.
+  script_segments:
+  - The kids are playing in the backyard.
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-21
+  verified: false
+  set_number: 3
+- id: rep-dummy-0022
+  text: I left my keys inside the car.
+  script_segments:
+  - I left my keys inside the car.
+  char_count: 30
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-22
+  verified: false
+  set_number: 3
+- id: rep-dummy-0023
+  text: We ran out of paper for the printer.
+  script_segments:
+  - We ran out of paper for the printer.
+  char_count: 36
+  word_count: 8
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-23
+  verified: false
+  set_number: 3
+- id: rep-dummy-0024
+  text: The meeting starts at ten tomorrow morning.
+  script_segments:
+  - The meeting starts at ten tomorrow morning.
+  char_count: 43
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-24
+  verified: false
+  set_number: 3
+- id: rep-dummy-0025
+  text: She always arrives early for work.
+  script_segments:
+  - She always arrives early for work.
+  char_count: 34
+  word_count: 6
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-25
+  verified: false
+  set_number: 3
+- id: rep-dummy-0026
+  text: Please water the plants while I'm away.
+  script_segments:
+  - Please water the plants while I'm away.
+  char_count: 39
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-26
+  verified: false
+  set_number: 3
+- id: rep-dummy-0027
+  text: The library is closed on public holidays.
+  script_segments:
+  - The library is closed on public holidays.
+  char_count: 41
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-27
+  verified: false
+  set_number: 3
+- id: rep-dummy-0028
+  text: He usually walks his dog every morning.
+  script_segments:
+  - He usually walks his dog every morning.
+  char_count: 39
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-28
+  verified: false
+  set_number: 3
+- id: rep-dummy-0029
+  text: Can you send me that file again?
+  script_segments:
+  - Can you send me that file again?
+  char_count: 32
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-29
+  verified: false
+  set_number: 3
+- id: rep-dummy-0030
+  text: The elevator is out of service today.
+  script_segments:
+  - The elevator is out of service today.
+  char_count: 37
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-30
+  verified: false
+  set_number: 3
+- id: rep-dummy-0031
+  text: I need a new charger for my laptop.
+  script_segments:
+  - I need a new charger for my laptop.
+  char_count: 35
+  word_count: 8
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-31
+  verified: false
+  set_number: 3
+- id: rep-dummy-0032
+  text: Let's take a short break for coffee.
+  script_segments:
+  - Let's take a short break for coffee.
+  char_count: 36
+  word_count: 7
+  difficulty: beginner
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-32
+  verified: false
+  set_number: 3
+- id: rep-dummy-0033
+  text: Could you please confirm whether the shipment will arrive on time?
+  script_segments:
+  - Could you please confirm whether the shipment will arrive on time?
+  char_count: 66
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-33
+  verified: false
+  set_number: 2
+- id: rep-dummy-0034
+  text: I was hoping you could review this draft before tomorrow's meeting.
+  script_segments:
+  - I was hoping you could review this draft before tomorrow's meeting.
+  char_count: 67
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-34
+  verified: false
+  set_number: 2
+- id: rep-dummy-0035
+  text: We need to figure out a better way to handle complaints.
+  script_segments:
+  - We need to figure out a better way to handle complaints.
+  char_count: 56
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-35
+  verified: false
+  set_number: 2
+- id: rep-dummy-0036
+  text: The manager asked everyone to submit their reports by Friday afternoon.
+  script_segments:
+  - The manager asked everyone to submit their reports by Friday afternoon.
+  char_count: 71
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-36
+  verified: false
+  set_number: 2
+- id: rep-dummy-0037
+  text: She mentioned that the flight might be delayed because of weather.
+  script_segments:
+  - She mentioned that the flight might be delayed because of weather.
+  char_count: 66
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-37
+  verified: false
+  set_number: 2
+- id: rep-dummy-0038
+  text: Let me know if you need any help preparing the presentation.
+  script_segments:
+  - Let me know if you need any help preparing the presentation.
+  char_count: 60
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-38
+  verified: false
+  set_number: 2
+- id: rep-dummy-0039
+  text: The new intern is still learning how the system works here.
+  script_segments:
+  - The new intern is still learning how the system works here.
+  char_count: 59
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-39
+  verified: false
+  set_number: 2
+- id: rep-dummy-0040
+  text: I think we should double-check the numbers before sending the invoice.
+  script_segments:
+  - I think we should double-check the numbers before sending the invoice.
+  char_count: 70
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-40
+  verified: false
+  set_number: 2
+- id: rep-dummy-0041
+  text: He said the client wants to change the delivery date again.
+  script_segments:
+  - He said the client wants to change the delivery date again.
+  char_count: 59
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-41
+  verified: false
+  set_number: 2
+- id: rep-dummy-0042
+  text: Our team is planning to launch the new website next month.
+  script_segments:
+  - Our team is planning to launch the new website next month.
+  char_count: 58
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-42
+  verified: false
+  set_number: 2
+- id: rep-dummy-0043
+  text: Please make sure the printer has enough paper before you leave.
+  script_segments:
+  - Please make sure the printer has enough paper before you leave.
+  char_count: 63
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-43
+  verified: false
+  set_number: 2
+- id: rep-dummy-0044
+  text: They decided to postpone the trip until the weather gets better.
+  script_segments:
+  - They decided to postpone the trip until the weather gets better.
+  char_count: 64
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-44
+  verified: false
+  set_number: 2
+- id: rep-dummy-0045
+  text: Would you mind sending me the updated schedule sometime this week?
+  script_segments:
+  - Would you mind sending me the updated schedule sometime this week?
+  char_count: 66
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-45
+  verified: false
+  set_number: 2
+- id: rep-dummy-0046
+  text: The company is looking for ways to reduce shipping costs overall.
+  script_segments:
+  - The company is looking for ways to reduce shipping costs overall.
+  char_count: 65
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-46
+  verified: false
+  set_number: 2
+- id: rep-dummy-0047
+  text: We should probably call the client before making any final decisions.
+  script_segments:
+  - We should probably call the client before making any final decisions.
+  char_count: 69
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-47
+  verified: false
+  set_number: 2
+- id: rep-dummy-0048
+  text: I heard that the new policy will take effect next quarter.
+  script_segments:
+  - I heard that the new policy will take effect next quarter.
+  char_count: 58
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-48
+  verified: false
+  set_number: 2
+- id: rep-dummy-0049
+  text: Could you check whether the invoice has already been sent out?
+  script_segments:
+  - Could you check whether the invoice has already been sent out?
+  char_count: 62
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-49
+  verified: false
+  set_number: 3
+- id: rep-dummy-0050
+  text: The technician said the issue should be fixed by this evening.
+  script_segments:
+  - The technician said the issue should be fixed by this evening.
+  char_count: 62
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-50
+  verified: false
+  set_number: 3
+- id: rep-dummy-0051
+  text: Let's set up a quick call to go over the details.
+  script_segments:
+  - Let's set up a quick call to go over the details.
+  char_count: 49
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-51
+  verified: false
+  set_number: 3
+- id: rep-dummy-0052
+  text: I noticed the numbers in the report don't quite add up.
+  script_segments:
+  - I noticed the numbers in the report don't quite add up.
+  char_count: 55
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-52
+  verified: false
+  set_number: 3
+- id: rep-dummy-0053
+  text: She's been working on this project since early last month.
+  script_segments:
+  - She's been working on this project since early last month.
+  char_count: 58
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-53
+  verified: false
+  set_number: 3
+- id: rep-dummy-0054
+  text: We might need to order more supplies before the week ends.
+  script_segments:
+  - We might need to order more supplies before the week ends.
+  char_count: 58
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-54
+  verified: false
+  set_number: 3
+- id: rep-dummy-0055
+  text: The client asked for a few small changes to the design.
+  script_segments:
+  - The client asked for a few small changes to the design.
+  char_count: 55
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-55
+  verified: false
+  set_number: 3
+- id: rep-dummy-0056
+  text: I think we're finally ready to move forward with the plan.
+  script_segments:
+  - I think we're finally ready to move forward with the plan.
+  char_count: 58
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-56
+  verified: false
+  set_number: 3
+- id: rep-dummy-0057
+  text: He forgot to attach the file before sending the email earlier.
+  script_segments:
+  - He forgot to attach the file before sending the email earlier.
+  char_count: 62
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-57
+  verified: false
+  set_number: 3
+- id: rep-dummy-0058
+  text: Can you let the team know about the schedule change today?
+  script_segments:
+  - Can you let the team know about the schedule change today?
+  char_count: 58
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-58
+  verified: false
+  set_number: 3
+- id: rep-dummy-0059
+  text: The new software update fixed most of the reported bugs already.
+  script_segments:
+  - The new software update fixed most of the reported bugs already.
+  char_count: 64
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-59
+  verified: false
+  set_number: 3
+- id: rep-dummy-0060
+  text: We're still waiting to hear back from the vendor about pricing.
+  script_segments:
+  - We're still waiting to hear back from the vendor about pricing.
+  char_count: 63
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-60
+  verified: false
+  set_number: 3
+- id: rep-dummy-0061
+  text: I'll send you the notes right after the meeting wraps up.
+  script_segments:
+  - I'll send you the notes right after the meeting wraps up.
+  char_count: 57
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-61
+  verified: false
+  set_number: 3
+- id: rep-dummy-0062
+  text: The office will be closed for renovations next Monday and Tuesday.
+  script_segments:
+  - The office will be closed for renovations next Monday and Tuesday.
+  char_count: 66
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-62
+  verified: false
+  set_number: 3
+- id: rep-dummy-0063
+  text: Please double check your email before forwarding it to the client.
+  script_segments:
+  - Please double check your email before forwarding it to the client.
+  char_count: 66
+  word_count: 11
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-63
+  verified: false
+  set_number: 3
+- id: rep-dummy-0064
+  text: The delivery is expected to arrive sometime early next week.
+  script_segments:
+  - The delivery is expected to arrive sometime early next week.
+  char_count: 60
+  word_count: 10
+  difficulty: intermediate
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-64
+  verified: false
+  set_number: 3
+- id: rep-dummy-0065
+  text: The board decided to delay the merger until all regulatory approvals had been
+    granted.
+  script_segments:
+  - The board decided to delay the merger until all regulatory approvals had been
+    granted.
+  char_count: 86
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-65
+  verified: false
+  set_number: 2
+- id: rep-dummy-0066
+  text: Even though the budget was tight, the team still managed to deliver the project
+    early.
+  script_segments:
+  - Even though the budget was tight, the team still managed to deliver the project
+    early.
+  char_count: 86
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-66
+  verified: false
+  set_number: 2
+- id: rep-dummy-0067
+  text: Analysts believe that consumer spending will continue to rise despite ongoing
+    economic uncertainty.
+  script_segments:
+  - Analysts believe that consumer spending will continue to rise despite ongoing
+    economic uncertainty.
+  char_count: 99
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-67
+  verified: false
+  set_number: 2
+- id: rep-dummy-0068
+  text: The city council approved a new plan to reduce traffic congestion in the downtown
+    area.
+  script_segments:
+  - The city council approved a new plan to reduce traffic congestion in the downtown
+    area.
+  char_count: 87
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-68
+  verified: false
+  set_number: 2
+- id: rep-dummy-0069
+  text: Because the servers were overloaded, customers experienced long delays when
+    trying to check out.
+  script_segments:
+  - Because the servers were overloaded, customers experienced long delays when trying
+    to check out.
+  char_count: 96
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-69
+  verified: false
+  set_number: 2
+- id: rep-dummy-0070
+  text: The professor explained that the theory had been widely misunderstood since
+    it was first published.
+  script_segments:
+  - The professor explained that the theory had been widely misunderstood since it
+    was first published.
+  char_count: 99
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-70
+  verified: false
+  set_number: 2
+- id: rep-dummy-0071
+  text: Although the negotiations lasted several months, both companies eventually
+    reached a mutually beneficial agreement.
+  script_segments:
+  - Although the negotiations lasted several months, both companies eventually reached
+    a mutually beneficial agreement.
+  char_count: 115
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-71
+  verified: false
+  set_number: 2
+- id: rep-dummy-0072
+  text: The airline announced that all flights would be grounded until the storm had
+    passed safely.
+  script_segments:
+  - The airline announced that all flights would be grounded until the storm had passed
+    safely.
+  char_count: 91
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-72
+  verified: false
+  set_number: 2
+- id: rep-dummy-0073
+  text: Several employees raised concerns about the new policy during yesterday's
+    all-hands meeting downtown.
+  script_segments:
+  - Several employees raised concerns about the new policy during yesterday's all-hands
+    meeting downtown.
+  char_count: 101
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-73
+  verified: false
+  set_number: 2
+- id: rep-dummy-0074
+  text: The report suggested that the company's profits had grown steadily over the
+    past three years.
+  script_segments:
+  - The report suggested that the company's profits had grown steadily over the past
+    three years.
+  char_count: 93
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-74
+  verified: false
+  set_number: 2
+- id: rep-dummy-0075
+  text: Once the renovations are complete, the office will finally have enough space
+    for everyone.
+  script_segments:
+  - Once the renovations are complete, the office will finally have enough space for
+    everyone.
+  char_count: 90
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-75
+  verified: false
+  set_number: 2
+- id: rep-dummy-0076
+  text: The engineers spent weeks testing the prototype before it was approved for
+    mass production.
+  script_segments:
+  - The engineers spent weeks testing the prototype before it was approved for mass
+    production.
+  char_count: 91
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-76
+  verified: false
+  set_number: 2
+- id: rep-dummy-0077
+  text: Customers were frustrated when the app crashed repeatedly during the busiest
+    hours of the day.
+  script_segments:
+  - Customers were frustrated when the app crashed repeatedly during the busiest hours
+    of the day.
+  char_count: 94
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-77
+  verified: false
+  set_number: 2
+- id: rep-dummy-0078
+  text: The government announced new regulations aimed at reducing carbon emissions
+    from heavy industry nationwide.
+  script_segments:
+  - The government announced new regulations aimed at reducing carbon emissions from
+    heavy industry nationwide.
+  char_count: 107
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-78
+  verified: false
+  set_number: 2
+- id: rep-dummy-0079
+  text: Although the interview went smoothly, she still felt nervous about the final
+    decision.
+  script_segments:
+  - Although the interview went smoothly, she still felt nervous about the final decision.
+  char_count: 86
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-79
+  verified: false
+  set_number: 2
+- id: rep-dummy-0080
+  text: The committee spent hours debating whether the new policy would actually reduce
+    overall costs.
+  script_segments:
+  - The committee spent hours debating whether the new policy would actually reduce
+    overall costs.
+  char_count: 94
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-80
+  verified: false
+  set_number: 2
+- id: rep-dummy-0081
+  text: Investors were relieved when the company reported earnings that exceeded analyst
+    expectations easily.
+  script_segments:
+  - Investors were relieved when the company reported earnings that exceeded analyst
+    expectations easily.
+  char_count: 101
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-81
+  verified: false
+  set_number: 3
+- id: rep-dummy-0082
+  text: The volunteers worked through the night to make sure everything was ready
+    by morning.
+  script_segments:
+  - The volunteers worked through the night to make sure everything was ready by morning.
+  char_count: 85
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-82
+  verified: false
+  set_number: 3
+- id: rep-dummy-0083
+  text: Because the flight was overbooked, several passengers were offered vouchers
+    for a later departure.
+  script_segments:
+  - Because the flight was overbooked, several passengers were offered vouchers for
+    a later departure.
+  char_count: 98
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-83
+  verified: false
+  set_number: 3
+- id: rep-dummy-0084
+  text: The research team published their findings after nearly two years of careful
+    analysis.
+  script_segments:
+  - The research team published their findings after nearly two years of careful analysis.
+  char_count: 86
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-84
+  verified: false
+  set_number: 3
+- id: rep-dummy-0085
+  text: Management assured employees that no layoffs were planned despite the recent
+    restructuring efforts.
+  script_segments:
+  - Management assured employees that no layoffs were planned despite the recent restructuring
+    efforts.
+  char_count: 99
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-85
+  verified: false
+  set_number: 3
+- id: rep-dummy-0086
+  text: The bridge was closed for repairs after inspectors found several cracks in
+    the foundation.
+  script_segments:
+  - The bridge was closed for repairs after inspectors found several cracks in the
+    foundation.
+  char_count: 90
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-86
+  verified: false
+  set_number: 3
+- id: rep-dummy-0087
+  text: Although sales declined slightly last quarter, executives remain optimistic
+    about the coming year.
+  script_segments:
+  - Although sales declined slightly last quarter, executives remain optimistic about
+    the coming year.
+  char_count: 98
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-87
+  verified: false
+  set_number: 3
+- id: rep-dummy-0088
+  text: The university announced a new scholarship program aimed at supporting first-generation
+    college students.
+  script_segments:
+  - The university announced a new scholarship program aimed at supporting first-generation
+    college students.
+  char_count: 105
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-88
+  verified: false
+  set_number: 3
+- id: rep-dummy-0089
+  text: Weather forecasters warned that the storm could bring significant flooding
+    to coastal areas soon.
+  script_segments:
+  - Weather forecasters warned that the storm could bring significant flooding to
+    coastal areas soon.
+  char_count: 97
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-89
+  verified: false
+  set_number: 3
+- id: rep-dummy-0090
+  text: The startup secured additional funding after impressing investors with its
+    latest product demo.
+  script_segments:
+  - The startup secured additional funding after impressing investors with its latest
+    product demo.
+  char_count: 95
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-90
+  verified: false
+  set_number: 3
+- id: rep-dummy-0091
+  text: Employees were asked to complete the survey before the end of the month.
+  script_segments:
+  - Employees were asked to complete the survey before the end of the month.
+  char_count: 72
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-91
+  verified: false
+  set_number: 3
+- id: rep-dummy-0092
+  text: The factory implemented new safety measures following an inspection earlier
+    in the year.
+  script_segments:
+  - The factory implemented new safety measures following an inspection earlier in
+    the year.
+  char_count: 88
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-92
+  verified: false
+  set_number: 3
+- id: rep-dummy-0093
+  text: Critics argued that the film's pacing suffered due to its overly long running
+    time.
+  script_segments:
+  - Critics argued that the film's pacing suffered due to its overly long running
+    time.
+  char_count: 83
+  word_count: 14
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-93
+  verified: false
+  set_number: 3
+- id: rep-dummy-0094
+  text: The negotiations stalled after both sides failed to agree on key contract
+    terms.
+  script_segments:
+  - The negotiations stalled after both sides failed to agree on key contract terms.
+  char_count: 80
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-94
+  verified: false
+  set_number: 3
+- id: rep-dummy-0095
+  text: Local officials announced new plans to renovate the old library building next
+    spring.
+  script_segments:
+  - Local officials announced new plans to renovate the old library building next
+    spring.
+  char_count: 85
+  word_count: 13
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-95
+  verified: false
+  set_number: 3
+- id: rep-dummy-0096
+  text: The airline's new policy requires passengers to check in online before arriving
+    at the airport.
+  script_segments:
+  - The airline's new policy requires passengers to check in online before arriving
+    at the airport.
+  char_count: 95
+  word_count: 15
+  difficulty: advanced
+  audio: []
+  source: dummy_set_padding
+  source_ref: dummy-set-padding-96
+  verified: false
+  set_number: 3

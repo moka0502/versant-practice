@@ -22,3 +22,4 @@ class Problem:
     source: str = "unknown"
     source_ref: str = ""
     verified: bool = False  # judge_audio.pyの文字起こし一致チェックを通過したか。配信可否の唯一の判定基準
+    set_number: int = 1  # 同一difficulty内で16問区切りの「セット」を識別する番号（docs/backlog.md No.3.5）

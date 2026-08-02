@@ -29,22 +29,32 @@ ACCENT = "en-US"
 VOICE = "alloy"
 TTS_MODEL = "gpt-4o-mini-tts"
 
+# バックログNo.3.5用のダミー問題(scripts/seed_dummy_set_padding.py)のsourceタグ。
+# 音声を用意していないため、通常の「verified=Trueかつ音声ファイル必須」の
+# fail-loudなチェックから除外し、audio: nullとしてそのままエクスポートする。
+DUMMY_SOURCE = "dummy_set_padding"
+
 
 def export(data_path: Path, audio_cache_dir: Path, prototype_dir: Path) -> list[dict]:
-    """verified=Trueの問題をprototype_dir配下に書き出す。戻り値は書き出したマニフェスト。
+    """verified=True(または本番未検証のダミー水増し問題)をprototype_dir配下に書き出す。
 
-    1パス目で全件の音声ファイル存在を確認し、1件でも欠けていれば何も書き込まず例外。
+    戻り値は書き出したマニフェスト。
+    1パス目で実データ(dummy以外)の音声ファイル存在を確認し、1件でも欠けていれば
+    何も書き込まず例外にする(fail loudly、ダミー問題はこのチェックの対象外)。
     2パス目で実際にコピー＋マニフェスト生成する。
     """
     problems = load_problems(data_path)
-    verified = [p for p in problems if p.verified]
-    if not verified:
+    eligible = [p for p in problems if p.verified or p.source == DUMMY_SOURCE]
+    if not eligible:
         raise ValueError("verified=Trueの問題が1件もありません。先にjudge_audio.pyを実行してください。")
 
-    # 1パス目: 存在確認のみ
+    # 1パス目: 実データのみ音声ファイルの存在確認
     resolved = []
     missing = []
-    for p in verified:
+    for p in eligible:
+        if p.source == DUMMY_SOURCE:
+            resolved.append((p, None, None))
+            continue
         key = cache_key(p.text, ACCENT, VOICE, TTS_MODEL)
         src = audio_cache_dir / f"{key}.mp3"
         if not src.exists():
@@ -64,9 +74,22 @@ def export(data_path: Path, audio_cache_dir: Path, prototype_dir: Path) -> list[
     audio_dir.mkdir(parents=True, exist_ok=True)
     manifest = []
     for p, key, src in resolved:
+        if p.source == DUMMY_SOURCE:
+            manifest.append(
+                {"id": p.id, "level": p.difficulty, "text": p.text, "audio": None, "set_number": p.set_number}
+            )
+            continue
         dest_name = f"{key}.mp3"
         shutil.copyfile(src, audio_dir / dest_name)
-        manifest.append({"id": p.id, "level": p.difficulty, "text": p.text, "audio": f"audio/{dest_name}"})
+        manifest.append(
+            {
+                "id": p.id,
+                "level": p.difficulty,
+                "text": p.text,
+                "audio": f"audio/{dest_name}",
+                "set_number": p.set_number,
+            }
+        )
 
     manifest_path = prototype_dir / "problems.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

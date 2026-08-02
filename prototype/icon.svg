@@ -1,4 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
   <rect width="192" height="192" rx="40" fill="#5b5bd6"/>
-  <text x="96" y="128" font-size="110" text-anchor="middle" font-family="-apple-system, sans-serif">🦉</text>
+
+  <!-- 耳の飾り羽 -->
+  <polygon points="52,66 70,66 57,32" fill="#faf9f7"/>
+  <polygon points="140,66 122,66 135,32" fill="#faf9f7"/>
+
+  <!-- 体・顔 -->
+  <ellipse cx="96" cy="114" rx="52" ry="58" fill="#faf9f7"/>
+
+  <!-- 目 -->
+  <circle cx="75" cy="102" r="23" fill="#ffffff" stroke="#5b5bd6" stroke-width="5"/>
+  <circle cx="117" cy="102" r="23" fill="#ffffff" stroke="#5b5bd6" stroke-width="5"/>
+  <circle cx="75" cy="104" r="10" fill="#33335a"/>
+  <circle cx="117" cy="104" r="10" fill="#33335a"/>
+  <circle cx="79" cy="99" r="3.5" fill="#ffffff"/>
+  <circle cx="121" cy="99" r="3.5" fill="#ffffff"/>
+
+  <!-- くちばし -->
+  <polygon points="87,126 105,126 96,144" fill="#f4a94b"/>
+
+  <!-- お腹の模様 -->
+  <path d="M 76 152 Q 96 164 116 152" stroke="#d8d4ee" stroke-width="4" fill="none" stroke-linecap="round"/>
 </svg>

@@ -5,8 +5,18 @@
 // 頻繁に更新されるこの段階では、キャッシュ優先だと「CACHE_NAMEのバージョンを
 // 上げ忘れると古い内容が延々と表示され続ける」という事故が起きやすいため
 // （実際に2度発生した）、この戦略に変更した。
-const CACHE_NAME = "eigo-shukan-juku-shell-v4";
-const SHELL_FILES = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon.svg"];
+const CACHE_NAME = "eigo-shukan-juku-shell-v5";
+const SHELL_FILES = [
+  "./",
+  "./index.html",
+  "./style.css",
+  "./app.js",
+  "./manifest.json",
+  "./icon.svg",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/apple-touch-icon.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

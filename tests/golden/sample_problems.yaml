@@ -11,6 +11,7 @@
   source: english-quiz-bot
   source_ref: q1
   verified: false
+  set_number: 1
 - id: rep-q2
   text: Could you please send me the report before the end of the day?
   script_segments:
@@ -24,3 +25,4 @@
   source: english-quiz-bot
   source_ref: q2
   verified: false
+  set_number: 1

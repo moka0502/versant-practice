@@ -15,6 +15,7 @@ const INTER_PROBLEM_PAUSE_MS = 2000; // 問題間の間。iOSでは次の音声�
 
 const state = {
   selectedLevel: "beginner",
+  selectedSet: 1, // レベル内のセット番号（バックログNo.3.5）。"mix"選択時は使わない
   selectedAccent: "us", // 現状は米国英語の音声しか用意していないため（他はUIでロック済み）
   speedRate: 1,
   queue: [],
@@ -72,6 +73,32 @@ function playBeep(freq, duration) {
 function vibrate(pattern) {
   if (navigator.vibrate) navigator.vibrate(pattern);
 }
+
+// 複数の単音を時間差で鳴らして簡単なチャイムにする（音声ファイル不要、Web Audio APIのみ）
+function playChime(notes) {
+  let t = 0;
+  notes.forEach(([freq, duration]) => {
+    setTimeout(() => playBeep(freq, duration), t * 1000);
+    t += duration * 0.85; // 次の音を少し重ねて繋がりよく聞こえるようにする
+  });
+}
+
+const LEVEL_UP_CHIME = [
+  [523.25, 0.12],
+  [659.25, 0.12],
+  [783.99, 0.2],
+]; // ド・ミ・ソの上昇アルペジオ
+const PERFECT_WEEK_CHIME = [
+  [523.25, 0.1],
+  [659.25, 0.1],
+  [783.99, 0.1],
+  [1046.5, 0.28],
+]; // ド・ミ・ソ・高いドの華やかなファンファーレ
+const SESSION_COMPLETE_CHIME = [
+  [659.25, 0.12],
+  [783.99, 0.12],
+  [1046.5, 0.24],
+]; // ミ・ソ・高いドの締めくくりの和音
 
 // emoji表示 + 下部タイムバーを durationMs かけて満たし、終わったら onDone を呼ぶ
 // （問題間の「間」を可視化する役割も兼ねる）
@@ -370,6 +397,7 @@ function maybeCelebratePerfectWeek() {
   if (isPerfectWeek()) {
     localStorage.setItem(PERFECT_WEEK_LAST_KEY, today);
     showToast("🎊 パーフェクトウィーク達成！7日連続で全問「できた」！");
+    playChime(PERFECT_WEEK_CHIME);
   }
 }
 
@@ -404,6 +432,7 @@ function awardXp(tier) {
   saveXp(after);
   if (levelForXp(after) > levelForXp(before)) {
     showToast(`⭐ レベルアップ！ Lv.${levelForXp(after)}`);
+    playChime(LEVEL_UP_CHIME);
   }
 }
 
@@ -719,8 +748,34 @@ function setupSingleSelectGroup(groupEl, dataAttr, onSelect) {
   });
 }
 
+// レベル内の「セット」選択（バックログNo.3.5）。ミックス選択時はセット概念が無いため非表示にする
+function renderSetChips(level) {
+  const groupEl = document.getElementById("set-group");
+  const wrapperEl = document.getElementById("set-option-group");
+  const sets =
+    level === "mix"
+      ? []
+      : [...new Set(PROBLEMS.filter((p) => p.level === level).map((p) => p.set_number))].sort((a, b) => a - b);
+
+  if (sets.length === 0) {
+    groupEl.innerHTML = "";
+    wrapperEl.hidden = true;
+    return;
+  }
+
+  wrapperEl.hidden = false;
+  groupEl.innerHTML = sets
+    .map((n, i) => `<button class="chip${i === 0 ? " active" : ""}" data-set="${n}">${LEVEL_LABEL[level]}${n}</button>`)
+    .join("");
+  state.selectedSet = sets[0];
+  setupSingleSelectGroup(groupEl, "set", (v) => {
+    state.selectedSet = Number(v);
+  });
+}
+
 setupSingleSelectGroup(document.getElementById("level-group"), "level", (v) => {
   state.selectedLevel = v;
+  renderSetChips(v);
 });
 setupSingleSelectGroup(document.getElementById("accent-group"), "accent", (v) => {
   state.selectedAccent = v;
@@ -748,7 +803,7 @@ function startSession() {
   const pool =
     state.selectedLevel === "mix"
       ? PROBLEMS
-      : PROBLEMS.filter((p) => p.level === state.selectedLevel);
+      : PROBLEMS.filter((p) => p.level === state.selectedLevel && p.set_number === state.selectedSet);
   if (pool.length === 0) return;
 
   const history = loadHistory();
@@ -935,6 +990,7 @@ function enterSummary() {
   if (state.totalCount > 0 && !state.hadAnyImperfect) {
     checkAndAwardBadges({ hadPerfectSession: true });
   }
+  if (state.totalCount > 0) playChime(SESSION_COMPLETE_CHIME);
 
   const pct = state.totalCount === 0 ? 0 : Math.round((state.scoreSum / state.totalCount) * 100);
   const reaction = pickSummaryReaction(pct);
@@ -1063,6 +1119,7 @@ startButtonEl.disabled = true;
 loadProblems()
   .then(() => {
     startButtonEl.disabled = false;
+    renderSetChips(state.selectedLevel);
   })
   .catch((err) => {
     console.error(err);
