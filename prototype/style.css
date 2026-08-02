@@ -532,6 +532,7 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto; /* onboarding-overlayと同じ理由。低高さ画面でも内容がはみ出て隠れないように */
   background: rgba(250, 249, 247, 0.9);
   z-index: 10;
   pointer-events: none;
@@ -763,8 +764,8 @@ button:active {
   inset: 0;
   background: rgba(28, 28, 30, 0.6);
   display: flex;
-  align-items: center;
   justify-content: center;
+  overflow-y: auto; /* 横向き等でカードが画面より高くなっても、はじめるボタンにスクロールで届くように */
   z-index: 30;
   padding: 16px;
 }
@@ -779,6 +780,7 @@ button:active {
   padding: 28px 24px;
   max-width: 360px;
   width: 100%;
+  margin: auto 0; /* 縦中央寄せ。はみ出た場合はmargin:autoが0に潰れ、上端からスクロールで全体に到達できる */
   text-align: center;
 }
 
