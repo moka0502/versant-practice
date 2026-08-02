@@ -491,6 +491,34 @@ button:active {
   margin-bottom: 4px;
 }
 
+/* アフィリエイトカード（セッション結果画面のみ。景品表示法のステルスマーケティング規制によりPR表記必須） */
+.affiliate-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 4px 0 16px;
+  text-align: center;
+}
+
+.affiliate-pr-label {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 1px 6px;
+  margin-bottom: 6px;
+}
+
+.affiliate-card a {
+  display: block;
+  font-size: 13px;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
 /* 正誤リアクション演出 */
 .reaction-overlay {
   position: fixed;
