@@ -606,15 +606,23 @@ function renderWeekCalendar() {
 function renderGrowthChart() {
   const log = loadDailyLog();
   const today = todayKey();
-  const bars = [];
+  const entries = [];
   for (let i = 6; i >= 0; i--) {
-    const entry = log[shiftDayKey(today, -i)];
-    const pct = entry && entry.attempts > 0 ? Math.round((entry.scoreSum / entry.attempts) * 100) : 0;
-    bars.push(
-      `<div class="growth-bar-col"><div class="growth-bar" style="height:${Math.max(pct, 4)}%"></div>` +
-        `<span class="growth-bar-label">${pct}</span></div>`
-    );
+    entries.push(log[shiftDayKey(today, -i)]);
   }
+  const hasAnyData = entries.some((entry) => entry && entry.attempts > 0);
+  if (!hasAnyData) {
+    document.getElementById("growth-chart").innerHTML =
+      '<p class="stats-empty">まだデータがありません。練習を始めましょう！</p>';
+    return;
+  }
+  const bars = entries.map((entry) => {
+    const pct = entry && entry.attempts > 0 ? Math.round((entry.scoreSum / entry.attempts) * 100) : 0;
+    return (
+      `<div class="growth-bar-col"><div class="growth-bar" style="height:${Math.max(pct, 4)}%"></div>` +
+      `<span class="growth-bar-label">${pct}</span></div>`
+    );
+  });
   document.getElementById("growth-chart").innerHTML = bars.join("");
 }
 
@@ -691,10 +699,10 @@ document.getElementById("back-from-stats").addEventListener("click", () => {
 
 // --- 画面-1: TOP（ダッシュボード） ---
 function renderTopScreen() {
-  document.getElementById("top-streak").textContent = `🔥 ${currentStreak()} 日`;
+  document.getElementById("top-streak").textContent = `${currentStreak()} 日`;
   document.getElementById("top-level").textContent = `Lv.${levelForXp(loadXp())}`;
   document.getElementById("top-coins").textContent = `${loadCoins()}枚`;
-  document.getElementById("top-freezes").textContent = `❄️ ${loadFreezeCount()} 個`;
+  document.getElementById("top-freezes").textContent = `${loadFreezeCount()} 個`;
 }
 
 const STAT_EXPLANATIONS = {

@@ -21,7 +21,7 @@
      「知らない人がうっかり見ない」程度の抑止に過ぎない -->
 <section id="screen-gate" class="screen">
   <div class="gate-card">
-    <div class="mascot">🦉</div>
+    <img class="mascot-icon" src="icon.svg" alt="英語習慣塾">
     <h1>英語習慣塾</h1>
     <p class="tagline">合言葉を入力してください</p>
     <input id="gate-password" class="gate-input" type="password" autocomplete="off" placeholder="合言葉">
@@ -34,7 +34,7 @@
 <section id="screen-top" class="screen hidden">
   <button id="theme-toggle" class="theme-toggle" aria-label="ダークモード切替" type="button">🌙</button>
   <header class="brand">
-    <div class="mascot">🦉</div>
+    <img class="mascot-icon" src="icon.svg" alt="英語習慣塾">
     <h1>英語習慣塾</h1>
     <p class="tagline">Versant練習用</p>
   </header>
@@ -48,6 +48,8 @@
 
   <button id="top-practice-button" class="btn-primary btn-large">📝 練習する</button>
   <button id="top-stats-button" class="btn-secondary">📊 統計を見る</button>
+
+  <p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。タイトルは仮称です。</p>
 </section>
 
 <!-- 画面0: 練習するPartの選択 -->
@@ -165,7 +167,8 @@
   <p id="answer-text" class="answer-text"></p>
   <button id="replay-on-answer" class="btn-secondary">🔁 もう一度聞く</button>
 
-  <div class="explanation-box">
+  <!-- 解説欄: 内容(コンテンツ)ができるまで非表示。枠自体はexplanation-boxとして残してある -->
+  <div class="explanation-box" hidden>
     <p class="explanation-title">解説</p>
     <p class="explanation-body">（今後追加予定）</p>
   </div>
@@ -191,7 +194,7 @@
   </div>
 
   <button id="restart-button" class="btn-primary btn-large">🔁 もう一度（同じ設定）</button>
-  <button id="share-button" class="btn-secondary">📤 結果をシェア</button>
+  <button id="share-button" class="btn-secondary btn-outline">📤 結果をシェア</button>
   <button class="btn-text back-button">設定を変える</button>
 </section>
 
@@ -199,7 +202,6 @@
 <section id="screen-stats" class="screen hidden">
   <header class="practice-header">
     <button class="btn-text" id="back-from-stats">← 戻る</button>
-    <span class="option-label" style="margin:0;">統計</span>
   </header>
 
   <div class="summary-stats">
@@ -263,7 +265,7 @@
 <!-- 初回起動時のオンボーディング -->
 <div id="onboarding-overlay" class="onboarding-overlay hidden">
   <div class="onboarding-card">
-    <div class="mascot">🦉</div>
+    <img class="mascot-icon" src="icon.svg" alt="英語習慣塾">
     <h2>ようこそ、英語習慣塾へ</h2>
     <ol class="onboarding-steps">
       <li>🔊 音声を聞く</li>
@@ -275,8 +277,6 @@
     <button id="onboarding-dismiss" class="btn-primary btn-large">はじめる</button>
   </div>
 </div>
-
-<p class="note">※プロトタイプにつき、ダミー問題・ブラウザ音声合成による仮再生です。タイトルは仮称です。</p>
 
 <script src="app.js"></script>
 </body>
