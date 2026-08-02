@@ -8,9 +8,10 @@ CLAUDE.md記載の長期構想（「PWA→必要ならネイティブ」）を�
 
 これに伴う技術的な帰結:
 - **StoreKit（Appleのアプリ内課金）はネイティブアプリ専用**で、PWAのままでは使えない。「広告解除」等の課金機能は、Web決済(Stripe等)ではなくStoreKitを前提に設計する
-- **広告もネイティブSDK前提**（Google AdMob等。Appleは自前の広告ネットワークを持っていない — iAdは2016年に終了）
-- 上記の理由から、PWA段階でWeb広告タグ・Web決済に投資する必要性は薄い。詳細は`docs/backlog.md`の「収益化」セクション参照
+- **ネイティブアプリ内の広告はネイティブSDK前提**（Google AdMob等。Appleは自前の広告ネットワークを持っていない — iAdは2016年に終了）
 - PWA化（`manifest.json`・Service Worker）は無駄にはならない。Capacitorはこのままの構成をベースにネイティブアプリへ変換する前提のツールなので、今の実装がそのまま土台になる
+
+**収益化の方針転換（2026-08-02）**: 本番ホスティング先がGitHub Pages（Web）になったことを受け、「収益化はiOS化してからAdMob」という前提を見直した。**Web版には今すぐGoogle AdSenseを導入できる**（GitHub Pagesは静的ホスティングだがAdSenseはスクリプトタグ＋`ads.txt`の追加のみで動作し、サーバー側の仕組みは不要）。AdMob（ネイティブアプリ内広告）とAdSense（Webサイト広告）は別物で、iOS化を待たずWeb版はAdSenseを個別に検討する。ただしGoogleへの申請・審査はユーザー本人のアカウントで行う必要があり、Claudeが代行できない外部ステップ。詳細は`docs/backlog.md` No.25参照。Web決済(Stripe等)についての結論（StoreKit前提でWeb決済は検討不要）は変更なし。
 
 ## 問題データの作り方（方針転換）
 
