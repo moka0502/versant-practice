@@ -150,6 +150,9 @@ activemq-data/
 # Environments
 .env
 .envrc
+
+# 個人用メモ（アカウントID等、非公開のまま管理したい情報。gitには含めない）
+private-notes.md
 .venv
 env/
 venv/
